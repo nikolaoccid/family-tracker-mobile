@@ -51,7 +51,7 @@ export default function ForgotPasswordScreen() {
     if (validateForm()) {
       try {
         await resetPassword(email);
-        setIsSubmitted(true);
+          setIsSubmitted(true);
       } catch (error) {
         // Error is handled by the store
       }

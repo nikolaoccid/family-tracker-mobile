@@ -49,10 +49,16 @@ function useProtectedRoute(isAuthenticated: boolean) {
   useEffect(() => {
     // Skip if we've already navigated to prevent loops
     if (navigationRef.current) return;
-    
+
     const inAuthGroup = segments[0] === "(auth)";
     const inPermissionsGroup = segments[0] === "permissions";
     const inSubscriptionScreen = segments[0] === "subscription";
+    const isResetPasswordScreen = segments[0] === "(auth)" && segments[1] === "reset-password";
+
+    // Allow access to reset-password screen without authentication
+    if (isResetPasswordScreen) {
+      return;
+    }
 
     if (!isAuthenticated && !inAuthGroup && !inPermissionsGroup && !inSubscriptionScreen) {
       // Redirect to the sign-in page if not authenticated and not already in auth group
@@ -61,7 +67,7 @@ function useProtectedRoute(isAuthenticated: boolean) {
     } else if (isAuthenticated && inAuthGroup) {
       // Check if user needs to go through permission screens
       const user = useAuthStore.getState().user;
-      
+
       if (user && !user.hasNotificationsEnabled && !user.hasLocationEnabled) {
         // User hasn't set up permissions yet, send to permission flow
         navigationRef.current = true;
@@ -76,12 +82,12 @@ function useProtectedRoute(isAuthenticated: boolean) {
         router.replace("/(tabs)");
       }
     }
-    
+
     // Reset the navigation flag after a short delay
     const timer = setTimeout(() => {
       navigationRef.current = false;
     }, 100);
-    
+
     return () => clearTimeout(timer);
   }, [isAuthenticated, segments, router]);
 }
@@ -93,16 +99,16 @@ function LocationAndNotificationSetup() {
   const checkIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const isMountedRef = useRef(true);
   const isProcessingRef = useRef(false);
-  
+
   // Set up location tracking and notifications on app start
   useEffect(() => {
     isMountedRef.current = true;
-    
+
     const setupTracking = async () => {
       if (Platform.OS === 'web' || isProcessingRef.current) return;
-      
+
       isProcessingRef.current = true;
-      
+
       try {
         // Check if user is authenticated and has location permissions
         if (user?.id && user.hasLocationEnabled) {
@@ -110,10 +116,10 @@ function LocationAndNotificationSetup() {
           if (user.hasNotificationsEnabled) {
             await registerForPushNotifications();
           }
-          
+
           // Check if background tracking is active
           const isActive = await isLocationTrackingActive();
-          
+
           // Start background tracking if it's not already active
           if (!isActive && isMountedRef.current) {
             const success = await startLocationTracking();
@@ -130,16 +136,16 @@ function LocationAndNotificationSetup() {
         isProcessingRef.current = false;
       }
     };
-    
+
     // Initial setup
     setupTracking();
-    
+
     // Set up periodic check to ensure background tracking is still active
     checkIntervalRef.current = setInterval(() => {
       if (!isMountedRef.current) return;
       setupTracking();
-    }, 60000); // Check every minute
-    
+    }, 60000) as unknown as NodeJS.Timeout; // Check every minute
+
     // Clean up on unmount
     return () => {
       isMountedRef.current = false;
@@ -149,7 +155,7 @@ function LocationAndNotificationSetup() {
       }
     };
   }, [user?.id, user?.hasLocationEnabled]);
-  
+
   return null;
 }
 
@@ -186,10 +192,10 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  
+
   // Use the protected route hook to handle redirects
   useProtectedRoute(isAuthenticated);
-  
+
   // Set up location tracking and notifications
   if (isAuthenticated) {
     return (
@@ -210,7 +216,7 @@ function RootLayoutNav() {
       </>
     );
   }
-  
+
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />

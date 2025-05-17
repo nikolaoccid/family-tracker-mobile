@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Family Tracker",
-    "slug": "family-tracker",
+    "slug": "familytracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "family-tracker",
+      "bundleIdentifier": "app.familytracker",
       "infoPlist": {
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs location access to track your family members even in the background.",
         "NSLocationWhenInUseUsageDescription": "This app needs location access to show your location on the map.",
@@ -27,7 +27,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "app.family-tracker.family-tracker-cjil4jz",
+      "package": "app.familytracker",
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
@@ -38,7 +38,7 @@
           "action": "VIEW",
           "data": {
             "scheme": "https",
-            "host": "family-tracker.app",
+            "host": "familytracker.app",
             "pathPrefix": "/"
           },
           "category": ["BROWSABLE", "DEFAULT"]
@@ -52,7 +52,7 @@
       [
         "expo-router",
         {
-          "origin": "https://family-tracker.app/"
+          "origin": "https://familytracker.app/"
         }
       ]
     ],

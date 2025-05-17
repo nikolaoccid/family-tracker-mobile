@@ -89,6 +89,27 @@ export const userController = {
     }
   },
 
+  completePasswordReset: async (token: string, newPassword: string) => {
+    try {
+      const response = await fetch(`${API_URL}/auth/complete-reset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, newPassword }),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Complete password reset error:', error);
+      throw error;
+    }
+  },
+
   // User profile
   getProfile: async () => {
     try {
