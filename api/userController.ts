@@ -1,17 +1,8 @@
 import { User } from '@/types';
 import { handleApiError } from './utils';
-import { useAuthStore } from '@/store/authStore';
+import { getAuthHeaders } from './authUtils';
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
-
-// Helper function to get headers with auth token
-const getHeaders = () => {
-  const token = useAuthStore.getState().accessToken;
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token}` : '',
-  };
-};
 
 export const userController = {
   // User authentication
@@ -79,7 +70,7 @@ export const userController = {
 
   resetPassword: async (email: string) => {
     try {
-      const response = await fetch(`${API_URL}/auth/reset-password`, {
+      const response = await fetch(`${API_URL}/users/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +94,7 @@ export const userController = {
     try {
       const response = await fetch(`${API_URL}/user/profile`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
 
       if (!response.ok) {
@@ -121,7 +112,7 @@ export const userController = {
     try {
       const response = await fetch(`${API_URL}/user/profile`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify(userData),
       });
 
@@ -141,7 +132,7 @@ export const userController = {
     try {
       const response = await fetch(`${API_URL}/user/push-token`, {
         method: 'POST',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ token }),
       });
 
@@ -160,7 +151,7 @@ export const userController = {
     try {
       const response = await fetch(`${API_URL}/user/notification-settings`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify(settings),
       });
 
@@ -180,7 +171,7 @@ export const userController = {
     try {
       const response = await fetch(`${API_URL}/user/subscription`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ planId }),
       });
 
@@ -199,7 +190,7 @@ export const userController = {
     try {
       const response = await fetch(`${API_URL}/user/subscription`, {
         method: 'DELETE',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
 
       if (!response.ok) {

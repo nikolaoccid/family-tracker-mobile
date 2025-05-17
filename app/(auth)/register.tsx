@@ -70,8 +70,8 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (validateForm()) {
-      await register(name, email, password);
-      if (!error){
+      const isRegisterOk = await register(name, email, password);
+      if (isRegisterOk){
         router.push('/subscription');
       }
     }

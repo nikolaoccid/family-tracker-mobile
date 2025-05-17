@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.family-tracker.family-tracker-cjil4jz",
+      "bundleIdentifier": "family-tracker",
       "infoPlist": {
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs location access to track your family members even in the background.",
         "NSLocationWhenInUseUsageDescription": "This app needs location access to show your location on the map.",

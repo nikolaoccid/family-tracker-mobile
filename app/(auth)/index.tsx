@@ -11,7 +11,8 @@ import { useAuthStore } from '@/store/authStore';
 export default function LoginScreen() {
   const router = useRouter();
   const { login, loginWithGoogle, isLoading, error, clearError, isAuthenticated } = useAuthStore();
-  
+
+  console.log('error', error);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -26,12 +27,12 @@ export default function LoginScreen() {
 
   const validateForm = () => {
     let isValid = true;
-    
+
     // Reset errors
     setEmailError('');
     setPasswordError('');
     clearError();
-    
+
     // Validate email
     if (!email) {
       setEmailError('Email is required');
@@ -40,7 +41,7 @@ export default function LoginScreen() {
       setEmailError('Email is invalid');
       isValid = false;
     }
-    
+
     // Validate password
     if (!password) {
       setPasswordError('Password is required');
@@ -49,7 +50,7 @@ export default function LoginScreen() {
       setPasswordError('Password must be at least 6 characters');
       isValid = false;
     }
-    
+
     return isValid;
   };
 
@@ -70,8 +71,8 @@ export default function LoginScreen() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
       <StatusBar style="dark" />
-      
-      <ScrollView 
+
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -85,16 +86,16 @@ export default function LoginScreen() {
             Stay connected with your loved ones
           </Text>
         </View>
-        
+
         <View style={styles.formContainer}>
           <Text style={styles.formTitle}>Sign In</Text>
-          
+
           {error ? (
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>{error}</Text>
             </View>
           ) : null}
-          
+
           <Input
             label="Email"
             placeholder="Enter your email"
@@ -105,7 +106,7 @@ export default function LoginScreen() {
             leftIcon={<Mail size={20} color={Colors.light.icon} />}
             error={emailError}
           />
-          
+
           <Input
             label="Password"
             placeholder="Enter your password"
@@ -115,13 +116,13 @@ export default function LoginScreen() {
             leftIcon={<Lock size={20} color={Colors.light.icon} />}
             error={passwordError}
           />
-          
+
           <Link href="/forgot-password" asChild>
             <TouchableOpacity style={styles.forgotPassword}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           </Link>
-          
+
           <Button
             title="Sign In"
             onPress={handleLogin}
@@ -130,13 +131,13 @@ export default function LoginScreen() {
             icon={<LogIn size={20} color="#FFFFFF" />}
             style={styles.loginButton}
           />
-          
+
           <View style={styles.orContainer}>
             <View style={styles.divider} />
             <Text style={styles.orText}>OR</Text>
             <View style={styles.divider} />
           </View>
-          
+
           <Button
             title="Sign In with Google"
             onPress={handleGoogleLogin}
@@ -144,7 +145,7 @@ export default function LoginScreen() {
             fullWidth
             style={styles.googleButton}
           />
-          
+
           <View style={styles.signupContainer}>
             <Text style={styles.signupText}>Don't have an account?</Text>
             <Link href="/register" asChild>
