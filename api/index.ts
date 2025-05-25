@@ -6,7 +6,6 @@ import { alertController } from './alertController';
 import { subscriptionController } from './subscriptionController';
 import { isApiAvailable, handleNetworkError, fetchWithTimeout, handleApiError } from './utils';
 
-// Export all controllers
 export {
   locationController,
   userController,
@@ -20,7 +19,6 @@ export {
   handleApiError,
 };
 
-// Export a single API object for convenience
 export const api = {
   location: locationController,
   user: userController,

@@ -1,17 +1,10 @@
 import { handleApiError } from './utils';
 import { useAuthStore } from '@/store/authStore';
 import { Alert, Location } from '@/types';
+import { getAuthHeaders } from './authUtils';
 
-const API_URL = 'https://api.familytracker.example.com'; // Replace with your actual API URL
+const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 
-// Helper function to get headers with auth token
-const getHeaders = () => {
-  const token = useAuthStore.getState().accessToken;
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token}` : '',
-  };
-};
 
 export const alertController = {
   // Get all alerts for a family
@@ -19,7 +12,7 @@ export const alertController = {
     try {
       const response = await fetch(`${API_URL}/family/${familyId}/alerts`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -38,7 +31,7 @@ export const alertController = {
     try {
       const response = await fetch(`${API_URL}/emergency`, {
         method: 'POST',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ location }),
       });
       
@@ -58,7 +51,7 @@ export const alertController = {
     try {
       const response = await fetch(`${API_URL}/alert/heading-home`, {
         method: 'POST',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ location }),
       });
       
@@ -78,7 +71,7 @@ export const alertController = {
     try {
       const response = await fetch(`${API_URL}/alert/${alertId}/read`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -97,7 +90,7 @@ export const alertController = {
     try {
       const response = await fetch(`${API_URL}/alert/${alertId}`, {
         method: 'DELETE',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {

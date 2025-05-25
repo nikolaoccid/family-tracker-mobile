@@ -36,7 +36,7 @@ export const getDeviceInfo = () => {
   return {
     platform: Platform.OS,
     version: Platform.Version,
-    isEmulator: Platform.OS === 'ios' ? false : false, // In a real app, use expo-device to detect
+    isEmulator: Platform.OS === 'ios' ? false : false, 
   };
 };
 

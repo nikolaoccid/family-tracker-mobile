@@ -1,16 +1,8 @@
+import { getAuthHeaders } from './authUtils';
 import { handleApiError } from './utils';
 import { useAuthStore } from '@/store/authStore';
 
-const API_URL = 'https://api.familytracker.example.com'; // Replace with your actual API URL
-
-// Helper function to get headers with auth token
-const getHeaders = () => {
-  const token = useAuthStore.getState().accessToken;
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token}` : '',
-  };
-};
+const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 
 export const subscriptionController = {
   // Get available subscription plans
@@ -18,7 +10,7 @@ export const subscriptionController = {
     try {
       const response = await fetch(`${API_URL}/subscription/plans`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -37,7 +29,7 @@ export const subscriptionController = {
     try {
       const response = await fetch(`${API_URL}/subscription`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -56,7 +48,7 @@ export const subscriptionController = {
     try {
       const response = await fetch(`${API_URL}/subscription`, {
         method: 'POST',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ planId, paymentDetails }),
       });
       
@@ -76,7 +68,7 @@ export const subscriptionController = {
     try {
       const response = await fetch(`${API_URL}/subscription`, {
         method: 'DELETE',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {

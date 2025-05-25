@@ -1,17 +1,9 @@
 import { handleApiError } from './utils';
 import { useAuthStore } from '@/store/authStore';
 import { SafeZone } from '@/types';
+import { getAuthHeaders } from './authUtils';
 
-const API_URL = 'https://api.familytracker.example.com'; // Replace with your actual API URL
-
-// Helper function to get headers with auth token
-const getHeaders = () => {
-  const token = useAuthStore.getState().accessToken;
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token}` : '',
-  };
-};
+const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 
 export const safeZoneController = {
   // Get all safe zones for a family
@@ -19,7 +11,7 @@ export const safeZoneController = {
     try {
       const response = await fetch(`${API_URL}/family/${familyId}/safe-zones`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -38,7 +30,7 @@ export const safeZoneController = {
     try {
       const response = await fetch(`${API_URL}/safe-zone/${safeZoneId}`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -57,7 +49,7 @@ export const safeZoneController = {
     try {
       const response = await fetch(`${API_URL}/safe-zone`, {
         method: 'POST',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify(safeZone),
       });
       
@@ -77,7 +69,7 @@ export const safeZoneController = {
     try {
       const response = await fetch(`${API_URL}/safe-zone/${safeZoneId}`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify(safeZone),
       });
       
@@ -97,7 +89,7 @@ export const safeZoneController = {
     try {
       const response = await fetch(`${API_URL}/safe-zone/${safeZoneId}`, {
         method: 'DELETE',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -116,7 +108,7 @@ export const safeZoneController = {
     try {
       const response = await fetch(`${API_URL}/safe-zone/${safeZoneId}/status`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ isActive }),
       });
       

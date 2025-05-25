@@ -1,17 +1,9 @@
 import { handleApiError } from './utils';
 import { useAuthStore } from '@/store/authStore';
 import { Family, FamilyMember } from '@/types';
+import { getAuthHeaders } from './authUtils';
 
-const API_URL = 'https://api.familytracker.example.com'; // Replace with your actual API URL
-
-// Helper function to get headers with auth token
-const getHeaders = () => {
-  const token = useAuthStore.getState().accessToken;
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token}` : '',
-  };
-};
+const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 
 export const familyController = {
   // Get family details
@@ -19,7 +11,7 @@ export const familyController = {
     try {
       const response = await fetch(`${API_URL}/family/${familyId}`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -38,7 +30,7 @@ export const familyController = {
     try {
       const response = await fetch(`${API_URL}/family`, {
         method: 'POST',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify(familyData),
       });
       
@@ -58,7 +50,7 @@ export const familyController = {
     try {
       const response = await fetch(`${API_URL}/family/${familyId}`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify(familyData),
       });
       
@@ -78,7 +70,7 @@ export const familyController = {
     try {
       const response = await fetch(`${API_URL}/family/${familyId}/members`, {
         method: 'POST',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ email }),
       });
       
@@ -98,7 +90,7 @@ export const familyController = {
     try {
       const response = await fetch(`${API_URL}/family/${familyId}/members/${memberId}`, {
         method: 'DELETE',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {
@@ -117,7 +109,7 @@ export const familyController = {
     try {
       const response = await fetch(`${API_URL}/family/${familyId}/members/${memberId}/role`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ role }),
       });
       
@@ -137,7 +129,7 @@ export const familyController = {
     try {
       const response = await fetch(`${API_URL}/family/${familyId}/location-sharing`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: getAuthHeaders(),
         body: JSON.stringify({ isSharing }),
       });
       

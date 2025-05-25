@@ -8,7 +8,7 @@ export const userController = {
   // User authentication
   login: async (email: string, password: string) => {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${API_URL}/auth/login/jwt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,26 +23,6 @@ export const userController = {
       return await response.json();
     } catch (error) {
       console.error('Login error:', error);
-      throw error;
-    }
-  },
-
-  loginWithGoogle: async () => {
-    try {
-      const response = await fetch(`${API_URL}/auth/google`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw await handleApiError(response);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Google login error:', error);
       throw error;
     }
   },
@@ -66,6 +46,10 @@ export const userController = {
       console.error('Registration error:', error);
       throw error;
     }
+  },
+
+  loginWithGoogle: async (name: string, email: string, password: string) => {
+    return await userController.register(name, email, password)
   },
 
   resetPassword: async (email: string) => {

@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "Family Tracker",
-    "slug": "familytracker",
+    "slug": "family-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "family-tracker",
+    "scheme": "app.familytracker",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -19,10 +19,14 @@
       "infoPlist": {
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs location access to track your family members even in the background.",
         "NSLocationWhenInUseUsageDescription": "This app needs location access to show your location on the map.",
-        "UIBackgroundModes": ["location", "fetch"]
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
       }
     },
     "android": {
+      "googleServicesFile": "./android/app/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -41,7 +45,21 @@
             "host": "familytracker.app",
             "pathPrefix": "/"
           },
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        },
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "app.familytracker",
+            "host": "oauthredirect"
+          },
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -54,7 +72,8 @@
         {
           "origin": "https://familytracker.app/"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, Lock, LogIn } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { useAuthStore } from '@/store/authStore';
+import * as Google from 'expo-auth-session/providers/google';
+import { ActivityIndicator } from 'react-native';
+
+const androidClientId = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID ?? ''
 
 export default function LoginScreen() {
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId,
+    iosClientId: 'dummy',
+    scopes: ['profile', 'email'],
+  });
   const router = useRouter();
   const { login, loginWithGoogle, isLoading, error, clearError, isAuthenticated } = useAuthStore();
 
@@ -17,6 +26,33 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      if (response?.type === 'success') {
+        const accessToken = response.authentication?.accessToken;
+        console.log('accessToken', accessToken);
+        if (!accessToken) return;
+
+        try {
+          const res = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          const userInfo = await res.json();
+          console.log('User Info:', userInfo);
+          loginWithGoogle(userInfo.name, userInfo.email, 'googleLogin123!');
+        } catch (err) {
+          console.error('Failed to fetch user info', err);
+        }
+      }
+    };
+
+    response && getUserInfo();
+  }, [response]);
+
 
   // Redirect if authenticated
   useEffect(() => {
@@ -60,9 +96,17 @@ export default function LoginScreen() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    await loginWithGoogle();
-  };
+    const handleGoogleLogin = async () => {
+      try {
+        if (Platform.OS === 'android') {
+          await promptAsync();
+          }} catch (err) {
+            console.error('Google login error:', err);
+          }
+
+      }
+
+
 
   return (
     <KeyboardAvoidingView

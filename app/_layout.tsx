@@ -3,13 +3,15 @@ import { useFonts } from "expo-font";
 import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useRef } from "react";
-import { Platform } from "react-native";
+import {Platform} from "react-native";
 import { ErrorBoundary } from "./error-boundary";
 import { useAuthStore } from "@/store/authStore";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { startLocationTracking, stopLocationTracking, isLocationTrackingActive } from '@/background/locationTask';
 import { useLocationStore } from '@/store/locationStore';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
+import * as Linking from 'expo-linking';
+
 
 // Create a client
 const queryClient = new QueryClient({
@@ -191,6 +193,17 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  useEffect(() => {
+    const handleDeepLink = (event: Linking.EventType) => {
+      console.log('Deep Link URL:', event.url);
+    };
+
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   // Use the protected route hook to handle redirects
@@ -212,6 +225,7 @@ function RootLayoutNav() {
           <Stack.Screen name="zones/index" />
           <Stack.Screen name="permissions/notifications" />
           <Stack.Screen name="permissions/location" />
+          <Stack.Screen name="oauthredirect" />
         </Stack>
       </>
     );

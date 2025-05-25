@@ -8,7 +8,7 @@ import { userController } from '@/api/userController';
 interface AuthStore extends AuthState {
   accessToken: string | null;
   login: (email: string, password: string) => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
+  loginWithGoogle: (name: string, email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   resetPassword: (email: string) => Promise<void>;
@@ -49,6 +49,7 @@ export const useAuthStore = create<AuthStore>()(
             // Try to use the API if available
             try {
               const response = await userController.login(email, password);
+              console.log('API login response:', response);
               set({
                 user: response.user,
                 accessToken: response.token,
@@ -81,12 +82,12 @@ export const useAuthStore = create<AuthStore>()(
           }
         },
 
-        loginWithGoogle: async () => {
+        loginWithGoogle: async (name: string, email: string, password: string) => {
           set({ isLoading: true, error: null });
           try {
             // Try to use the API if available
             try {
-              const response = await userController.loginWithGoogle();
+              const response = await userController.loginWithGoogle(name,email, password);
               set({
                 user: response.user,
                 accessToken: response.token,

@@ -1,17 +1,9 @@
 import { Location } from '@/types';
 import { handleApiError, retryWithBackoff } from './utils';
 import { useAuthStore } from '@/store/authStore';
+import { getAuthHeaders } from './authUtils';
 
-const API_URL = 'https://api.familytracker.example.com'; // Replace with your actual API URL
-
-// Helper function to get headers with auth token
-const getHeaders = () => {
-  const token = useAuthStore.getState().accessToken;
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token}` : '',
-  };
-};
+const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 
 export const locationController = {
   // Send user location
@@ -20,7 +12,7 @@ export const locationController = {
       return await retryWithBackoff(async () => {
         const response = await fetch(`${API_URL}/location`, {
           method: 'POST',
-          headers: getHeaders(),
+          headers: getAuthHeaders(),
           body: JSON.stringify(location),
         });
         
@@ -42,7 +34,7 @@ export const locationController = {
       return await retryWithBackoff(async () => {
         const response = await fetch(`${API_URL}/family/${familyId}/locations`, {
           method: 'GET',
-          headers: getHeaders(),
+          headers: getAuthHeaders(),
         });
         
         if (!response.ok) {
@@ -74,7 +66,7 @@ export const locationController = {
       return await retryWithBackoff(async () => {
         const response = await fetch(url, {
           method: 'GET',
-          headers: getHeaders(),
+          headers: getAuthHeaders(),
         });
         
         if (!response.ok) {
@@ -95,7 +87,7 @@ export const locationController = {
       return await retryWithBackoff(async () => {
         const response = await fetch(`${API_URL}/user/battery`, {
           method: 'POST',
-          headers: getHeaders(),
+          headers: getAuthHeaders(),
           body: JSON.stringify({ level }),
         });
         

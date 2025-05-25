@@ -1,7 +1,10 @@
-import { Link, Stack } from "expo-router";
+import {Link, Stack, useRouter, useSegments} from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function NotFoundScreen() {
+  const segments = useSegments();
+  console.log('Attempted Route:', segments.join('/'));
+
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />
