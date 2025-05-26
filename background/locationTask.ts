@@ -12,43 +12,43 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
     console.error('Location tracking task error:', error);
     return;
   }
-  
+
   if (data) {
     // Extract location data
     const { locations } = data as { locations: Location.LocationObject[] };
     const location = locations[0];
-    
+
     if (location) {
       try {
         // Get user ID from auth store
         const userId = useAuthStore.getState().user?.id;
-        
+
         if (!userId) {
           console.error('User ID not available for location tracking');
           return;
         }
-        
+
         // Send location to the server
         try {
           await locationController.sendLocation({
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
             timestamp: new Date().toISOString(),
-            accuracy: location.coords.accuracy,
-            speed: location.coords.speed,
-            heading: location.coords.heading,
+            accuracy: location.coords.accuracy ?? undefined,
+            speed: location.coords.speed ?? undefined,
+            heading: location.coords.heading ?? undefined,
           });
         } catch (apiError) {
           console.error('API error sending location, falling back to direct fetch:', apiError);
-          
+
           // Fallback to direct fetch if the API controller fails
           const token = useAuthStore.getState().accessToken;
           if (!token) {
             console.error('No access token available for location tracking');
             return;
           }
-          
-          const response = await fetch('https://api.familytracker.example.com/location', {
+          const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://api.familytracker.example.com';
+          const response = await fetch(`${API_URL}/location`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -63,22 +63,22 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
               heading: location.coords.heading,
             }),
           });
-          
+
           if (!response.ok) {
             throw new Error(`Failed to send location: ${response.status} ${response.statusText}`);
           }
         }
-        
+
         // Update local store with the latest location
         useLocationStore.getState().updateMyLocation({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
           timestamp: new Date().toISOString(),
-          accuracy: location.coords.accuracy,
-          speed: location.coords.speed,
-          heading: location.coords.heading,
+          accuracy: location.coords.accuracy ?? undefined,
+          speed: location.coords.speed ?? undefined,
+          heading: location.coords.heading ?? undefined,
         });
-        
+
         console.log('Location sent in background:', location.coords);
       } catch (error) {
         console.error('Error sending location in background:', error);
@@ -91,30 +91,30 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
 export const startLocationTracking = async () => {
   // Check if we already have permissions
   const { status } = await Location.requestForegroundPermissionsAsync();
-  
+
   if (status !== 'granted') {
     console.error('Location permission not granted');
     return false;
   }
-  
+
   // Request background permissions
   const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-  
+
   if (backgroundStatus !== 'granted') {
     console.error('Background location permission not granted');
     return false;
   }
-  
+
   // Start background location tracking
   try {
     // Check if task is already registered
     const isRegistered = await TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING);
-    
+
     if (isRegistered) {
       console.log('Background location tracking already active');
       return true;
     }
-    
+
     // Start background location updates
     await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
       accuracy: Location.Accuracy.Balanced,
@@ -127,7 +127,7 @@ export const startLocationTracking = async () => {
       activityType: Location.ActivityType.Other,
       showsBackgroundLocationIndicator: true,
     });
-    
+
     console.log('Background location tracking started');
     return true;
   } catch (error) {
@@ -140,12 +140,12 @@ export const startLocationTracking = async () => {
 export const stopLocationTracking = async () => {
   try {
     const isRegistered = await TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING);
-    
+
     if (isRegistered) {
       await Location.stopLocationUpdatesAsync(LOCATION_TRACKING);
       console.log('Location tracking stopped');
     }
-    
+
     return true;
   } catch (error) {
     console.error('Error stopping location tracking:', error);

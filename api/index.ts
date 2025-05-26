@@ -4,7 +4,7 @@ import { familyController } from './familyController';
 import { safeZoneController } from './safeZoneController';
 import { alertController } from './alertController';
 import { subscriptionController } from './subscriptionController';
-import { isApiAvailable, handleNetworkError, fetchWithTimeout, handleApiError } from './utils';
+import { isApiAvailable, handleApiError } from './utils';
 
 export {
   locationController,
@@ -14,8 +14,6 @@ export {
   alertController,
   subscriptionController,
   isApiAvailable,
-  handleNetworkError,
-  fetchWithTimeout,
   handleApiError,
 };
 
@@ -28,8 +26,6 @@ export const api = {
   subscription: subscriptionController,
   utils: {
     isApiAvailable,
-    handleNetworkError,
-    fetchWithTimeout,
     handleApiError,
   },
 };

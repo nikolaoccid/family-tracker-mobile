@@ -75,7 +75,7 @@ export const userController = {
 
   completePasswordReset: async (token: string, newPassword: string) => {
     try {
-      const response = await fetch(`${API_URL}/auth/complete-reset`, {
+      const response = await fetch(`${API_URL}/users/complete-reset`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

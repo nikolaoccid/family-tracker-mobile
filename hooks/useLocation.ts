@@ -13,24 +13,24 @@ export const useLocation = () => {
   const { family } = useFamilyStore();
   const { updateMyLocation } = useLocationStore();
   const queryClient = useQueryClient();
-  
+
   // State for location permissions
   const [permissionsStatus, setPermissionsStatus] = useState<Location.PermissionStatus | null>(null);
   const [isBackgroundActive, setIsBackgroundActive] = useState(false);
-  
+
   // Refs for cleanup
   const locationIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const backgroundCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const isMountedRef = useRef(true);
   const isProcessingLocationRef = useRef(false);
-  
+
   // Check if background tracking is active
   useEffect(() => {
     isMountedRef.current = true;
-    
+
     const checkBackgroundTracking = async () => {
       if (Platform.OS === 'web') return;
-      
+
       try {
         const isActive = await isLocationTrackingActive();
         if (isMountedRef.current) {
@@ -40,17 +40,17 @@ export const useLocation = () => {
         console.error('Error checking background tracking:', error);
       }
     };
-    
+
     // Initial check
     checkBackgroundTracking();
-    
+
     // Set up periodic check
     backgroundCheckIntervalRef.current = setInterval(() => {
       if (isMountedRef.current) {
         checkBackgroundTracking();
       }
     }, 30000); // Check every 30 seconds
-    
+
     return () => {
       isMountedRef.current = false;
       if (backgroundCheckIntervalRef.current) {
@@ -59,7 +59,7 @@ export const useLocation = () => {
       }
     };
   }, []);
-  
+
   // Request location permissions
   const requestPermissions = async () => {
     try {
@@ -73,10 +73,10 @@ export const useLocation = () => {
       return 'error';
     }
   };
-  
+
   // Mutation for sending location updates
   const locationMutation = useMutation(
-    (location: Location.LocationObject) => 
+    (location: Location.LocationObject) =>
       locationController.sendLocation({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -97,13 +97,13 @@ export const useLocation = () => {
       }
     }
   );
-  
+
   // Get current location once
   const getCurrentLocation = async () => {
     // Prevent multiple simultaneous location requests
     if (isProcessingLocationRef.current) return null;
     isProcessingLocationRef.current = true;
-    
+
     try {
       if (Platform.OS === 'web') {
         try {
@@ -114,7 +114,7 @@ export const useLocation = () => {
               maximumAge: 10000
             });
           });
-          
+
           const location = {
             coords: {
               latitude: position.coords.latitude,
@@ -127,7 +127,7 @@ export const useLocation = () => {
             },
             timestamp: position.timestamp
           };
-          
+
           // Update local state
           if (isMountedRef.current) {
             updateMyLocation({
@@ -139,10 +139,10 @@ export const useLocation = () => {
               heading: location.coords.heading,
             });
           }
-          
+
           // Send to server
           locationMutation.mutate(location as any);
-          
+
           return location;
         } catch (error) {
           console.error('Error getting web location:', error);
@@ -153,22 +153,22 @@ export const useLocation = () => {
           const location = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.Balanced
           });
-          
+
           // Update local state
           if (isMountedRef.current) {
             updateMyLocation({
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               timestamp: new Date().toISOString(),
-              accuracy: location.coords.accuracy,
-              speed: location.coords.speed,
-              heading: location.coords.heading,
+              accuracy: location.coords.accuracy ?? undefined,
+              speed: location.coords.speed ?? undefined,
+              heading: location.coords.heading ?? undefined,
             });
           }
-          
+
           // Send to server
           locationMutation.mutate(location);
-          
+
           return location;
         } catch (error) {
           console.error('Error getting location:', error);
@@ -179,7 +179,7 @@ export const useLocation = () => {
       isProcessingLocationRef.current = false;
     }
   };
-  
+
   // Query for getting family locations
   const familyLocationsQuery = useQuery(
     ['familyLocations', family?.id],
@@ -194,14 +194,14 @@ export const useLocation = () => {
       }
     }
   );
-  
+
   // Request permissions on mount
   useEffect(() => {
     if (!permissionsStatus) {
       requestPermissions();
     }
   }, [permissionsStatus]);
-  
+
   // Get current location periodically when in foreground
   useEffect(() => {
     if (permissionsStatus === 'granted' && user?.id) {
@@ -209,14 +209,14 @@ export const useLocation = () => {
       const initialLocationTimeout = setTimeout(() => {
         getCurrentLocation();
       }, 1000);
-      
+
       // Then set up interval to get location periodically
       locationIntervalRef.current = setInterval(() => {
         if (isMountedRef.current) {
           getCurrentLocation();
         }
       }, 15000); // Update every 15 seconds when app is in foreground
-      
+
       return () => {
         clearTimeout(initialLocationTimeout);
         if (locationIntervalRef.current) {
@@ -226,7 +226,7 @@ export const useLocation = () => {
       };
     }
   }, [permissionsStatus, user?.id]);
-  
+
   // Clean up all intervals on unmount
   useEffect(() => {
     return () => {
@@ -241,7 +241,7 @@ export const useLocation = () => {
       }
     };
   }, []);
-  
+
   return {
     permissionsStatus,
     requestPermissions,
