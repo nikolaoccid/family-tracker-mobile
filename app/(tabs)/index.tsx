@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import * as Battery from 'expo-battery';
 import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
@@ -16,31 +17,42 @@ export default function MapScreen() {
   const { user } = useAuthStore();
   const { family, safeZones, createAlert } = useFamilyStore();
   const { myLocation } = useLocationStore();
-  const { 
-    familyLocations, 
+  const {
+    familyLocations,
     isLoadingFamilyLocations,
     permissionsStatus,
     requestPermissions,
     isBackgroundActive,
     getCurrentLocation
   } = useLocation();
-  
+
   const [batteryLevel, setBatteryLevel] = useState(85);
-  const batteryIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const batteryIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isMountedRef = useRef(true);
-  
-  // Simulate getting device battery level
+
   useEffect(() => {
     isMountedRef.current = true;
-    
-    // In a real app, we would use expo-battery to get the actual battery level
-    batteryIntervalRef.current = setInterval(() => {
-      // Randomly decrease battery level for demo purposes
-      if (isMountedRef.current) {
-        setBatteryLevel(prev => Math.max(prev - Math.floor(Math.random() * 2), 5));
+
+    const fetchBatteryLevel = async () => {
+      try {
+        const level = await Battery.getBatteryLevelAsync();
+        console.log('Battery level:', level);
+        if (isMountedRef.current && typeof level === 'number') {
+          setBatteryLevel(Math.round(level * 100)); // Convert from 0–1 to 0–100%
+        }
+      } catch (error) {
+        console.error('Error getting battery level:', error);
       }
+    };
+
+    // Initial fetch
+    fetchBatteryLevel();
+
+    // Optional: refresh every 30 seconds
+    batteryIntervalRef.current = setInterval(() => {
+      fetchBatteryLevel();
     }, 30000);
-    
+
     return () => {
       isMountedRef.current = false;
       if (batteryIntervalRef.current) {
@@ -49,6 +61,7 @@ export default function MapScreen() {
       }
     };
   }, []);
+
 
   // Request location permissions if not granted
   useEffect(() => {
@@ -62,7 +75,7 @@ export default function MapScreen() {
     const timer = setTimeout(() => {
       getCurrentLocation();
     }, 1000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -99,19 +112,19 @@ export default function MapScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
+
       <MockMap familyLocations={familyLocations} />
-      
+
       <View style={styles.actionsContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.actionButton, styles.emergencyButton]}
           onPress={handleEmergencyAlert}
         >
           <AlertTriangle size={24} color="#FFFFFF" />
           <Text style={styles.actionButtonText}>Emergency</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={[styles.actionButton, styles.headingHomeButton]}
           onPress={handleHeadingHome}
         >
@@ -119,7 +132,7 @@ export default function MapScreen() {
           <Text style={styles.actionButtonText}>Heading Home</Text>
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.infoContainer}>
         <View style={styles.batteryInfo}>
           <BatteryMedium size={16} color={batteryLevel < 20 ? Colors.danger : Colors.light.subtext} />
@@ -127,17 +140,17 @@ export default function MapScreen() {
             {batteryLevel}%
           </Text>
         </View>
-        
+
         <View style={styles.locationInfo}>
           <Navigation size={16} color={Colors.primary} />
           <Text style={styles.locationText}>
-            {isBackgroundActive 
-              ? 'Location sharing is active' 
+            {isBackgroundActive
+              ? 'Location sharing is active'
               : 'Waiting for location services...'}
           </Text>
         </View>
       </View>
-      
+
       <View style={styles.footer}>
         <Button
           title="View Safe Zones"

@@ -8,6 +8,7 @@ const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 export const locationController = {
   // Send user location
   sendLocation: async (location: Location) => {
+    console.log('Sending location:', location);
     try {
       return await retryWithBackoff(async () => {
         const response = await fetch(`${API_URL}/location`, {
@@ -15,11 +16,11 @@ export const locationController = {
           headers: getAuthHeaders(),
           body: JSON.stringify(location),
         });
-        
+
         if (!response.ok) {
           throw await handleApiError(response);
         }
-        
+
         return await response.json();
       }, 2); // Retry up to 2 times
     } catch (error) {
@@ -27,7 +28,7 @@ export const locationController = {
       throw error;
     }
   },
-  
+
   // Get family member locations
   getFamilyLocations: async (familyId: string) => {
     try {
@@ -36,11 +37,11 @@ export const locationController = {
           method: 'GET',
           headers: getAuthHeaders(),
         });
-        
+
         if (!response.ok) {
           throw await handleApiError(response);
         }
-        
+
         return await response.json();
       }, 2); // Retry up to 2 times
     } catch (error) {
@@ -48,10 +49,10 @@ export const locationController = {
       throw error;
     }
   },
-  
+
   // Get location history for a user
-  getUserLocationHistory: async (userId: string, params: { 
-    startDate?: string, 
+  getUserLocationHistory: async (userId: string, params: {
+    startDate?: string,
     endDate?: string,
     limit?: number
   } = {}) => {
@@ -60,19 +61,19 @@ export const locationController = {
       if (params.startDate) queryParams.append('startDate', params.startDate);
       if (params.endDate) queryParams.append('endDate', params.endDate);
       if (params.limit) queryParams.append('limit', params.limit.toString());
-      
+
       const url = `${API_URL}/user/${userId}/location-history?${queryParams.toString()}`;
-      
+
       return await retryWithBackoff(async () => {
         const response = await fetch(url, {
           method: 'GET',
           headers: getAuthHeaders(),
         });
-        
+
         if (!response.ok) {
           throw await handleApiError(response);
         }
-        
+
         return await response.json();
       }, 2); // Retry up to 2 times
     } catch (error) {
@@ -80,7 +81,7 @@ export const locationController = {
       throw error;
     }
   },
-  
+
   // Update battery level
   updateBatteryLevel: async (level: number) => {
     try {
@@ -90,11 +91,11 @@ export const locationController = {
           headers: getAuthHeaders(),
           body: JSON.stringify({ level }),
         });
-        
+
         if (!response.ok) {
           throw await handleApiError(response);
         }
-        
+
         return await response.json();
       }, 2); // Retry up to 2 times
     } catch (error) {

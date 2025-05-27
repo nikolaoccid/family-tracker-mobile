@@ -19,8 +19,8 @@ export const useLocation = () => {
   const [isBackgroundActive, setIsBackgroundActive] = useState(false);
 
   // Refs for cleanup
-  const locationIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const backgroundCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const locationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const backgroundCheckIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isMountedRef = useRef(true);
   const isProcessingLocationRef = useRef(false);
 
@@ -81,9 +81,9 @@ export const useLocation = () => {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         timestamp: new Date().toISOString(),
-        accuracy: location.coords.accuracy,
-        speed: location.coords.speed,
-        heading: location.coords.heading,
+        accuracy: location.coords.accuracy ?? undefined,
+        speed: location.coords.speed ?? undefined,
+        heading: location.coords.heading ?? undefined,
       }),
     {
       onSuccess: () => {
@@ -135,8 +135,8 @@ export const useLocation = () => {
               longitude: location.coords.longitude,
               timestamp: new Date().toISOString(),
               accuracy: location.coords.accuracy,
-              speed: location.coords.speed,
-              heading: location.coords.heading,
+              speed: location.coords.speed ?? undefined,
+              heading: location.coords.heading ?? undefined,
             });
           }
 
@@ -151,7 +151,7 @@ export const useLocation = () => {
       } else {
         try {
           const location = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Balanced
+            accuracy: Location.Accuracy.Highest
           });
 
           // Update local state
