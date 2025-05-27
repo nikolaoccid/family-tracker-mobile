@@ -1,33 +1,118 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { UserPlus, Users } from 'lucide-react-native';
+import { UserPlus, Users, Trash2, UserCog } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useFamilyStore } from '@/store/familyStore';
+import { useAuthStore } from '@/store/authStore';
 import FamilyMemberItem from '@/components/FamilyMemberItem';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 
 export default function FamilyScreen() {
   const router = useRouter();
-  const { family, isLoading } = useFamilyStore();
-  
+  const { family, isLoading, deleteFamily, removeFamilyMember, updateMemberRole } = useFamilyStore();
+  const { user } = useAuthStore();
+
   const [showQRCode, setShowQRCode] = useState(false);
 
   const handleAddMember = () => {
     router.push('/family/add-member');
   };
 
-  const handleMemberPress = (memberId: string) => {
-    // In a real app, this would navigate to member details
-    console.log('Member pressed:', memberId);
+  const handleCreateFamily = () => {
+    router.push('/family/create');
   };
+
+  const handleMemberPress = (memberId: string) => {
+    router.push(`/profile/view/${memberId}`);
+  };
+
+  const isAdmin = user && family?.members.find(m => m.id === user.id)?.role === 'admin';
+
+  const handleDeleteMember = (memberId: string, memberName: string) => {
+    if (!isAdmin) return;
+
+    Alert.alert(
+      "Remove Member",
+      `Are you sure you want to remove ${memberName} from the family?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Remove",
+          onPress: () => removeFamilyMember(memberId),
+          style: "destructive"
+        }
+      ]
+    );
+  };
+
+  const handlePromoteToAdmin = (memberId: string, memberName: string) => {
+    if (!isAdmin) return;
+
+    Alert.alert(
+      "Promote to Admin",
+      `Are you sure you want to make ${memberName} an admin of the family?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Promote",
+          onPress: () => updateMemberRole(memberId, 'admin')
+        }
+      ]
+    );
+  };
+
+  const handleDeleteFamily = () => {
+    if (!isAdmin) return;
+
+    Alert.alert(
+      "Delete Family",
+      "Are you sure you want to delete this family? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: () => deleteFamily(),
+          style: "destructive"
+        }
+      ]
+    );
+  };
+
+  // If no family exists, show a different UI
+  if (!family) {
+    return (
+      <View style={styles.emptyContainer}>
+        <StatusBar style="dark" />
+        <Users size={64} color={Colors.light.icon} />
+        <Text style={styles.emptyTitle}>No Family Group</Text>
+        <Text style={styles.emptyText}>
+          Create a family group to start tracking your loved ones
+        </Text>
+        <Button
+          title="Create Family Group"
+          onPress={handleCreateFamily}
+          style={styles.createButton}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Your Family</Text>
@@ -37,58 +122,56 @@ export default function FamilyScreen() {
             </View>
           )}
         </View>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.addButton}
           onPress={handleAddMember}
         >
           <UserPlus size={20} color={Colors.primary} />
         </TouchableOpacity>
       </View>
-      
-      {family ? (
-        <>
-          <Card title={family.name} subtitle={`Created ${new Date(family.createdAt).toLocaleDateString()}`}>
-            <View style={styles.familyInfo}>
-              <View style={styles.infoItem}>
-                <Users size={16} color={Colors.primary} />
-                <Text style={styles.infoText}>
-                  {family.members.length} members
-                </Text>
-              </View>
-              <Text style={styles.infoText}>
-                {family.members.filter(m => m.isSharing).length} sharing location
-              </Text>
-            </View>
-          </Card>
-          
-          <FlatList
-            data={family.members}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <FamilyMemberItem
-                member={item}
-                onPress={() => handleMemberPress(item.id)}
-              />
-            )}
-            contentContainerStyle={styles.listContent}
-            showsVerticalScrollIndicator={false}
-          />
-        </>
-      ) : (
-        <View style={styles.emptyContainer}>
-          <Users size={64} color={Colors.light.icon} />
-          <Text style={styles.emptyTitle}>No Family Group</Text>
-          <Text style={styles.emptyText}>
-            Create a family group to start tracking your loved ones
+
+      <Card title={family.name} subtitle={`Created ${new Date(family.createdAt).toLocaleDateString()}`}>
+        <View style={styles.familyInfo}>
+          <View style={styles.infoItem}>
+            <Users size={16} color={Colors.primary} />
+            <Text style={styles.infoText}>
+              {family.members.length} members
+            </Text>
+          </View>
+          <Text style={styles.infoText}>
+            {family.members.filter(m => m.isSharing).length} sharing location
           </Text>
-          <Button
-            title="Create Family Group"
-            onPress={handleAddMember}
-            style={styles.createButton}
-          />
         </View>
-      )}
+
+        {isAdmin && (
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={handleDeleteFamily}
+          >
+            <Trash2 size={16} color={Colors.danger} />
+            <Text style={styles.deleteText}>Delete Family</Text>
+          </TouchableOpacity>
+        )}
+      </Card>
+
+      <FlatList
+        data={family.members}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <FamilyMemberItem
+            member={item}
+            onPress={() => handleMemberPress(item.id)}
+            isCurrentUser={user?.id === item.id}
+            isAdmin={isAdmin}
+            onDelete={isAdmin && item.id !== user?.id ? () => handleDeleteMember(item.id, item.name) : undefined}
+            onPromote={isAdmin && item.id !== user?.id && item.role !== 'admin' ?
+              () => handlePromoteToAdmin(item.id, item.name) : undefined}
+          />
+        )}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 }
@@ -133,6 +216,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 12,
   },
   infoItem: {
     flexDirection: 'row',
@@ -142,6 +226,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.light.subtext,
     marginLeft: 4,
+  },
+  deleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderTopWidth: 1,
+    borderTopColor: Colors.light.border,
+    marginTop: 8,
+  },
+  deleteText: {
+    color: Colors.danger,
+    marginLeft: 8,
+    fontWeight: '500',
   },
   listContent: {
     paddingBottom: 100,

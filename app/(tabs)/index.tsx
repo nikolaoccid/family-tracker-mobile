@@ -3,7 +3,7 @@ import * as Battery from 'expo-battery';
 import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
-import { AlertTriangle, Navigation, Home, BatteryMedium } from 'lucide-react-native';
+import { AlertTriangle, Navigation, Home, BatteryMedium, Users } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useFamilyStore } from '@/store/familyStore';
 import { useAuthStore } from '@/store/authStore';
@@ -108,6 +108,32 @@ export default function MapScreen() {
       });
     }
   };
+  const handleCreateFamily = () => {
+    router.push('/family/create');
+  };
+  console.log('family', family)
+  if (!family) {
+    return (
+      <View style={styles.noFamilyContainer}>
+        <StatusBar style="dark" />
+        <Users size={64} color={Colors.light.icon} />
+        <Text style={styles.noFamilyTitle}>No Family Group</Text>
+        <Text style={styles.noFamilyText}>
+          You need to create or join a family group to start tracking your loved ones.
+        </Text>
+        <Button
+          title="Create Family Group"
+          onPress={handleCreateFamily}
+          style={styles.createButton}
+        />
+        <TouchableOpacity onPress={() => router.push('/family')}>
+          <Text style={styles.joinText}>
+            Or join an existing family
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -167,6 +193,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,
+  },
+  noFamilyContainer: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+  },
+  noFamilyTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: Colors.light.text,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  noFamilyText: {
+    fontSize: 16,
+    color: Colors.light.subtext,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  createButton: {
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  joinText: {
+    fontSize: 14,
+    color: Colors.primary,
+    textDecorationLine: 'underline',
   },
   actionsContainer: {
     position: 'absolute',

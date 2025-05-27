@@ -1,5 +1,4 @@
 import { handleApiError } from './utils';
-import { useAuthStore } from '@/store/authStore';
 import { Family, FamilyMember } from '@/types';
 import { getAuthHeaders } from './authUtils';
 
@@ -13,18 +12,18 @@ export const familyController = {
         method: 'GET',
         headers: getAuthHeaders(),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Get family error:', error);
       throw error;
     }
   },
-  
+
   // Create a new family
   createFamily: async (familyData: { name: string }) => {
     try {
@@ -33,18 +32,18 @@ export const familyController = {
         headers: getAuthHeaders(),
         body: JSON.stringify(familyData),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Create family error:', error);
       throw error;
     }
   },
-  
+
   // Update family details
   updateFamily: async (familyId: string, familyData: Partial<Family>) => {
     try {
@@ -53,18 +52,18 @@ export const familyController = {
         headers: getAuthHeaders(),
         body: JSON.stringify(familyData),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Update family error:', error);
       throw error;
     }
   },
-  
+
   // Add member to family
   addFamilyMember: async (familyId: string, email: string) => {
     try {
@@ -73,18 +72,18 @@ export const familyController = {
         headers: getAuthHeaders(),
         body: JSON.stringify({ email }),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Add family member error:', error);
       throw error;
     }
   },
-  
+
   // Remove member from family
   removeFamilyMember: async (familyId: string, memberId: string) => {
     try {
@@ -92,18 +91,18 @@ export const familyController = {
         method: 'DELETE',
         headers: getAuthHeaders(),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Remove family member error:', error);
       throw error;
     }
   },
-  
+
   // Update member role
   updateMemberRole: async (familyId: string, memberId: string, role: 'admin' | 'member') => {
     try {
@@ -112,18 +111,18 @@ export const familyController = {
         headers: getAuthHeaders(),
         body: JSON.stringify({ role }),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Update member role error:', error);
       throw error;
     }
   },
-  
+
   // Toggle location sharing
   toggleLocationSharing: async (familyId: string, isSharing: boolean) => {
     try {
@@ -132,15 +131,36 @@ export const familyController = {
         headers: getAuthHeaders(),
         body: JSON.stringify({ isSharing }),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Toggle location sharing error:', error);
       throw error;
     }
   },
+  async deleteFamily(familyData: { id: string | undefined }) {
+    if (!familyData.id) {
+      throw new Error('Family ID is required for deletion');
+    }
+    try {
+      const response = await fetch(`${API_URL}/family`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(familyData),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Delete family error:', error);
+      throw error;
+    }
+  }
 };

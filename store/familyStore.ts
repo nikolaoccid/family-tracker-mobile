@@ -15,7 +15,9 @@ interface FamilyStore {
   error: string | null;
 
   fetchFamily: () => Promise<void>;
+  createFamily: (name: string) => Promise<void>;
   updateFamilyName: (name: string) => Promise<void>;
+  deleteFamily: () => Promise<void>;
   addFamilyMember: (email: string) => Promise<void>;
   removeFamilyMember: (memberId: string) => Promise<void>;
   updateMemberRole: (memberId: string, role: 'admin' | 'member') => Promise<void>;
@@ -50,11 +52,29 @@ export const useFamilyStore = create<FamilyStore>()(
         set({ isLoading: true, error: null });
         try {
           const familyId = get().family?.id;
+          console.log('Fetching family with ID:', familyId);
           if (!familyId) throw new Error('Family ID not found');
           const data = await familyController.getFamily(familyId);
           set({ family: data, isLoading: false });
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
+        }
+      },
+      createFamily: async (name) => {
+        set({ isLoading: true, error: null });
+        try {
+          const newFamily = await familyController.createFamily({ name });
+          set({ family: newFamily, isLoading: false });
+        } catch (e){
+          set({ error: e instanceof Error ? e.message : 'An error occurred', isLoading: false });
+        }
+      },
+      deleteFamily: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          await familyController.deleteFamily({ id: get().family?.id });
+        } catch (e){
+          set({ error: e instanceof Error ? e.message : 'An error occurred', isLoading: false });
         }
       },
 
