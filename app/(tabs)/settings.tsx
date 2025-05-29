@@ -19,6 +19,7 @@ import { useLocationStore } from '@/store/locationStore';
 import Avatar from '@/components/Avatar';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useLocation } from '@/hooks/useLocation';
+import {useFamilyStore} from "@/store/familyStore";
 
 export default function SettingsScreen() {
   const router = useRouter();

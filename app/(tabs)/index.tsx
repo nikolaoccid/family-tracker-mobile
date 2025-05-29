@@ -111,7 +111,6 @@ export default function MapScreen() {
   const handleCreateFamily = () => {
     router.push('/family/create');
   };
-  console.log('family', family)
   if (!family) {
     return (
       <View style={styles.noFamilyContainer}>

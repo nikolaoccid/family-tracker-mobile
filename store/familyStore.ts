@@ -52,20 +52,19 @@ export const useFamilyStore = create<FamilyStore>()(
         set({ isLoading: true, error: null });
         try {
           const familyId = get().family?.id;
-          console.log('Fetching family with ID:', familyId);
-          if (!familyId) throw new Error('Family ID not found');
-          const data = await familyController.getFamily(familyId);
+          const data = await familyController.getFamily(familyId ?? '00000000-0000-0000-0000-000000000000');
           set({ family: data, isLoading: false });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
+          set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false});
         }
       },
       createFamily: async (name) => {
         set({ isLoading: true, error: null });
         try {
-          const newFamily = await familyController.createFamily({ name });
+          const newFamily = await familyController.createFamily({ name }) ?? null;
           set({ family: newFamily, isLoading: false });
         } catch (e){
+
           set({ error: e instanceof Error ? e.message : 'An error occurred', isLoading: false });
         }
       },
@@ -73,6 +72,7 @@ export const useFamilyStore = create<FamilyStore>()(
         set({ isLoading: true, error: null });
         try {
           await familyController.deleteFamily({ id: get().family?.id });
+          set({ family: null, isLoading: false });
         } catch (e){
           set({ error: e instanceof Error ? e.message : 'An error occurred', isLoading: false });
         }
@@ -96,6 +96,7 @@ export const useFamilyStore = create<FamilyStore>()(
           const familyId = get().family?.id;
           if (!familyId) throw new Error('Family ID not found');
           const updated = await familyController.addFamilyMember(familyId, email);
+          console.log('updated family', updated)
           set({ family: updated, isLoading: false });
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
@@ -108,6 +109,7 @@ export const useFamilyStore = create<FamilyStore>()(
           const familyId = get().family?.id;
           if (!familyId) throw new Error('Family ID not found');
           const updated = await familyController.removeFamilyMember(familyId, memberId);
+          console.log('updated family after removing member', updated)
           set({ family: updated, isLoading: false });
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });

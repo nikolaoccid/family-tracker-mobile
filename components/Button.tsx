@@ -1,9 +1,9 @@
 import React from 'react';
-import { 
-  ActivityIndicator, 
-  StyleSheet, 
-  Text, 
-  TouchableOpacity, 
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
   ViewStyle,
   TextStyle
@@ -13,6 +13,7 @@ import Colors from '@/constants/colors';
 interface ButtonProps {
   title: string;
   onPress: () => void;
+  isLoading?: boolean;
   variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'success' | 'text';
   size?: 'small' | 'medium' | 'large';
   fullWidth?: boolean;
@@ -26,6 +27,7 @@ interface ButtonProps {
 export default function Button({
   title,
   onPress,
+  isLoading,
   variant = 'primary',
   size = 'medium',
   fullWidth = false,
@@ -41,6 +43,13 @@ export default function Button({
       ...sizeStyles[size],
       ...(fullWidth && styles.fullWidth),
     };
+
+    if (isLoading) {
+      return {
+        ...baseStyle,
+        backgroundColor: Colors.light.border,
+      };
+    }
 
     if (disabled) {
       return {
@@ -77,9 +86,9 @@ export default function Button({
       activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator 
-          color={variantStyles[variant].loading} 
-          size="small" 
+        <ActivityIndicator
+          color={variantStyles[variant].loading}
+          size="small"
         />
       ) : (
         <View style={styles.content}>

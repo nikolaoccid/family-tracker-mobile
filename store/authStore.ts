@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthState, User } from '@/types';
 import { userController } from '@/api/userController';
+import {resetStores} from "@/store/resetStores";
 
 interface AuthStore extends AuthState {
   accessToken: string | null;
@@ -89,12 +90,13 @@ export const useAuthStore = create<AuthStore>()(
         },
 
         logout: () => {
-          set({
-            user: null,
-            accessToken: null,
-            isAuthenticated: false,
-            error: null
-          });
+          // set({
+          //   user: null,
+          //   accessToken: null,
+          //   isAuthenticated: false,
+          //   error: null,
+          // });
+          resetStores();
         },
 
         resetPassword: async (email) => {

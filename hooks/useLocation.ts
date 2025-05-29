@@ -186,7 +186,7 @@ export const useLocation = () => {
     () => family?.id ? locationController.getFamilyLocations(family.id) : null,
     {
       enabled: !!family?.id && !!user?.id,
-      refetchInterval: 10000, // Refetch every 10 seconds
+      refetchInterval: 8000, // Refetch every 8 seconds
       retry: 3,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       onError: (error) => {

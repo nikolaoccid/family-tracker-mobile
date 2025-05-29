@@ -43,7 +43,7 @@ export default function LoginScreen() {
           });
           const userInfo = await res.json();
           console.log('User Info:', userInfo);
-          loginWithGoogle(userInfo.name, userInfo.email, 'googleLogin123!');
+          loginWithGoogle(userInfo.name, userInfo.email, '');
         } catch (err) {
           console.error('Failed to fetch user info', err);
         }

@@ -29,7 +29,7 @@ export default function FamilyScreen() {
     router.push(`/profile/view/${memberId}`);
   };
 
-  const isAdmin = user && family?.members.find(m => m.id === user.id)?.role === 'admin';
+  const isAdmin = (user && family?.members?.find(m => m.id === user.id)?.role === 'admin') ?? false;
 
   const handleDeleteMember = (memberId: string, memberName: string) => {
     if (!isAdmin) return;
@@ -118,7 +118,7 @@ export default function FamilyScreen() {
           <Text style={styles.title}>Your Family</Text>
           {family && (
             <View style={styles.countBadge}>
-              <Text style={styles.countText}>{family.members.length}</Text>
+              <Text style={styles.countText}>{family.members?.length}</Text>
             </View>
           )}
         </View>
@@ -136,11 +136,11 @@ export default function FamilyScreen() {
           <View style={styles.infoItem}>
             <Users size={16} color={Colors.primary} />
             <Text style={styles.infoText}>
-              {family.members.length} members
+              {family.members?.length} members
             </Text>
           </View>
           <Text style={styles.infoText}>
-            {family.members.filter(m => m.isSharing).length} sharing location
+            {family.members?.filter(m => m.isSharing)?.length} sharing location
           </Text>
         </View>
 
@@ -165,7 +165,7 @@ export default function FamilyScreen() {
             isCurrentUser={user?.id === item.id}
             isAdmin={isAdmin}
             onDelete={isAdmin && item.id !== user?.id ? () => handleDeleteMember(item.id, item.name) : undefined}
-            onPromote={isAdmin && item.id !== user?.id && item.role !== 'admin' ?
+            onPromote={isAdmin && item.id !== user?.id && item.role !== 'admin' && item.isInvited ?
               () => handlePromoteToAdmin(item.id, item.name) : undefined}
           />
         )}

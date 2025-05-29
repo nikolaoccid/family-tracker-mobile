@@ -33,6 +33,7 @@
       },
       "package": "app.familytracker",
       "permissions": [
+        "FOREGROUND_SERVICE",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION"

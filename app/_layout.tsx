@@ -19,8 +19,8 @@ const queryClient = new QueryClient({
     queries: {
       retry: 2,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      staleTime:  0,
+      cacheTime:  0,
       refetchOnWindowFocus: true,
       refetchOnReconnect: true,
       onError: (error) => {
@@ -193,9 +193,19 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const router = useRouter();
   useEffect(() => {
     const handleDeepLink = (event: Linking.EventType) => {
-      console.log('Deep Link URL:', event.url);
+      const url = event.url;
+      const parsed = Linking.parse(url);
+
+      if (url.includes('family-invite')) {
+        const { invitedEmail, token } = parsed.queryParams ?? {};
+        router.push({
+          pathname: '/family/accept-invite',
+          params: { invitedEmail, token },
+        });
+      }
     };
 
     const subscription = Linking.addEventListener('url', handleDeepLink);
@@ -217,6 +227,7 @@ function RootLayoutNav() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="family/add-member" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="family/accept-invite" options={{ headerShown: false }} />
           <Stack.Screen name="zones/create" options={{ presentation: 'modal' }} />
           <Stack.Screen name="zones/edit" options={{ presentation: 'modal' }} />
           <Stack.Screen name="profile/edit" options={{ presentation: 'modal' }} />

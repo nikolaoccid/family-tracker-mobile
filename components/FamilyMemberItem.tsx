@@ -32,6 +32,7 @@ export default function FamilyMemberItem({
 
   const isOnline = member.isSharing && member.lastSeen &&
     new Date().getTime() - new Date(member.lastSeen).getTime() < 5 * 60 * 1000; // 5 minutes
+  const showPromoteButton = !member.isInvited
 
   return (
     <TouchableOpacity
@@ -50,7 +51,7 @@ export default function FamilyMemberItem({
       <View style={styles.content}>
         <View style={styles.nameRow}>
           <Text style={styles.name}>
-            {member.name}
+            {member.name?.length > 23 ? `${member.name.substring(0, 23)}...` : member.name}
             {isCurrentUser ? ' (You)' : ''}
           </Text>
           {member.role === 'admin' ? (
@@ -92,7 +93,7 @@ export default function FamilyMemberItem({
 
         {isAdmin && !isCurrentUser && (
           <View style={styles.adminActions}>
-            {onPromote && (
+            {showPromoteButton && onPromote && (
               <TouchableOpacity
                 style={styles.adminAction}
                 onPress={onPromote}

@@ -11,18 +11,18 @@ import { useFamilyStore } from '@/store/familyStore';
 export default function AddMemberScreen() {
   const router = useRouter();
   const { addFamilyMember, isLoading, error, clearError } = useFamilyStore();
-  
+
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const validateForm = () => {
     let isValid = true;
-    
+
     // Reset errors
     setEmailError('');
     clearError();
-    
+
     // Validate email
     if (!email) {
       setEmailError('Email is required');
@@ -31,7 +31,7 @@ export default function AddMemberScreen() {
       setEmailError('Email is invalid');
       isValid = false;
     }
-    
+
     return isValid;
   };
 
@@ -58,9 +58,9 @@ export default function AddMemberScreen() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
@@ -68,7 +68,7 @@ export default function AddMemberScreen() {
         </TouchableOpacity>
         <Text style={styles.title}>Add Family Member</Text>
       </View>
-      
+
       {isSubmitted ? (
         <View style={styles.successContainer}>
           <View style={styles.successIconContainer}>
@@ -78,14 +78,14 @@ export default function AddMemberScreen() {
           <Text style={styles.successMessage}>
             We've sent an invitation to {email}. They'll be added to your family group once they accept.
           </Text>
-          <Button
-            title="Share Invite Link"
-            onPress={handleShareInvite}
-            variant="outline"
-            icon={<Share2 size={20} color={Colors.primary} />}
-            fullWidth
-            style={styles.shareButton}
-          />
+          {/*<Button*/}
+          {/*  title="Share Invite Link"*/}
+          {/*  onPress={handleShareInvite}*/}
+          {/*  variant="outline"*/}
+          {/*  icon={<Share2 size={20} color={Colors.primary} />}*/}
+          {/*  fullWidth*/}
+          {/*  style={styles.shareButton}*/}
+          {/*/>*/}
           <Button
             title="Done"
             onPress={() => router.back()}
@@ -98,13 +98,13 @@ export default function AddMemberScreen() {
           <Text style={styles.subtitle}>
             Invite a family member to join your group. They'll receive an email with instructions.
           </Text>
-          
+
           {error && (
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>{error}</Text>
             </View>
           )}
-          
+
           <Input
             label="Email Address"
             placeholder="Enter their email address"
@@ -115,7 +115,7 @@ export default function AddMemberScreen() {
             leftIcon={<Mail size={20} color={Colors.light.icon} />}
             error={emailError}
           />
-          
+
           <Button
             title="Send Invitation"
             onPress={handleAddMember}

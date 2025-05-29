@@ -95,7 +95,7 @@ export default function MemberProfileScreen() {
             showBadge={!!isOnline}
             badgeColor={Colors.success}
           />
-          <Text style={styles.name}>{member.name}</Text>
+          <Text style={styles.name}>{member.name?.length > 23 ? `${member.name.substring(0, 23)}...` : member.name}</Text>
           {member.role === 'admin' && (
             <View style={styles.adminBadge}>
               <Text style={styles.adminText}>Family Admin</Text>

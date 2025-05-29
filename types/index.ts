@@ -17,6 +17,7 @@ export interface FamilyMember extends User {
   batteryLevel?: number;
   lastSeen?: string;
   isSharing: boolean;
+  isInvited?: boolean
 }
 
 export interface Family {

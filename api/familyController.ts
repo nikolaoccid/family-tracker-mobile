@@ -147,7 +147,7 @@ export const familyController = {
       throw new Error('Family ID is required for deletion');
     }
     try {
-      const response = await fetch(`${API_URL}/family`, {
+      const response = await fetch(`${API_URL}/family/${familyData.id}`, {
         method: 'DELETE',
         headers: getAuthHeaders(),
         body: JSON.stringify(familyData),
@@ -162,5 +162,62 @@ export const familyController = {
       console.error('Delete family error:', error);
       throw error;
     }
+  },
+  async verifyInvite(inviteToken: string) {
+    try {
+      const response = await fetch(`${API_URL}/family/verify/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ inviteToken }),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Verify invite token error:', error);
+      throw error;
+    }
+  },
+  async acceptInvite(inviteToken: string) {
+    try {
+      const response = await fetch(`${API_URL}/family/accept/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ inviteToken }),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Accept invite error:', error);
+      throw error;
+    }
+
+  },
+  async rejectInvite(inviteToken: string) {
+    try {
+      const response = await fetch(`${API_URL}/family/reject/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ inviteToken }),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Accept invite error:', error);
+      throw error;
+    }
+
+
   }
 };
