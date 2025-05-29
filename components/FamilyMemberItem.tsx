@@ -1,10 +1,10 @@
-import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { FamilyMember } from '@/types';
 import Colors from '@/constants/colors';
 import Avatar from './Avatar';
 import { formatDistanceToNow } from '@/utils/date';
 import { BatteryMedium, MapPin, Trash2, UserCog } from 'lucide-react-native';
+import {useEffect, useState} from "react";
 
 interface FamilyMemberItemProps {
   member: FamilyMember;
@@ -13,6 +13,7 @@ interface FamilyMemberItemProps {
   isAdmin?: boolean;
   onDelete?: () => void;
   onPromote?: () => void;
+  onDemote?: ()=> void;
 }
 
 export default function FamilyMemberItem({
@@ -21,7 +22,8 @@ export default function FamilyMemberItem({
                                            isCurrentUser = false,
                                            isAdmin = false,
                                            onDelete,
-                                           onPromote
+                                           onPromote,
+                                           onDemote
                                          }: FamilyMemberItemProps) {
   const getBatteryColor = () => {
     if (!member.batteryLevel) return Colors.light.icon;
@@ -29,10 +31,8 @@ export default function FamilyMemberItem({
     if (member.batteryLevel < 50) return Colors.warning;
     return Colors.success;
   };
-
   const isOnline = member.isSharing && member.lastSeen &&
     new Date().getTime() - new Date(member.lastSeen).getTime() < 5 * 60 * 1000; // 5 minutes
-  const showPromoteButton = !member.isInvited
 
   return (
     <TouchableOpacity
@@ -93,12 +93,21 @@ export default function FamilyMemberItem({
 
         {isAdmin && !isCurrentUser && (
           <View style={styles.adminActions}>
-            {showPromoteButton && onPromote && (
+            {onPromote && (
               <TouchableOpacity
                 style={styles.adminAction}
                 onPress={onPromote}
               >
                 <UserCog size={18} color={Colors.primary} />
+              </TouchableOpacity>
+            )}
+
+            {onDemote && (
+              <TouchableOpacity
+                style={styles.adminAction}
+                onPress={onDemote}
+              >
+                <UserCog size={18} color={Colors.warning} />
               </TouchableOpacity>
             )}
 

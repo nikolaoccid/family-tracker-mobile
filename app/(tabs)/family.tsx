@@ -70,6 +70,25 @@ export default function FamilyScreen() {
     );
   };
 
+  const handleDemoteToMember = (memberId: string, memberName: string) => {
+    if (!isAdmin) return;
+
+    Alert.alert(
+      "Demote to Member",
+      `Are you sure you want to demote ${memberName} to a regular member?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Demote",
+          onPress: () => updateMemberRole(memberId, 'member')
+        }
+      ]
+    );
+  };
+
   const handleDeleteFamily = () => {
     if (!isAdmin) return;
 
@@ -165,8 +184,10 @@ export default function FamilyScreen() {
             isCurrentUser={user?.id === item.id}
             isAdmin={isAdmin}
             onDelete={isAdmin && item.id !== user?.id ? () => handleDeleteMember(item.id, item.name) : undefined}
-            onPromote={isAdmin && item.id !== user?.id && item.role !== 'admin' && item.isInvited ?
+            onPromote={isAdmin && item.id !== user?.id && item.role !== 'admin' && !item.isInvited ?
               () => handlePromoteToAdmin(item.id, item.name) : undefined}
+            onDemote={isAdmin && item.id !== user?.id && item.role === 'admin' && !item.isInvited ?
+              () => handleDemoteToMember(item.id, item.name) : undefined}
           />
         )}
         contentContainerStyle={styles.listContent}

@@ -51,11 +51,11 @@ export const useFamilyStore = create<FamilyStore>()(
       fetchFamily: async () => {
         set({ isLoading: true, error: null });
         try {
-          const familyId = get().family?.id;
-          const data = await familyController.getFamily(familyId ?? '00000000-0000-0000-0000-000000000000');
+          // const familyId = get().family?.id;
+          const data = await familyController.getFamily('00000000-0000-0000-0000-000000000000');
           set({ family: data, isLoading: false });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false});
+          set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false, family: null});
         }
       },
       createFamily: async (name) => {

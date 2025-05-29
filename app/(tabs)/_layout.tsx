@@ -14,15 +14,16 @@ export default function TabLayout() {
   const { user } = useAuthStore();
   const isMountedRef = useRef(true);
   const isLoadingDataRef = useRef(false);
-  
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   // Use React.useEffect to prevent infinite loops
   useEffect(() => {
     isMountedRef.current = true;
-    
+
     // Fetch initial data
     const loadData = async () => {
       if (isLoadingDataRef.current) return;
-      
+
       isLoadingDataRef.current = true;
       try {
         await fetchFamily();
@@ -36,9 +37,18 @@ export default function TabLayout() {
         }
       }
     };
-    
+
     loadData();
-    
+
+    intervalRef.current = setInterval(() => {
+      if (isMountedRef.current) {
+        console.log('about to refetch all data')
+        loadData();
+      }
+    }, 5000);
+
+
+
     return () => {
       isMountedRef.current = false;
     };
@@ -78,10 +88,10 @@ export default function TabLayout() {
             // Only show upgrade button for free users
             if (user && !user.isPremium) {
               return (
-                <TouchableOpacity 
-                  style={{ 
-                    flexDirection: 'row', 
-                    alignItems: 'center', 
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
                     backgroundColor: Colors.secondary,
                     paddingHorizontal: 12,
                     paddingVertical: 6,
@@ -91,8 +101,8 @@ export default function TabLayout() {
                   onPress={handleUpgrade}
                 >
                   <Crown size={16} color={Colors.light.text} />
-                  <Text style={{ 
-                    color: Colors.light.text, 
+                  <Text style={{
+                    color: Colors.light.text,
                     fontWeight: '600',
                     marginLeft: 4,
                     fontSize: 12
