@@ -26,24 +26,24 @@ export default function SafeZonesScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.title}>Safe Zones</Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.addButton}
           onPress={handleCreateZone}
         >
           <PlusCircle size={24} color={Colors.primary} />
         </TouchableOpacity>
       </View>
-      
-      {safeZones.length > 0 ? (
+
+      {safeZones?.length > 0 ? (
         <FlatList
           data={safeZones}
           keyExtractor={(item) => item.id}
@@ -51,7 +51,7 @@ export default function SafeZonesScreen() {
             <SafeZoneItem
               zone={item}
               onPress={() => handleZonePress(item.id)}
-              memberCount={item.membersToTrack.length}
+              memberCount={item?.membersToTrack?.length}
             />
           )}
           contentContainerStyle={styles.listContent}

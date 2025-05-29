@@ -20,17 +20,17 @@ export default function SafeZoneItem({ zone, onPress, memberCount = 0 }: SafeZon
       <View style={[styles.iconContainer, { backgroundColor: `${zone.color}20` }]}>
         <MapPin size={24} color={zone.color} />
       </View>
-      
+
       <View style={styles.content}>
         <Text style={styles.name}>{zone.name}</Text>
         <View style={styles.detailsRow}>
           <Text style={styles.radius}>{zone.radius}m radius</Text>
           <View style={styles.statusContainer}>
-            <View 
+            <View
               style={[
-                styles.statusDot, 
+                styles.statusDot,
                 { backgroundColor: zone.isActive ? Colors.success : Colors.light.icon }
-              ]} 
+              ]}
             />
             <Text style={styles.status}>
               {zone.isActive ? 'Active' : 'Inactive'}
@@ -38,11 +38,11 @@ export default function SafeZoneItem({ zone, onPress, memberCount = 0 }: SafeZon
           </View>
         </View>
       </View>
-      
+
       <View style={styles.membersContainer}>
         <Users size={16} color={Colors.light.subtext} />
         <Text style={styles.membersCount}>
-          {zone.membersToTrack.length}
+          {zone?.membersToTrack?.length}
         </Text>
       </View>
     </TouchableOpacity>

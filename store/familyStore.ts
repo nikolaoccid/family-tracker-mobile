@@ -6,6 +6,7 @@ import { familyController } from '@/api/familyController';
 import { safeZoneController } from '@/api/safeZoneController';
 import { alertController } from '@/api/alertController';
 import { locationController } from '@/api/locationController';
+import {family} from "@/mocks/data";
 
 interface FamilyStore {
   family: Family | null;
@@ -170,7 +171,7 @@ export const useFamilyStore = create<FamilyStore>()(
       addSafeZone: async (zone) => {
         set({ isLoading: true, error: null });
         try {
-          const newZone = await safeZoneController.createSafeZone(zone);
+          const newZone = await safeZoneController.createSafeZone(zone, get().family?.id ?? '00000000-0000-0000-0000-000000000000');
           set((state) => ({ safeZones: [...state.safeZones, newZone], isLoading: false }));
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
@@ -180,7 +181,9 @@ export const useFamilyStore = create<FamilyStore>()(
       updateSafeZone: async (zoneId, zone) => {
         set({ isLoading: true, error: null });
         try {
-          const updated = await safeZoneController.updateSafeZone(zoneId, zone);
+          const familyId = get().family?.id ?? '00000000-0000-0000-0000-000000000000';
+          const updated = await safeZoneController.updateSafeZone(zoneId, zone, familyId);
+          console.log('updated zone', updated)
           set((state) => ({
             safeZones: state.safeZones.map(z => z.id === zoneId ? updated : z),
             isLoading: false,

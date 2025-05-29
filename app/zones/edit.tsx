@@ -15,17 +15,17 @@ export default function EditSafeZoneScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { safeZones, family, updateSafeZone, deleteSafeZone, isLoading } = useFamilyStore();
-  
+
   const [name, setName] = useState('');
   const [radius, setRadius] = useState('');
   const [color, setColor] = useState('');
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
   const [center, setCenter] = useState({
-    latitude: 0,
-    longitude: 0,
+    latitude: 100,
+    longitude: 200,
   });
   const [isActive, setIsActive] = useState(true);
-  
+
   // Form validation errors
   const [nameError, setNameError] = useState('');
   const [radiusError, setRadiusError] = useState('');
@@ -43,46 +43,48 @@ export default function EditSafeZoneScreen() {
         setIsActive(zone.isActive);
       } else {
         // Zone not found, go back
-        router.back();
+        router.navigate('/zones');
       }
     }
-  }, [id, safeZones]);
+  }, [id]);
 
   const validateForm = () => {
     let isValid = true;
-    
+
     // Reset errors
     setNameError('');
     setRadiusError('');
-    
+
     // Validate name
     if (!name.trim()) {
       setNameError('Zone name is required');
       isValid = false;
     }
-    
+
     // Validate radius
     const radiusNum = parseInt(radius, 10);
     if (isNaN(radiusNum) || radiusNum < 50 || radiusNum > 5000) {
       setRadiusError('Radius must be between 50 and 5000 meters');
       isValid = false;
     }
-    
+
     return isValid;
   };
 
   const handleUpdateZone = async () => {
     if (validateForm() && id) {
       try {
-        await updateSafeZone(id, {
+        const zone = {
           name,
           color,
           radius: parseInt(radius, 10),
           center,
           membersToTrack: selectedMembers,
           isActive,
-        });
-        
+        }
+        console.log('about to edit zone', zone)
+        await updateSafeZone(id, zone );
+
         router.back();
       } catch (error) {
         console.error('Failed to update safe zone:', error);
@@ -101,8 +103,8 @@ export default function EditSafeZoneScreen() {
         'Are you sure you want to delete this safe zone? This action cannot be undone.',
         [
           { text: 'Cancel', style: 'cancel' },
-          { 
-            text: 'Delete', 
+          {
+            text: 'Delete',
             style: 'destructive',
             onPress: deleteZone
           }
@@ -144,24 +146,24 @@ export default function EditSafeZoneScreen() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
           <ArrowLeft size={24} color={Colors.light.text} />
         </TouchableOpacity>
         <Text style={styles.title}>Edit Safe Zone</Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.deleteButton}
           onPress={handleDeleteZone}
         >
           <Trash2 size={24} color={Colors.danger} />
         </TouchableOpacity>
       </View>
-      
-      <ScrollView 
+
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -173,7 +175,7 @@ export default function EditSafeZoneScreen() {
           leftIcon={<MapPin size={20} color={Colors.light.icon} />}
           error={nameError}
         />
-        
+
         <Text style={styles.sectionTitle}>Zone Color</Text>
         <ColorPicker
           selectedColor={color}
@@ -187,7 +189,7 @@ export default function EditSafeZoneScreen() {
             Colors.info,
           ]}
         />
-        
+
         <Text style={styles.sectionTitle}>Zone Location</Text>
         <MockMap
           center={center}
@@ -198,7 +200,7 @@ export default function EditSafeZoneScreen() {
         <Text style={styles.helperText}>
           Tap on the map to select a different location
         </Text>
-        
+
         <Input
           label="Radius (meters)"
           placeholder="Enter radius in meters"
@@ -207,7 +209,7 @@ export default function EditSafeZoneScreen() {
           keyboardType="number-pad"
           error={radiusError}
         />
-        
+
         <View style={styles.statusContainer}>
           <Text style={styles.statusLabel}>Zone Status</Text>
           <TouchableOpacity
@@ -222,7 +224,7 @@ export default function EditSafeZoneScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-        
+
         <Text style={styles.sectionTitle}>Family Members to Track</Text>
         {family && family.members.length > 0 ? (
           <MemberSelector
@@ -241,7 +243,7 @@ export default function EditSafeZoneScreen() {
             No family members available to track
           </Text>
         )}
-        
+
         <View style={styles.buttonContainer}>
           <Button
             title="Save Changes"
