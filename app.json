@@ -26,6 +26,11 @@
       }
     },
     "android": {
+      "config": {
+        "googleMaps": {
+          "apiKey": "REDACTED_GOOGLE_API_KEY"
+        }
+      },
       "googleServicesFile": "./android/app/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -68,6 +73,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "react-native-maps",
+        {
+          "androidGoogleMapsApiKey": "REDACTED_GOOGLE_API_KEY",
+          "iosGoogleMapsApiKey": "REDACTED_GOOGLE_API_KEY"
+        }
+      ],
       [
         "expo-router",
         {

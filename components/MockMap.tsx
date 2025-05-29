@@ -1,26 +1,42 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Colors from '@/constants/colors';
 
-// Mock map component since we can't use actual maps in this environment
 function MockMap({ familyLocations = [] }) {
+  console.log('MockMap rendered with familyLocations:', JSON.stringify(familyLocations, null, 2));
+  const initialRegion = {
+    latitude: familyLocations[0]?.latitude || 37.78825,
+    longitude: familyLocations[0]?.longitude || -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  };
+
   return (
-    <View style={styles.mockMap}>
-      <Text style={styles.mockMapText}>Map View</Text>
-      <Text style={styles.mockMapSubtext}>
-        {familyLocations.length > 0 
-          ? `Showing ${familyLocations.length} family members` 
-          : "Family members' locations would be displayed here"}
-      </Text>
-      
-      {familyLocations.length > 0 && (
-        <View style={styles.locationsList}>
+    <View style={styles.container}>
+      {familyLocations.length > 0 ? (
+        <MapView
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={initialRegion}
+        >
           {familyLocations.map((location, index) => (
-            <View key={index} style={styles.locationItem}>
-              <View style={styles.locationDot} />
-              <Text style={styles.locationName}>{location.name || 'Unknown'}</Text>
-            </View>
+            <Marker
+              key={index}
+              coordinate={{
+                latitude: location.latitude || 0,
+                longitude: location.longitude || 0,
+              }}
+              title={location?.user?.name || 'Unknown'}
+            />
           ))}
+        </MapView>
+      ) : (
+        <View style={styles.emptyState}>
+          <Text style={styles.mockMapText}>Map View</Text>
+          <Text style={styles.mockMapSubtext}>
+            Family members' locations would be displayed here
+          </Text>
         </View>
       )}
     </View>
@@ -28,7 +44,13 @@ function MockMap({ familyLocations = [] }) {
 }
 
 const styles = StyleSheet.create({
-  mockMap: {
+  container: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
+  emptyState: {
     flex: 1,
     backgroundColor: '#E8EEF4',
     alignItems: 'center',
@@ -46,25 +68,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 40,
     marginBottom: 16,
-  },
-  locationsList: {
-    marginTop: 16,
-  },
-  locationItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  locationDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: Colors.primary,
-    marginRight: 8,
-  },
-  locationName: {
-    fontSize: 14,
-    color: Colors.light.text,
   },
 });
 
