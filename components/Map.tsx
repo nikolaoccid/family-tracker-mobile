@@ -5,7 +5,6 @@ import Colors from '@/constants/colors';
 import {SafeZone} from "@/types";
 
 function Map({ familyLocations = [], safeZones = [] }: {familyLocations: any[], safeZones?: any[]}) {
-  console.log('safeZones', safeZones);
   const mapRef = useRef<MapView>(null);
 
   const defaultLat = 37.78825;

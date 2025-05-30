@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, MapPin, Trash2 } from 'lucide-react-native';
@@ -9,13 +18,16 @@ import Input from '@/components/Input';
 import { useFamilyStore } from '@/store/familyStore';
 import ColorPicker from '@/components/ColorPicker';
 import MemberSelector from '@/components/MemberSelector';
-import Map from '@/components/Map';
+import EditableMap from '@/components/EditableMap';
+import { useLocation } from '@/hooks/useLocation';
 
 export default function EditSafeZoneScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { safeZones, family, updateSafeZone, deleteSafeZone, isLoading } = useFamilyStore();
+  const { getCurrentLocation } = useLocation();
 
+  console.log('safezones', safeZones)
   const [name, setName] = useState('');
   const [radius, setRadius] = useState('');
   const [color, setColor] = useState('');
@@ -26,11 +38,9 @@ export default function EditSafeZoneScreen() {
   });
   const [isActive, setIsActive] = useState(true);
 
-  // Form validation errors
   const [nameError, setNameError] = useState('');
   const [radiusError, setRadiusError] = useState('');
 
-  // Load zone data
   useEffect(() => {
     if (id) {
       const zone = safeZones.find(z => z.id === id);
@@ -39,10 +49,27 @@ export default function EditSafeZoneScreen() {
         setRadius(zone.radius.toString());
         setColor(zone.color);
         setSelectedMembers(zone.membersToTrack);
-        setCenter(zone.center);
+        setCenter({
+          latitude: zone?.centerLatitude,
+          longitude: zone?.centerLongitude,
+        });
         setIsActive(zone.isActive);
+
+        if (
+          zone.centerLatitude === 100 &&
+          zone.centerLongitude === 200
+        ) {
+          (async () => {
+            const location = await getCurrentLocation();
+            if (location) {
+              setCenter({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+              });
+            }
+          })();
+        }
       } else {
-        // Zone not found, go back
         router.navigate('/zones');
       }
     }
@@ -50,18 +77,14 @@ export default function EditSafeZoneScreen() {
 
   const validateForm = () => {
     let isValid = true;
-
-    // Reset errors
     setNameError('');
     setRadiusError('');
 
-    // Validate name
     if (!name.trim()) {
       setNameError('Zone name is required');
       isValid = false;
     }
 
-    // Validate radius
     const radiusNum = parseInt(radius, 10);
     if (isNaN(radiusNum) || radiusNum < 50 || radiusNum > 5000) {
       setRadiusError('Radius must be between 50 and 5000 meters');
@@ -81,10 +104,9 @@ export default function EditSafeZoneScreen() {
           center,
           membersToTrack: selectedMembers,
           isActive,
-        }
-        console.log('about to edit zone', zone)
-        await updateSafeZone(id, zone );
-
+        };
+        console.log('about to edit zone', zone);
+        await updateSafeZone(id, zone);
         router.back();
       } catch (error) {
         console.error('Failed to update safe zone:', error);
@@ -106,8 +128,8 @@ export default function EditSafeZoneScreen() {
           {
             text: 'Delete',
             style: 'destructive',
-            onPress: deleteZone
-          }
+            onPress: deleteZone,
+          },
         ]
       );
     }
@@ -124,17 +146,6 @@ export default function EditSafeZoneScreen() {
     }
   };
 
-  // Mock function to simulate map location selection
-  const handleLocationSelect = () => {
-    // In a real app, this would open a map to select location
-    // For now, we'll just set a random location near the current one
-    setCenter({
-      latitude: center.latitude + (Math.random() * 0.01 - 0.005),
-      longitude: center.longitude + (Math.random() * 0.01 - 0.005),
-    });
-  };
-
-  // Toggle active status
   const toggleActiveStatus = () => {
     setIsActive(!isActive);
   };
@@ -148,25 +159,16 @@ export default function EditSafeZoneScreen() {
       <StatusBar style="dark" />
 
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <ArrowLeft size={24} color={Colors.light.text} />
         </TouchableOpacity>
         <Text style={styles.title}>Edit Safe Zone</Text>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={handleDeleteZone}
-        >
+        <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteZone}>
           <Trash2 size={24} color={Colors.danger} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Input
           label="Zone Name"
           placeholder="Enter zone name (e.g. Home, School)"
@@ -191,15 +193,14 @@ export default function EditSafeZoneScreen() {
         />
 
         <Text style={styles.sectionTitle}>Zone Location</Text>
-        <Map
+        <EditableMap
           center={center}
+          setCenter={setCenter}
           radius={parseInt(radius, 10)}
+          setRadius={(r) => setRadius(String(r))}
           color={color}
-          onPress={handleLocationSelect}
         />
-        <Text style={styles.helperText}>
-          Tap on the map to select a different location
-        </Text>
+        <Text style={styles.helperText}>Tap or drag the pin to adjust the center</Text>
 
         <Input
           label="Radius (meters)"
@@ -215,7 +216,7 @@ export default function EditSafeZoneScreen() {
           <TouchableOpacity
             style={[
               styles.statusButton,
-              isActive ? styles.activeButton : styles.inactiveButton
+              isActive ? styles.activeButton : styles.inactiveButton,
             ]}
             onPress={toggleActiveStatus}
           >
@@ -232,25 +233,18 @@ export default function EditSafeZoneScreen() {
             selectedMemberIds={selectedMembers}
             onSelectMember={(id) => {
               if (selectedMembers.includes(id)) {
-                setSelectedMembers(selectedMembers.filter(memberId => memberId !== id));
+                setSelectedMembers(selectedMembers.filter((memberId) => memberId !== id));
               } else {
                 setSelectedMembers([...selectedMembers, id]);
               }
             }}
           />
         ) : (
-          <Text style={styles.noMembersText}>
-            No family members available to track
-          </Text>
+          <Text style={styles.noMembersText}>No family members available to track</Text>
         )}
 
         <View style={styles.buttonContainer}>
-          <Button
-            title="Save Changes"
-            onPress={handleUpdateZone}
-            loading={isLoading}
-            fullWidth
-          />
+          <Button title="Save Changes" onPress={handleUpdateZone} loading={isLoading} fullWidth />
           <Button
             title="Cancel"
             onPress={() => router.back()}
