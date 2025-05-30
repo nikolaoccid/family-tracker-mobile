@@ -16,7 +16,6 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
   if (data) {
     // Extract location data
     const { locations } = data as { locations: Location.LocationObject[] };
-    console.log('locations task', locations);
     const location = locations[0];
 
     if (location) {

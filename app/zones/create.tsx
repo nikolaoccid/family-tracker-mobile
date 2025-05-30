@@ -72,7 +72,8 @@ export default function CreateSafeZoneScreen() {
           name,
           color,
           radius: parseInt(radius, 10),
-          center,
+          centerLongitude: center.longitude,
+          centerLatitude: center.latitude,
           membersToTrack: selectedMembers,
           isActive: true,
         });

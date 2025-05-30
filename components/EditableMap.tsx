@@ -50,7 +50,7 @@ export default function EditableMap({
         ref={mapRef}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
-        initialRegion={zoomRegion}
+        region={zoomRegion}
         onPress={(e) => setCenter(e.nativeEvent.coordinate)}
       >
         <Marker
@@ -84,15 +84,15 @@ export default function EditableMap({
       <View style={styles.radiusControls}>
         <TouchableOpacity
           style={styles.controlButton}
-          onPress={() => setRadius(Math.max(50, radius - 50))}
-        >
-          <Minus size={18} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controlButton}
           onPress={() => setRadius(Math.min(5000, radius + 50))}
         >
           <Plus size={18} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.controlButton}
+          onPress={() => setRadius(Math.max(50, radius - 50))}
+        >
+          <Minus size={18} color="#fff" />
         </TouchableOpacity>
       </View>
     </View>

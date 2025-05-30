@@ -15,7 +15,7 @@ import Map from '@/components/Map';
 export default function MapScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
-  const { family, safeZones, createAlert } = useFamilyStore();
+  const { family, safeZones, createAlert, updateBatteryLevel } = useFamilyStore();
   const { myLocation } = useLocationStore();
   const {
     familyLocations,
@@ -38,7 +38,9 @@ export default function MapScreen() {
         const level = await Battery.getBatteryLevelAsync();
         console.log('Battery level:', level);
         if (isMountedRef.current && typeof level === 'number') {
-          setBatteryLevel(Math.round(level * 100)); // Convert from 0–1 to 0–100%
+          const batteryLevel = Math.round(level * 100); // Convert from 0–1 to 0–100%
+          await updateBatteryLevel(batteryLevel)
+          setBatteryLevel(batteryLevel);
         }
       } catch (error) {
         console.error('Error getting battery level:', error);

@@ -50,7 +50,7 @@ export const safeZoneController = {
       const response = await fetch(`${API_URL}/safe-zone`, {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify({...safeZone, centerLongitude: safeZone.center.longitude, centerLatitude: safeZone.center.latitude, familyId: familyId }),
+        body: JSON.stringify({...safeZone, familyId: familyId }),
       });
 
       if (!response.ok) {
@@ -70,7 +70,7 @@ export const safeZoneController = {
       const response = await fetch(`${API_URL}/safe-zone/${safeZoneId}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
-        body: JSON.stringify({...safeZone, familyId: familyId, centerLongitude: safeZone.center?.longitude, centerLatitude: safeZone.center?.latitude }),
+        body: JSON.stringify({...safeZone, familyId: familyId }),
       });
 
       if (!response.ok) {

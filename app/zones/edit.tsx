@@ -101,11 +101,11 @@ export default function EditSafeZoneScreen() {
           name,
           color,
           radius: parseInt(radius, 10),
-          center,
+          centerLatitude: center.latitude,
+          centerLongitude: center.longitude,
           membersToTrack: selectedMembers,
           isActive,
         };
-        console.log('about to edit zone', zone);
         await updateSafeZone(id, zone);
         router.back();
       } catch (error) {

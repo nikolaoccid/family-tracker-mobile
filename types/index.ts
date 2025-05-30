@@ -42,10 +42,8 @@ export interface SafeZone {
   name: string;
   color: string;
   radius: number;
-  center: {
-    latitude: number;
-    longitude: number;
-  };
+  centerLatitude: number;
+  centerLongitude: number;
   membersToTrack: string[]; // User IDs
   isActive: boolean;
   createdAt: string;
