@@ -73,6 +73,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      ["expo-location",  {
+        "locationAlwaysAndWhenInUsePermission": "Allow FamilyTracker to use your location to connect with your family.",
+        "isIosBackgroundLocationEnabled": true,
+        "isAndroidForegroundServiceEnabled": true,
+        "isAndroidBackgroundLocationEnabled": true
+      }],
       [
         "react-native-maps",
         {

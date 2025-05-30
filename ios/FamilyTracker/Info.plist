@@ -56,7 +56,7 @@
     <key>NSCameraUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your camera</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>This app needs location access to track your family members even in the background.</string>
+    <string>Allow FamilyTracker to use your location to connect with your family.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your location</string>
     <key>NSLocationWhenInUseUsageDescription</key>

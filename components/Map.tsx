@@ -64,7 +64,7 @@ function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[];
               />
             ))}
 
-            {safeZones?.map((zone) => (
+            {safeZones?.filter((zone)=> zone.isActive).map((zone) => (
               <React.Fragment key={zone.id}>
                 <Circle
                   center={{

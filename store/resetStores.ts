@@ -23,7 +23,6 @@ export const resetStores = () => {
   // Reset location store
   useLocationStore.setState({
     myLocation: null,
-    isSharingLocation: false,
   });
 
   console.log('All stores have been reset');

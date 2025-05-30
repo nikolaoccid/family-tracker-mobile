@@ -7,6 +7,7 @@ import { useFamilyStore } from '@/store/familyStore';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'expo-router';
 import OfflineNotice from '@/components/OfflineNotice';
+import {startLocationTracking} from "@/background/locationTask";
 
 export default function TabLayout() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function TabLayout() {
 
       isLoadingDataRef.current = true;
       try {
+        await startLocationTracking();
         await fetchFamily();
         await fetchSafeZones();
         await fetchAlerts();

@@ -11,18 +11,18 @@ import { useAuthStore } from '@/store/authStore';
 
 export default function SubscriptionScreen() {
   const router = useRouter();
-  const { 
-    fetchSubscriptions, 
-    subscriptions, 
-    selectedPlan, 
-    selectPlan, 
+  const {
+    fetchSubscriptions,
+    subscriptions,
+    selectedPlan,
+    selectPlan,
     subscribeToPlan,
     isLoading,
     error,
     clearError
   } = useSubscriptionStore();
   const { user, updateUser } = useAuthStore();
-  
+
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(
     user?.isPremium ? 'premium' : 'free'
   );
@@ -47,23 +47,23 @@ export default function SubscriptionScreen() {
       try {
         setTransactionFailed(false);
         setTransactionError(null);
-        
+
         // Simulate a payment gateway connection
         // In a real app, this would connect to Stripe, PayPal, etc.
         const paymentResult = await simulatePaymentGateway();
-        
+
         if (!paymentResult.success) {
           setTransactionFailed(true);
           setTransactionError(paymentResult.message);
           return;
         }
-        
+
         await subscribeToPlan(selectedPlanId, {});
-        
+
         // Update user's premium status based on selected plan
         const isPremium = selectedPlanId === 'premium';
         updateUser({ isPremium });
-        
+
         // Navigate back
         router.back();
       } catch (error) {
@@ -77,7 +77,7 @@ export default function SubscriptionScreen() {
   // Simulate a payment gateway that occasionally fails
   const simulatePaymentGateway = async () => {
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     // Randomly fail 30% of the time for demonstration purposes
     if (Math.random() < 0.3) {
       return {
@@ -85,7 +85,7 @@ export default function SubscriptionScreen() {
         message: 'Payment processing failed. Your card was declined or there was a network issue.'
       };
     }
-    
+
     return {
       success: true,
       message: 'Payment processed successfully'
@@ -105,8 +105,8 @@ export default function SubscriptionScreen() {
         'Are you sure you want to cancel your premium subscription? You will lose access to premium features at the end of your billing period.',
         [
           { text: 'No', style: 'cancel' },
-          { 
-            text: 'Yes, Cancel', 
+          {
+            text: 'Yes, Cancel',
             style: 'destructive',
             onPress: () => {
               updateUser({ isPremium: false });
@@ -128,9 +128,9 @@ export default function SubscriptionScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
@@ -139,21 +139,21 @@ export default function SubscriptionScreen() {
         <Text style={styles.title}>Subscription</Text>
         <View style={{ width: 40 }} />
       </View>
-      
-      <ScrollView 
+
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.subtitle}>
           Choose the plan that best fits your family's needs
         </Text>
-        
+
         {error ? (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{error}</Text>
           </View>
         ) : null}
-        
+
         {transactionFailed ? (
           <View style={styles.transactionErrorContainer}>
             <AlertCircle size={24} color={Colors.danger} />
@@ -161,7 +161,7 @@ export default function SubscriptionScreen() {
             <Text style={styles.transactionErrorText}>
               {transactionError || 'There was a problem processing your payment. Please try again.'}
             </Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.retryButton}
               onPress={handleRetry}
             >
@@ -170,7 +170,7 @@ export default function SubscriptionScreen() {
             </TouchableOpacity>
           </View>
         ) : null}
-        
+
         {subscriptions.map((plan) => (
           <SubscriptionCard
             key={plan.id}
@@ -179,12 +179,12 @@ export default function SubscriptionScreen() {
             onSelect={() => handleSelectPlan(plan.id)}
           />
         ))}
-        
+
         <Text style={styles.disclaimer}>
           You can change or cancel your subscription at any time from the settings.
         </Text>
       </ScrollView>
-      
+
       <View style={styles.footer}>
         {user?.isPremium && selectedPlanId === 'free' ? (
           <Button
@@ -203,7 +203,7 @@ export default function SubscriptionScreen() {
             fullWidth
           />
         )}
-        
+
         <Button
           title="Back"
           onPress={() => router.back()}
@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
+    marginTop: 8,
   },
   title: {
     fontSize: 20,
@@ -308,8 +309,5 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     marginBottom: 8,
-  },
-  backButton: {
-    marginTop: 8,
   },
 });
