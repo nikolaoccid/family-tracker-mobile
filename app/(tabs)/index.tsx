@@ -10,7 +10,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useLocation } from '@/hooks/useLocation';
 import { useLocationStore } from '@/store/locationStore';
 import Button from '@/components/Button';
-import MockMap from '@/components/MockMap';
+import Map from '@/components/Map';
 
 export default function MapScreen() {
   const router = useRouter();
@@ -138,7 +138,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <StatusBar style="dark" />
 
-      <MockMap familyLocations={familyLocations} />
+      <Map familyLocations={familyLocations} />
 
       <View style={styles.actionsContainer}>
         <TouchableOpacity

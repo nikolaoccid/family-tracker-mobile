@@ -9,7 +9,7 @@ import Input from '@/components/Input';
 import { useFamilyStore } from '@/store/familyStore';
 import ColorPicker from '@/components/ColorPicker';
 import MemberSelector from '@/components/MemberSelector';
-import MockMap from '@/components/MockMap';
+import Map from '@/components/Map';
 
 export default function EditSafeZoneScreen() {
   const router = useRouter();
@@ -191,7 +191,7 @@ export default function EditSafeZoneScreen() {
         />
 
         <Text style={styles.sectionTitle}>Zone Location</Text>
-        <MockMap
+        <Map
           center={center}
           radius={parseInt(radius, 10)}
           color={color}

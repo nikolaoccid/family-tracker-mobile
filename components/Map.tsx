@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import Colors from '@/constants/colors';
 
-function MockMap({ familyLocations = [] }) {
+function Map({ familyLocations = [] }) {
   const mapRef = useRef<MapView>(null);
 
   const [region, setRegion] = useState<Region>({
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MockMap;
+export default Map;

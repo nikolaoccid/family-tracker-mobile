@@ -9,12 +9,12 @@ import Input from '@/components/Input';
 import { useFamilyStore } from '@/store/familyStore';
 import ColorPicker from '@/components/ColorPicker';
 import MemberSelector from '@/components/MemberSelector';
-import MockMap from '@/components/MockMap';
+import Map from '@/components/Map';
 
 export default function CreateSafeZoneScreen() {
   const router = useRouter();
   const { family, addSafeZone, isLoading } = useFamilyStore();
-  
+
   const [name, setName] = useState('');
   const [radius, setRadius] = useState('200');
   const [color, setColor] = useState(Colors.primary);
@@ -23,31 +23,31 @@ export default function CreateSafeZoneScreen() {
     latitude: 37.7749,
     longitude: -122.4194,
   });
-  
+
   // Form validation errors
   const [nameError, setNameError] = useState('');
   const [radiusError, setRadiusError] = useState('');
 
   const validateForm = () => {
     let isValid = true;
-    
+
     // Reset errors
     setNameError('');
     setRadiusError('');
-    
+
     // Validate name
     if (!name.trim()) {
       setNameError('Zone name is required');
       isValid = false;
     }
-    
+
     // Validate radius
     const radiusNum = parseInt(radius, 10);
     if (isNaN(radiusNum) || radiusNum < 50 || radiusNum > 5000) {
       setRadiusError('Radius must be between 50 and 5000 meters');
       isValid = false;
     }
-    
+
     return isValid;
   };
 
@@ -62,7 +62,7 @@ export default function CreateSafeZoneScreen() {
           membersToTrack: selectedMembers,
           isActive: true,
         });
-        
+
         router.back();
       } catch (error) {
         console.error('Failed to create safe zone:', error);
@@ -87,9 +87,9 @@ export default function CreateSafeZoneScreen() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
@@ -98,15 +98,15 @@ export default function CreateSafeZoneScreen() {
         <Text style={styles.title}>Create Safe Zone</Text>
         <View style={{ width: 40 }} />
       </View>
-      
-      <ScrollView 
+
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.subtitle}>
           Safe zones alert you when family members enter or leave important locations.
         </Text>
-        
+
         <Input
           label="Zone Name"
           placeholder="Enter zone name (e.g. Home, School)"
@@ -115,7 +115,7 @@ export default function CreateSafeZoneScreen() {
           leftIcon={<MapPin size={20} color={Colors.light.icon} />}
           error={nameError}
         />
-        
+
         <Text style={styles.sectionTitle}>Zone Color</Text>
         <ColorPicker
           selectedColor={color}
@@ -129,9 +129,9 @@ export default function CreateSafeZoneScreen() {
             Colors.info,
           ]}
         />
-        
+
         <Text style={styles.sectionTitle}>Zone Location</Text>
-        <MockMap
+        <Map
           center={center}
           radius={parseInt(radius, 10)}
           color={color}
@@ -140,7 +140,7 @@ export default function CreateSafeZoneScreen() {
         <Text style={styles.helperText}>
           Tap on the map to select a different location
         </Text>
-        
+
         <Input
           label="Radius (meters)"
           placeholder="Enter radius in meters"
@@ -149,7 +149,7 @@ export default function CreateSafeZoneScreen() {
           keyboardType="number-pad"
           error={radiusError}
         />
-        
+
         <Text style={styles.sectionTitle}>Family Members to Track</Text>
         {family && family.members.length > 0 ? (
           <MemberSelector
@@ -168,7 +168,7 @@ export default function CreateSafeZoneScreen() {
             No family members available to track
           </Text>
         )}
-        
+
         <View style={styles.buttonContainer}>
           <Button
             title="Create Safe Zone"
