@@ -24,10 +24,9 @@ import { useLocation } from '@/hooks/useLocation';
 export default function EditSafeZoneScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { safeZones, family, updateSafeZone, deleteSafeZone, isLoading } = useFamilyStore();
+  const { family, updateSafeZone, deleteSafeZone, isLoading, fetchSafeZones } = useFamilyStore();
   const { getCurrentLocation } = useLocation();
 
-  console.log('safezones', safeZones)
   const [name, setName] = useState('');
   const [radius, setRadius] = useState('');
   const [color, setColor] = useState('');
@@ -42,24 +41,26 @@ export default function EditSafeZoneScreen() {
   const [radiusError, setRadiusError] = useState('');
 
   useEffect(() => {
-    if (id) {
-      const zone = safeZones.find(z => z.id === id);
-      if (zone) {
-        setName(zone.name);
-        setRadius(zone.radius.toString());
-        setColor(zone.color);
-        setSelectedMembers(zone.membersToTrack);
-        setCenter({
-          latitude: zone?.centerLatitude,
-          longitude: zone?.centerLongitude,
-        });
-        setIsActive(zone.isActive);
+    const loadZone = async () => {
+      await fetchSafeZones();
 
-        if (
-          zone.centerLatitude === 100 &&
-          zone.centerLongitude === 200
-        ) {
-          (async () => {
+      if (id) {
+        const zone = useFamilyStore.getState().safeZones.find(z => z.id === id);
+        if (zone) {
+          setName(zone.name);
+          setRadius(zone.radius.toString());
+          setColor(zone.color);
+          setSelectedMembers(zone.membersToTrack);
+          setCenter({
+            latitude: zone.centerLatitude,
+            longitude: zone.centerLongitude,
+          });
+          setIsActive(zone.isActive);
+
+          if (
+            zone.centerLatitude === 100 &&
+            zone.centerLongitude === 200
+          ) {
             const location = await getCurrentLocation();
             if (location) {
               setCenter({
@@ -67,12 +68,14 @@ export default function EditSafeZoneScreen() {
                 longitude: location.coords.longitude,
               });
             }
-          })();
+          }
+        } else {
+          router.navigate('/zones');
         }
-      } else {
-        router.navigate('/zones');
       }
-    }
+    };
+
+    loadZone();
   }, [id]);
 
   const validateForm = () => {
@@ -150,6 +153,11 @@ export default function EditSafeZoneScreen() {
     setIsActive(!isActive);
   };
 
+  const getSafeRadius = () => {
+    const value = parseInt(radius, 10);
+    return !isNaN(value) && value > 0 ? value : 100;
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -196,7 +204,7 @@ export default function EditSafeZoneScreen() {
         <EditableMap
           center={center}
           setCenter={setCenter}
-          radius={parseInt(radius, 10)}
+          radius={getSafeRadius()}
           setRadius={(r) => setRadius(String(r))}
           color={color}
         />

@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import * as Location from 'expo-location';
 import {assertEnvVars} from "@/utils/assertEnvVars";
+import {getAuthHeaders} from "@/api/authUtils";
 
 const {EXPO_PUBLIC_API_BASE_URL: API_URL} = assertEnvVars({EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL});
 
@@ -36,7 +37,7 @@ export const getDeviceInfo = () => {
   return {
     platform: Platform.OS,
     version: Platform.Version,
-    isEmulator: Platform.OS === 'ios' ? false : false, 
+    isEmulator: Platform.OS === 'ios' ? false : false,
   };
 };
 
@@ -107,9 +108,7 @@ export const registerPushToken = async (token: string) => {
   try {
     const response = await fetch(`${API_URL}/notifications/register`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ token }),
     });
 
