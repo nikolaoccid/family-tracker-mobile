@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import MapView, { Marker, Circle, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import Colors from '@/constants/colors';
@@ -17,7 +17,9 @@ export default function EditableMap({
   setRadius: (r: number) => void;
   color: string;
 }) {
-  const [region, setRegion] = useState<Region>({
+  const mapRef = useRef<MapView>(null);
+
+  const [zoomRegion, setZoomRegion] = useState<Region>({
     latitude: center.latitude,
     longitude: center.longitude,
     latitudeDelta: 0.01,
@@ -25,7 +27,7 @@ export default function EditableMap({
   });
 
   useEffect(() => {
-    setRegion((prev) => ({
+    setZoomRegion((prev) => ({
       ...prev,
       latitude: center.latitude,
       longitude: center.longitude,
@@ -33,20 +35,22 @@ export default function EditableMap({
   }, [center]);
 
   const zoom = (factor: number) => {
-    setRegion((prev) => ({
-      ...prev,
-      latitudeDelta: Math.max(0.001, prev.latitudeDelta * factor),
-      longitudeDelta: Math.max(0.001, prev.longitudeDelta * factor),
-    }));
+    const newRegion = {
+      ...zoomRegion,
+      latitudeDelta: Math.max(0.001, zoomRegion.latitudeDelta * factor),
+      longitudeDelta: Math.max(0.001, zoomRegion.longitudeDelta * factor),
+    };
+    setZoomRegion(newRegion);
+    mapRef.current?.animateToRegion(newRegion, 200);
   };
 
   return (
     <View style={styles.container}>
       <MapView
+        ref={mapRef}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
-        region={region}
-        onRegionChangeComplete={setRegion}
+        initialRegion={zoomRegion}
         onPress={(e) => setCenter(e.nativeEvent.coordinate)}
       >
         <Marker
