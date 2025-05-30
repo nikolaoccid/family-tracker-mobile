@@ -132,6 +132,7 @@ export default function CreateSafeZoneScreen() {
 
         <Text style={styles.sectionTitle}>Zone Location</Text>
         <Map
+
           center={center}
           radius={parseInt(radius, 10)}
           color={color}

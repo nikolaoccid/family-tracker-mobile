@@ -138,7 +138,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <StatusBar style="dark" />
 
-      <Map familyLocations={familyLocations} />
+      <Map familyLocations={familyLocations} safeZones={safeZones} />
 
       <View style={styles.actionsContainer}>
         <TouchableOpacity
