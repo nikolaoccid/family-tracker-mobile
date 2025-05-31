@@ -231,6 +231,22 @@ export const useFamilyStore = create<FamilyStore>()(
             read: false,
           };
           set((state) => ({ alerts: [newAlert, ...state.alerts] }));
+
+          if (alert.location) {
+            console.log('Creating alert with location:', alert.location);
+
+            const { latitude, longitude, timestamp, accuracy, speed, heading } = alert.location;
+
+            await alertController.createEmergencyAlert({
+              ...alert,
+              latitude,
+              longitude,
+              timestamp,
+              accuracy,
+              speed,
+              heading,
+            });
+          }
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred' });
         }
@@ -238,7 +254,7 @@ export const useFamilyStore = create<FamilyStore>()(
 
       markAlertAsRead: async (alertId) => {
         try {
-          await alertController.markAlertAsRead(alertId);
+          // await alertController.markAlertAsRead(alertId);
           set((state) => ({
             readAlertIds: new Set(state.readAlertIds).add(alertId),
           }));

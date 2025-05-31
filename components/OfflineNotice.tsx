@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Animated, Platform, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Animated } from 'react-native';
 import { WifiOff, RefreshCw } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { isApiAvailable } from '@/api/utils';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+// Create a singleton pattern to ensure only one instance of OfflineNotice is active
+let isOfflineNoticeActive = false;
 
 export default function OfflineNotice() {
   const [isOffline, setIsOffline] = useState(false);
@@ -13,10 +15,25 @@ export default function OfflineNotice() {
   const isMountedRef = useRef(true);
   const lastCheckTimeRef = useRef(0);
 
+  // Skip rendering if another instance is already active
+  useEffect(() => {
+    if (isOfflineNoticeActive) {
+      return;
+    }
+
+    isOfflineNoticeActive = true;
+
+    return () => {
+      isOfflineNoticeActive = false;
+    };
+  }, []);
+
   const checkConnection = async () => {
     // Prevent multiple simultaneous checks and throttle checks
     const now = Date.now();
-    if (!isMountedRef.current || isChecking || (now - lastCheckTimeRef.current < 5000)) return;
+    if (!isMountedRef.current || isChecking || (now - lastCheckTimeRef.current < 10000)) {
+      return;
+    }
 
     lastCheckTimeRef.current = now;
     setIsChecking(true);
@@ -64,12 +81,14 @@ export default function OfflineNotice() {
     // Initial check with a slight delay to prevent initial render issues
     const initialCheckTimeout = setTimeout(() => {
       checkConnection();
-    }, 1000);
+    }, 3000);
 
     // Set up interval for periodic checks
     checkIntervalRef.current = setInterval(() => {
-      checkConnection();
-    }, 30000); // Check every 30 seconds
+      if (isMountedRef.current) {
+        checkConnection();
+      }
+    }, 60000); // Check every minute (increased from 30 seconds)
 
     return () => {
       isMountedRef.current = false;
@@ -94,19 +113,17 @@ export default function OfflineNotice() {
         { transform: [{ translateY: slideAnim }] }
       ]}
     >
-      <SafeAreaView style={styles.safeArea} edges={['top']}>
-        <View style={styles.content}>
-          <WifiOff size={16} color="#FFFFFF" />
-          <Text style={styles.text}>You're offline. Some features may be limited.</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.refreshButton}
-          onPress={checkConnection}
-          disabled={isChecking}
-        >
-          <RefreshCw size={16} color="#FFFFFF" />
-        </TouchableOpacity>
-      </SafeAreaView>
+      <View style={styles.content}>
+        <WifiOff size={16} color="#FFFFFF" />
+        <Text style={styles.text}>You're offline. Some features may be limited.</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.refreshButton}
+        onPress={checkConnection}
+        disabled={isChecking}
+      >
+        <RefreshCw size={16} color="#FFFFFF" />
+      </TouchableOpacity>
     </Animated.View>
   );
 }
@@ -118,14 +135,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: Colors.danger,
-    zIndex: 1000,
-  },
-  safeArea: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 8,
+    zIndex: 1000,
   },
   content: {
     flexDirection: 'row',

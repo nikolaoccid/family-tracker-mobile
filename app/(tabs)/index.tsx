@@ -38,7 +38,7 @@ export default function MapScreen() {
         const level = await Battery.getBatteryLevelAsync();
         console.log('Battery level:', level);
         if (isMountedRef.current && typeof level === 'number') {
-          const batteryLevel = Math.round(level * 100); // Convert from 0–1 to 0–100%
+          const batteryLevel = Math.abs(Math.round(level * 100)); // Convert from 0–1 to 0–100%
           await updateBatteryLevel(batteryLevel)
           setBatteryLevel(batteryLevel);
         }
@@ -86,6 +86,7 @@ export default function MapScreen() {
       createAlert({
         type: 'emergency',
         userId: user.id,
+        familyId: family?.id ?? '00000000-0000-0000-0000-000000000000',
         message: `${user.name} triggered an emergency alert`,
         location: myLocation || {
           latitude: 37.7749,

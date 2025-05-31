@@ -25,9 +25,16 @@ export const isApiAvailable = async () => {
       },
     });
 
-    return response.ok;
+
+    if (!response.ok) {
+      console.log(`API responded with status: ${response.status}`);
+      return false;
+    }
+
+    return true;
   } catch (error) {
-    console.log('API availability check failed:', error);
+    // Handle network errors or no response
+    console.log('API availability check failed:', (error as any).message, error);
     return false;
   }
 };

@@ -1,6 +1,6 @@
 import { handleApiError } from './utils';
 import { useAuthStore } from '@/store/authStore';
-import { Alert, Location } from '@/types';
+import {Alert, BackendAlert, Location} from '@/types';
 import { getAuthHeaders } from './authUtils';
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
@@ -14,38 +14,38 @@ export const alertController = {
         method: 'GET',
         headers: getAuthHeaders(),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Get alerts error:', error);
       throw error;
     }
   },
-  
+
   // Create an emergency alert
-  createEmergencyAlert: async (location: Location) => {
+  createEmergencyAlert: async (alert: Omit<BackendAlert, 'read' | 'id'>) => {
     try {
       const response = await fetch(`${API_URL}/emergency`, {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify({ location }),
+        body: JSON.stringify(alert),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Create emergency alert error:', error);
       throw error;
     }
   },
-  
+
   // Create a heading home alert
   createHeadingHomeAlert: async (location: Location) => {
     try {
@@ -54,18 +54,18 @@ export const alertController = {
         headers: getAuthHeaders(),
         body: JSON.stringify({ location }),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Create heading home alert error:', error);
       throw error;
     }
   },
-  
+
   // Mark an alert as read
   markAlertAsRead: async (alertId: string) => {
     try {
@@ -73,18 +73,18 @@ export const alertController = {
         method: 'PUT',
         headers: getAuthHeaders(),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Mark alert as read error:', error);
       throw error;
     }
   },
-  
+
   // Delete an alert
   deleteAlert: async (alertId: string) => {
     try {
@@ -92,11 +92,11 @@ export const alertController = {
         method: 'DELETE',
         headers: getAuthHeaders(),
       });
-      
+
       if (!response.ok) {
         throw await handleApiError(response);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Delete alert error:', error);

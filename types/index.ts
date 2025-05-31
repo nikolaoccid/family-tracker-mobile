@@ -53,8 +53,24 @@ export interface Alert {
   id: string;
   type: 'emergency' | 'zone_exit' | 'zone_entry' | 'low_battery' | 'heading_home';
   userId: string;
+  familyId: string;
   message: string;
   location?: Location;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface BackendAlert {
+  id: string;
+  type: 'emergency' | 'zone_exit' | 'zone_entry' | 'low_battery' | 'heading_home';
+  userId: string;
+  familyId: string;
+  message: string;
+  latitude: number,
+  longitude: number,
+  accuracy?: number,
+  speed?: number,
+  heading?: number,
   timestamp: string;
   read: boolean;
 }

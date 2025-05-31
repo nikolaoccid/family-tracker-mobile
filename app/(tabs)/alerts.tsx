@@ -7,9 +7,9 @@ import { useFamilyStore } from '@/store/familyStore';
 import AlertItem from '@/components/AlertItem';
 
 export default function AlertsScreen() {
-  const { alerts, markAlertAsRead } = useFamilyStore();
-  
-  const unreadCount = alerts.filter(alert => !alert.read).length;
+  const { alerts, markAlertAsRead, filteredAlerts } = useFamilyStore();
+
+  const unreadCount = filteredAlerts().filter(alert => !alert.read).length;
 
   const handleAlertPress = (alertId: string) => {
     markAlertAsRead(alertId);
@@ -22,7 +22,7 @@ export default function AlertsScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Alerts</Text>
@@ -33,10 +33,10 @@ export default function AlertsScreen() {
           )}
         </View>
       </View>
-      
-      {alerts.length > 0 ? (
+
+      {filteredAlerts().length > 0 ? (
         <FlatList
-          data={alerts}
+          data={filteredAlerts()}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <AlertItem
