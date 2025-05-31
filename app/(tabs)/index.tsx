@@ -102,6 +102,7 @@ export default function MapScreen() {
       createAlert({
         type: 'heading_home',
         userId: user.id,
+        familyId: family?.id ?? '00000000-0000-0000-0000-000000000000',
         message: `${user.name} is heading home`,
         location: myLocation || {
           latitude: 37.7749,
