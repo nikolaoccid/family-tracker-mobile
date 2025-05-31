@@ -6,12 +6,12 @@ import { familyController } from '@/api/familyController';
 import { safeZoneController } from '@/api/safeZoneController';
 import { alertController } from '@/api/alertController';
 import { locationController } from '@/api/locationController';
-import {family} from "@/mocks/data";
 
 interface FamilyStore {
   family: Family | null;
   safeZones: SafeZone[];
   alerts: Alert[];
+  readAlertIds: Set<string>;
   isLoading: boolean;
   error: string | null;
 
@@ -37,6 +37,7 @@ interface FamilyStore {
   markAlertAsRead: (alertId: string) => Promise<void>;
   deleteAlert: (alertId: string) => Promise<void>;
 
+  filteredAlerts: () => Alert[];
   clearError: () => void;
 }
 
@@ -46,26 +47,29 @@ export const useFamilyStore = create<FamilyStore>()(
       family: null,
       safeZones: [],
       alerts: [],
+      readAlertIds: new Set<string>(),
       isLoading: false,
       error: null,
 
       fetchFamily: async () => {
         set({ isLoading: true, error: null });
         try {
-          // const familyId = get().family?.id;
           const data = await familyController.getFamily('00000000-0000-0000-0000-000000000000');
           set({ family: data, isLoading: false });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false, family: null});
+          set({
+            error: error instanceof Error ? error.message : 'An error occurred',
+            isLoading: false,
+            family: null,
+          });
         }
       },
       createFamily: async (name) => {
         set({ isLoading: true, error: null });
         try {
-          const newFamily = await familyController.createFamily({ name }) ?? null;
+          const newFamily = (await familyController.createFamily({ name })) ?? null;
           set({ family: newFamily, isLoading: false });
-        } catch (e){
-
+        } catch (e) {
           set({ error: e instanceof Error ? e.message : 'An error occurred', isLoading: false });
         }
       },
@@ -74,7 +78,7 @@ export const useFamilyStore = create<FamilyStore>()(
         try {
           await familyController.deleteFamily({ id: get().family?.id });
           set({ family: null, isLoading: false });
-        } catch (e){
+        } catch (e) {
           set({ error: e instanceof Error ? e.message : 'An error occurred', isLoading: false });
         }
       },
@@ -97,7 +101,6 @@ export const useFamilyStore = create<FamilyStore>()(
           const familyId = get().family?.id;
           if (!familyId) throw new Error('Family ID not found');
           const updated = await familyController.addFamilyMember(familyId, email);
-          console.log('updated family', updated)
           set({ family: updated, isLoading: false });
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
@@ -110,7 +113,6 @@ export const useFamilyStore = create<FamilyStore>()(
           const familyId = get().family?.id;
           if (!familyId) throw new Error('Family ID not found');
           const updated = await familyController.removeFamilyMember(familyId, memberId);
-          console.log('updated family after removing member', updated)
           set({ family: updated, isLoading: false });
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
@@ -171,7 +173,10 @@ export const useFamilyStore = create<FamilyStore>()(
       addSafeZone: async (zone) => {
         set({ isLoading: true, error: null });
         try {
-          const newZone = await safeZoneController.createSafeZone(zone, get().family?.id ?? '00000000-0000-0000-0000-000000000000');
+          const newZone = await safeZoneController.createSafeZone(
+            zone,
+            get().family?.id ?? '00000000-0000-0000-0000-000000000000'
+          );
           set((state) => ({ safeZones: [...state.safeZones, newZone], isLoading: false }));
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
@@ -183,9 +188,8 @@ export const useFamilyStore = create<FamilyStore>()(
         try {
           const familyId = get().family?.id ?? '00000000-0000-0000-0000-000000000000';
           const updated = await safeZoneController.updateSafeZone(zoneId, zone, familyId);
-          console.log('updated zone', updated)
           set((state) => ({
-            safeZones: state.safeZones.map(z => z.id === zoneId ? updated : z),
+            safeZones: state.safeZones.map((z) => (z.id === zoneId ? updated : z)),
             isLoading: false,
           }));
         } catch (error) {
@@ -198,7 +202,7 @@ export const useFamilyStore = create<FamilyStore>()(
         try {
           await safeZoneController.deleteSafeZone(zoneId);
           set((state) => ({
-            safeZones: state.safeZones.filter(z => z.id !== zoneId),
+            safeZones: state.safeZones.filter((z) => z.id !== zoneId),
             isLoading: false,
           }));
         } catch (error) {
@@ -236,7 +240,7 @@ export const useFamilyStore = create<FamilyStore>()(
         try {
           await alertController.markAlertAsRead(alertId);
           set((state) => ({
-            alerts: state.alerts.map(a => a.id === alertId ? { ...a, read: true } : a),
+            readAlertIds: new Set(state.readAlertIds).add(alertId),
           }));
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred' });
@@ -247,11 +251,27 @@ export const useFamilyStore = create<FamilyStore>()(
         try {
           await alertController.deleteAlert(alertId);
           set((state) => ({
-            alerts: state.alerts.filter(a => a.id !== alertId),
+            alerts: state.alerts.filter((a) => a.id !== alertId),
+            readAlertIds: new Set([...state.readAlertIds].filter((id) => id !== alertId)),
           }));
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred' });
         }
+      },
+
+      filteredAlerts: () => {
+        const { alerts, readAlertIds } = get();
+        const now = new Date();
+
+        return alerts.map((alert) => {
+          const alertDate = new Date(alert.timestamp);
+          const isOlderThan24Hours = now.getTime() - alertDate.getTime() > 24 * 60 * 60 * 1000;
+
+          return {
+            ...alert,
+            read: isOlderThan24Hours || readAlertIds.has(alert.id),
+          };
+        });
       },
 
       clearError: () => {
