@@ -44,7 +44,6 @@ export default function TabLayout() {
 
     intervalRef.current = setInterval(() => {
       if (isMountedRef.current) {
-        console.log('about to refetch all data')
         loadData();
       }
     }, 5000);

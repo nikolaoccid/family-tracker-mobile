@@ -7,7 +7,7 @@ import { useFamilyStore } from '@/store/familyStore';
 import AlertItem from '@/components/AlertItem';
 
 export default function AlertsScreen() {
-  const { alerts, markAlertAsRead, filteredAlerts } = useFamilyStore();
+  const { markAlertAsRead, filteredAlerts } = useFamilyStore();
 
   const unreadCount = filteredAlerts().filter(alert => !alert.read).length;
 

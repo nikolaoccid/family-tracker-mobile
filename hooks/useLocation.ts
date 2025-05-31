@@ -171,7 +171,8 @@ export const useLocation = () => {
 
           return location;
         } catch (error) {
-          console.error('Error getting location:', error);
+          //TODO restore
+          // console.error('Error getting location:', error);
           return null;
         }
       }

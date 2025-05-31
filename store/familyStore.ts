@@ -237,15 +237,27 @@ export const useFamilyStore = create<FamilyStore>()(
 
             const { latitude, longitude, timestamp, accuracy, speed, heading } = alert.location;
 
-            await alertController.createEmergencyAlert({
-              ...alert,
-              latitude,
-              longitude,
-              timestamp,
-              accuracy,
-              speed,
-              heading,
-            });
+            if (alert.type === 'emergency') {
+              await alertController.createEmergencyAlert({
+                ...alert,
+                latitude,
+                longitude,
+                timestamp,
+                accuracy,
+                speed,
+                heading,
+              });
+            } else if (alert.type === 'heading_home'){
+              await alertController.createHeadingHomeAlert({
+                ...alert,
+                latitude,
+                longitude,
+                timestamp,
+                accuracy,
+                speed,
+                heading,
+              });
+            }
           }
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred' });
@@ -300,7 +312,18 @@ export const useFamilyStore = create<FamilyStore>()(
       partialize: (state) => ({
         family: state.family,
         safeZones: state.safeZones,
+        readAlertIds: Array.from(state.readAlertIds),
       }),
+      merge: (persistedState, currentState) => {
+        const current = currentState as any;
+        const persisted = persistedState as any;
+
+        return {
+          ...current,
+          ...persisted,
+          readAlertIds: new Set(persisted.readAlertIds ?? []),
+        };
+      },
     }
   )
 );

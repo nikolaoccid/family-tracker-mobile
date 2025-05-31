@@ -21,9 +21,7 @@ export const locationController = {
           throw await handleApiError(response);
         }
 
-        const res =  await response.json();
-        console.log('backgroundTask location sent, response:', res);
-        return res;
+        return await response.json();
       }, 2); // Retry up to 2 times
     } catch (error) {
       console.error('Send location error:', error);

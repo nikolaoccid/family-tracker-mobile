@@ -111,7 +111,7 @@ export const startLocationTracking = async () => {
     const isRegistered = await TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING);
 
     if (isRegistered) {
-      console.log('Background location tracking already active');
+      // console.log('Background location tracking already active');
       return true;
     }
 

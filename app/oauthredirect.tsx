@@ -18,7 +18,6 @@ export default function Oauthredirect() {
     prompt?: string;
   }>();
   const router = useRouter();
-  // const {  } = useAuthStore()
   console.log('OAuth Redirect Params:', params);
 
   useEffect(() => {

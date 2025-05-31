@@ -67,7 +67,6 @@ export default function AcceptInviteScreen() {
 
       try {
         const details = await familyController.verifyInvite(inviteToken);
-        console.log('details', details)
         setInviteDetails(details);
         setInviteEmail(details.inviteeMail)
       } catch (err) {
