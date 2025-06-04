@@ -79,22 +79,22 @@ export default function AcceptInviteScreen() {
     verifyInvite();
   }, [inviteEmail, inviteToken]);
 
-  // Check if user is already in a family
-  useEffect(() => {
-    if (isAuthenticated && family) {
-      // If user already has a family, show warning
-      if (family.id && inviteDetails) {
-        Alert.alert(
-          "Already in a Family",
-          "You are already a member of a family. Accepting this invitation will remove you from your current family.",
-          [
-            { text: "Cancel", style: "cancel" },
-            { text: "Continue", style: "destructive" }
-          ]
-        );
-      }
-    }
-  }, [isAuthenticated, family, inviteDetails]);
+  // // Check if user is already in a family
+  // useEffect(() => {
+  //   if (isAuthenticated && family) {
+  //     // If user already has a family, show warning
+  //     if (family.id && inviteDetails) {
+  //       Alert.alert(
+  //         "Already in a Family",
+  //         "You are already a member of a family. Accepting this invitation will remove you from your current family.",
+  //         [
+  //           { text: "Cancel", style: "cancel" },
+  //           { text: "Continue", style: "destructive" }
+  //         ]
+  //       );
+  //     }
+  //   }
+  // }, [isAuthenticated, family, inviteDetails]);
 
   // Handle accept invitation
   const handleAccept = async () => {

@@ -8,8 +8,8 @@ const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 export const locationController = {
   // Send user location
   sendLocation: async (location: Location) => {
-    console.log('Sending location:', location);
     try {
+      console.log('Sending location:', location);
       return await retryWithBackoff(async () => {
         const response = await fetch(`${API_URL}/location`, {
           method: 'POST',
@@ -22,7 +22,7 @@ export const locationController = {
         }
 
         return await response.json();
-      }, 2); // Retry up to 2 times
+      }, 0);
     } catch (error) {
       console.error('Send location error:', error);
       throw error;

@@ -11,6 +11,7 @@ import { startLocationTracking, stopLocationTracking, isLocationTrackingActive }
 import { useLocationStore } from '@/store/locationStore';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import * as Linking from 'expo-linking';
+import {StripeProvider} from "@stripe/stripe-react-native";
 
 
 // Create a client
@@ -185,9 +186,11 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ''}>
       <ErrorBoundary>
         <RootLayoutNav />
       </ErrorBoundary>
+        </StripeProvider>
     </QueryClientProvider>
   );
 }

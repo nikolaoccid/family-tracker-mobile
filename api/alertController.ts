@@ -47,12 +47,12 @@ export const alertController = {
   },
 
   // Create a heading home alert
-  createHeadingHomeAlert: async (location: Location) => {
+  createHeadingHomeAlert: async (alert: Omit<BackendAlert, 'read' | 'id'>) => {
     try {
       const response = await fetch(`${API_URL}/alert/heading-home`, {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify({ location }),
+        body: JSON.stringify(alert),
       });
 
       if (!response.ok) {

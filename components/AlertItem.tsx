@@ -5,6 +5,7 @@ import { Alert } from '@/types';
 import Colors from '@/constants/colors';
 import Avatar from './Avatar';
 import { AlertCircle, Battery, MapPin, Home, LogOut } from 'lucide-react-native';
+import {alertController} from "@/api";
 
 interface AlertItemProps {
   alert: Alert;
@@ -37,14 +38,14 @@ export default function AlertItem({ alert, onPress, onMarkAsRead }: AlertItemPro
       activeOpacity={0.7}
     >
       <View style={styles.iconContainer}>{getAlertIcon()}</View>
-      
+
       <View style={styles.content}>
         <Text style={styles.message}>{alert.message}</Text>
         <Text style={styles.timestamp}>
-          {formatDistanceToNow(new Date(alert.timestamp))}
+          {formatDistanceToNow(new Date(alert?.timestamp))}
         </Text>
       </View>
-      
+
       {!alert.read && onMarkAsRead && (
         <TouchableOpacity
           style={styles.readButton}

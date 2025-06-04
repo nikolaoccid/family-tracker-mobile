@@ -20,7 +20,7 @@ export const familyController = {
       return await response.json();
     } catch (error) {
       console.error('Get family error:', error);
-      throw error;
+      // throw error;
     }
   },
 

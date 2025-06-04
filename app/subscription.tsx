@@ -8,6 +8,9 @@ import Button from '@/components/Button';
 import SubscriptionCard from '@/components/SubscriptionCard';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useAuthStore } from '@/store/authStore';
+import { useStripe } from '@stripe/stripe-react-native';
+import {paymentController} from "@/api/paymentController";
+import {subscriptionController} from "@/api";
 
 export default function SubscriptionScreen() {
   const router = useRouter();
@@ -16,12 +19,12 @@ export default function SubscriptionScreen() {
     subscriptions,
     selectedPlan,
     selectPlan,
-    subscribeToPlan,
     isLoading,
     error,
     clearError
   } = useSubscriptionStore();
   const { user, updateUser } = useAuthStore();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(
     user?.isPremium ? 'premium' : 'free'
@@ -36,60 +39,49 @@ export default function SubscriptionScreen() {
   const handleSelectPlan = (planId: string) => {
     setSelectedPlanId(planId);
     selectPlan(planId);
-    // Clear any previous errors when selecting a new plan
     setTransactionFailed(false);
     setTransactionError(null);
     clearError();
   };
 
   const handleContinue = async () => {
-    if (selectedPlanId) {
+    if (selectedPlanId === 'premium') {
       try {
         setTransactionFailed(false);
         setTransactionError(null);
 
-        // Simulate a payment gateway connection
-        // In a real app, this would connect to Stripe, PayPal, etc.
-        const paymentResult = await simulatePaymentGateway();
-
-        if (!paymentResult.success) {
-          setTransactionFailed(true);
-          setTransactionError(paymentResult.message);
-          return;
+        if (!user?.email) {
+          throw new Error('User email is required for payment processing');
         }
+        const { clientSecret, customerId } = await paymentController.createPaymentIntent(
+          999,
+          'usd',
+          user.email
+        );
 
-        await subscribeToPlan(selectedPlanId, {});
+        const { error: initError } = await initPaymentSheet({
+            paymentIntentClientSecret: clientSecret,
+            merchantDisplayName: 'Family Tracker',
+        });
 
-        // Update user's premium status based on selected plan
-        const isPremium = selectedPlanId === 'premium';
-        updateUser({ isPremium });
+        if (initError) throw initError;
 
-        // Navigate back
+        const { error: paymentError } = await presentPaymentSheet();
+        if (paymentError) throw paymentError;
+
+        await subscriptionController.subscribeToPlan('premium');
+        updateUser({ isPremium: true });
         router.back();
-      } catch (error) {
-        console.error('Failed to subscribe:', error);
+      } catch (error: any) {
+        console.error(error);
         setTransactionFailed(true);
-        setTransactionError('An unexpected error occurred. Please try again.');
+        setTransactionError(error.message || 'Unexpected payment error');
       }
+    } else {
+      await subscriptionController.subscribeToPlan('free');
+      updateUser({ isPremium: false });
+      router.back();
     }
-  };
-
-  // Simulate a payment gateway that occasionally fails
-  const simulatePaymentGateway = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Randomly fail 30% of the time for demonstration purposes
-    if (Math.random() < 0.3) {
-      return {
-        success: false,
-        message: 'Payment processing failed. Your card was declined or there was a network issue.'
-      };
-    }
-
-    return {
-      success: true,
-      message: 'Payment processed successfully'
-    };
   };
 
   const handleCancelSubscription = () => {

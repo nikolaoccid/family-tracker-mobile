@@ -115,8 +115,9 @@ export const userController = {
 
   updateUser: async (userData: Partial<User>) => {
     try {
-      const response = await fetch(`${API_URL}/user/profile`, {
-        method: 'PUT',
+      const response = await fetch(`${API_URL}/users/profile`, {
+        method: '' +
+          'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(userData),
       });

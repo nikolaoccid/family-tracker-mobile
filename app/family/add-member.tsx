@@ -119,7 +119,7 @@ export default function AddMemberScreen() {
           <Button
             title="Send Invitation"
             onPress={handleAddMember}
-            loading={isLoading}
+            loading={isSubmitted}
             fullWidth
             style={styles.sendButton}
           />

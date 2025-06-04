@@ -6,6 +6,19 @@ import { Plus, Minus } from 'lucide-react-native';
 
 function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[]; safeZones?: any[] }) {
   const mapRef = useRef<MapView>(null);
+  const [famLocations, setFamLocations] = useState(familyLocations);
+
+  useEffect(() => {
+    const data = familyLocations.map((location) => ({
+      latitude: location.latitude || 0,
+      longitude: location.longitude || 0,
+      user: {
+        name: location.user?.name || 'Unknown',
+        id: location.user?.id || 'unknown',
+      },
+    }));
+    setFamLocations(familyLocations);
+  }, [familyLocations]);
 
   const defaultLat = 37.78825;
   const defaultLng = -122.4324;
@@ -53,7 +66,7 @@ function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[];
             provider={PROVIDER_GOOGLE}
             initialRegion={zoomRegion}
           >
-            {familyLocations.map((location, index) => (
+            {famLocations.map((location, index) => (
               <Marker
                 key={index}
                 coordinate={{

@@ -47,7 +47,7 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
             console.error('No access token available for location tracking');
             return;
           }
-          const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://api.familytracker.example.com';
+          const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL || '';
           const response = await fetch(`${API_URL}/location`, {
             method: 'POST',
             headers: {
@@ -79,7 +79,7 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
           heading: location.coords.heading ?? undefined,
         });
 
-        console.log('Location sent in background:', location.coords);
+        // console.log('Location sent in background:', location.coords);
       } catch (error) {
         console.error('Error sending location in background:', error);
       }

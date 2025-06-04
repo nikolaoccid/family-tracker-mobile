@@ -233,7 +233,6 @@ export const useFamilyStore = create<FamilyStore>()(
           set((state) => ({ alerts: [newAlert, ...state.alerts] }));
 
           if (alert.location) {
-            console.log('Creating alert with location:', alert.location);
 
             const { latitude, longitude, timestamp, accuracy, speed, heading } = alert.location;
 
@@ -242,7 +241,7 @@ export const useFamilyStore = create<FamilyStore>()(
                 ...alert,
                 latitude,
                 longitude,
-                timestamp,
+                timestamp: new Date().toISOString(),
                 accuracy,
                 speed,
                 heading,
@@ -252,7 +251,7 @@ export const useFamilyStore = create<FamilyStore>()(
                 ...alert,
                 latitude,
                 longitude,
-                timestamp,
+                timestamp: new Date().toISOString(),
                 accuracy,
                 speed,
                 heading,
@@ -291,15 +290,21 @@ export const useFamilyStore = create<FamilyStore>()(
         const { alerts, readAlertIds } = get();
         const now = new Date();
 
-        return alerts.map((alert) => {
-          const alertDate = new Date(alert.timestamp);
-          const isOlderThan24Hours = now.getTime() - alertDate.getTime() > 24 * 60 * 60 * 1000;
+        return alerts
+          .map((alert) => {
+            const alertDate = new Date(alert.timestamp);
+            const isOlderThan24Hours = now.getTime() - alertDate.getTime() > 24 * 60 * 60 * 1000;
 
-          return {
-            ...alert,
-            read: isOlderThan24Hours || readAlertIds.has(alert.id),
-          };
-        });
+            return {
+              ...alert,
+              read: isOlderThan24Hours || readAlertIds.has(alert.id),
+            };
+          })
+          .sort((a, b) => {
+            const aTime = new Date(a.timestamp).getTime();
+            const bTime = new Date(b.timestamp).getTime();
+            return bTime - aTime; // descending order
+          });
       },
 
       clearError: () => {

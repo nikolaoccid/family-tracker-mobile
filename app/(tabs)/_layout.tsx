@@ -8,11 +8,14 @@ import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'expo-router';
 import OfflineNotice from '@/components/OfflineNotice';
 import {startLocationTracking} from "@/background/locationTask";
+import {useLocationStore} from "@/store/locationStore";
+import {useLocation} from "@/hooks/useLocation";
 
 export default function TabLayout() {
   const router = useRouter();
   const { fetchFamily, fetchSafeZones, fetchAlerts } = useFamilyStore();
   const { user } = useAuthStore();
+  const { getCurrentLocation } = useLocation();
   const isMountedRef = useRef(true);
   const isLoadingDataRef = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -28,6 +31,7 @@ export default function TabLayout() {
       isLoadingDataRef.current = true;
       try {
         await startLocationTracking();
+        await getCurrentLocation();
         await fetchFamily();
         await fetchSafeZones();
         await fetchAlerts();
