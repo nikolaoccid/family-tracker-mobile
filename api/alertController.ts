@@ -21,7 +21,7 @@ export const alertController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get alerts error:', error);
+      console.warn('Get alerts error:', error);
       throw error;
     }
   },
@@ -41,7 +41,7 @@ export const alertController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Create emergency alert error:', error);
+      console.warn('Create emergency alert error:', error);
       throw error;
     }
   },
@@ -61,7 +61,7 @@ export const alertController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Create heading home alert error:', error);
+      console.warn('Create heading home alert error:', error);
       throw error;
     }
   },
@@ -80,7 +80,7 @@ export const alertController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Mark alert as read error:', error);
+      console.warn('Mark alert as read error:', error);
       throw error;
     }
   },
@@ -99,7 +99,7 @@ export const alertController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Delete alert error:', error);
+      console.warn('Delete alert error:', error);
       throw error;
     }
   },

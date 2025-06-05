@@ -20,7 +20,7 @@ export const safeZoneController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get safe zones error:', error);
+      console.warn('Get safe zones error:', error);
       throw error;
     }
   },
@@ -39,7 +39,7 @@ export const safeZoneController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get safe zone error:', error);
+      console.warn('Get safe zone error:', error);
       throw error;
     }
   },
@@ -59,7 +59,7 @@ export const safeZoneController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Create safe zone error:', error);
+      console.warn('Create safe zone error:', error);
       throw error;
     }
   },
@@ -79,7 +79,7 @@ export const safeZoneController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Update safe zone error:', error);
+      console.warn('Update safe zone error:', error);
       throw error;
     }
   },
@@ -98,7 +98,7 @@ export const safeZoneController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Delete safe zone error:', error);
+      console.warn('Delete safe zone error:', error);
       throw error;
     }
   },
@@ -118,7 +118,7 @@ export const safeZoneController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Toggle safe zone status error:', error);
+      console.warn('Toggle safe zone status error:', error);
       throw error;
     }
   },

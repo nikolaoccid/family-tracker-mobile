@@ -19,7 +19,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get family error:', error);
+      console.warn('Get family error:', error);
       // throw error;
     }
   },
@@ -39,7 +39,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Create family error:', error);
+      console.warn('Create family error:', error);
       throw error;
     }
   },
@@ -59,7 +59,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Update family error:', error);
+      console.warn('Update family error:', error);
       throw error;
     }
   },
@@ -79,7 +79,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Add family member error:', error);
+      console.warn('Add family member error:', error);
       throw error;
     }
   },
@@ -98,7 +98,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Remove family member error:', error);
+      console.warn('Remove family member error:', error);
       throw error;
     }
   },
@@ -118,7 +118,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Update member role error:', error);
+      console.warn('Update member role error:', error);
       throw error;
     }
   },
@@ -138,7 +138,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Toggle location sharing error:', error);
+      console.warn('Toggle location sharing error:', error);
       throw error;
     }
   },
@@ -159,7 +159,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Delete family error:', error);
+      console.warn('Delete family error:', error);
       throw error;
     }
   },
@@ -177,7 +177,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Verify invite token error:', error);
+      console.warn('Verify invite token error:', error);
       throw error;
     }
   },
@@ -195,7 +195,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Accept invite error:', error);
+      console.warn('Accept invite error:', error);
       throw error;
     }
 
@@ -214,7 +214,7 @@ export const familyController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Accept invite error:', error);
+      console.warn('Accept invite error:', error);
       throw error;
     }
 

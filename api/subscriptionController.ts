@@ -17,7 +17,7 @@ export const subscriptionController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get subscription plans error:', error);
+      console.warn('Get subscription plans error:', error);
       throw error;
     }
   },
@@ -35,7 +35,7 @@ export const subscriptionController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get current subscription error:', error);
+      console.warn('Get current subscription error:', error);
       throw error;
     }
   },
@@ -54,7 +54,7 @@ export const subscriptionController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Subscribe to plan error:', error);
+      console.warn('Subscribe to plan error:', error);
       throw error;
     }
   },
@@ -72,7 +72,7 @@ export const subscriptionController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Cancel subscription error:', error);
+      console.warn('Cancel subscription error:', error);
       throw error;
     }
   },

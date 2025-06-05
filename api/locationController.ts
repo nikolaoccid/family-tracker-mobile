@@ -5,10 +5,32 @@ import { getAuthHeaders } from './authUtils';
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 
+let lastLocation: Location | null = null
+function getDateDifferenceInSeconds(date1: Date, date2: Date): number {
+  return Math.abs(date1.getTime() - date2.getTime()) / 1000;
+}
+function checkRepeatingLocation(location: Location): boolean {
+  if (!lastLocation) {
+    return false;
+  }
+
+  if (lastLocation?.latitude === location.latitude &&
+      lastLocation.longitude === location.longitude) {
+    console.log('Location is repeating, not sending:', location);
+    return true;
+  }
+
+  return false;
+}
+
 export const locationController = {
   // Send user location
   sendLocation: async (location: Location) => {
     try {
+      if (checkRepeatingLocation(location)){
+        return
+      }
+      lastLocation = location;
       console.log('Sending location:', location);
       return await retryWithBackoff(async () => {
         const response = await fetch(`${API_URL}/location`, {
@@ -24,7 +46,7 @@ export const locationController = {
         return await response.json();
       }, 0);
     } catch (error) {
-      console.error('Send location error:', error);
+      console.warn('Send location error:', error);
       throw error;
     }
   },
@@ -45,7 +67,7 @@ export const locationController = {
         return await response.json();
       }, 2); // Retry up to 2 times
     } catch (error) {
-      console.error('Get family locations error:', error);
+      console.warn('Get family locations error:', error);
       throw error;
     }
   },
@@ -77,7 +99,7 @@ export const locationController = {
         return await response.json();
       }, 2); // Retry up to 2 times
     } catch (error) {
-      console.error('Get location history error:', error);
+      console.warn('Get location history error:', error);
       throw error;
     }
   },
@@ -99,7 +121,7 @@ export const locationController = {
         return await response.json();
       }, 2); // Retry up to 2 times
     } catch (error) {
-      console.error('Update battery level error:', error);
+      console.warn('Update battery level error:', error);
       throw error;
     }
   },

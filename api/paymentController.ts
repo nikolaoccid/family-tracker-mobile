@@ -21,7 +21,7 @@ export const paymentController = {
 
       return await response.json(); // { clientSecret, customerId }
     } catch (error) {
-      console.error('Create PaymentIntent error:', error);
+      console.warn('Create PaymentIntent error:', error);
       throw error;
     }
   },

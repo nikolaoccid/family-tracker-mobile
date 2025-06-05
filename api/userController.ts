@@ -22,7 +22,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Login error:', error);
+      console.warn('Login error:', error);
       throw error;
     }
   },
@@ -43,7 +43,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Registration error:', error);
+      console.warn('Registration error:', error);
       throw error;
     }
   },
@@ -68,7 +68,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Reset password error:', error);
+      console.warn('Reset password error:', error);
       throw error;
     }
   },
@@ -89,7 +89,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Complete password reset error:', error);
+      console.warn('Complete password reset error:', error);
       throw error;
     }
   },
@@ -108,7 +108,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get profile error:', error);
+      console.warn('Get profile error:', error);
       throw error;
     }
   },
@@ -128,7 +128,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Update user error:', error);
+      console.warn('Update user error:', error);
       throw error;
     }
   },
@@ -148,7 +148,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Register push token error:', error);
+      console.warn('Register push token error:', error);
       throw error;
     }
   },
@@ -167,7 +167,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Update notification settings error:', error);
+      console.warn('Update notification settings error:', error);
       throw error;
     }
   },
@@ -187,7 +187,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Update subscription error:', error);
+      console.warn('Update subscription error:', error);
       throw error;
     }
   },
@@ -205,7 +205,7 @@ export const userController = {
 
       return await response.json();
     } catch (error) {
-      console.error('Cancel subscription error:', error);
+      console.warn('Cancel subscription error:', error);
       throw error;
     }
   },

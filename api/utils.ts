@@ -105,7 +105,7 @@ export const createTimeoutSignal = (timeoutMs: number) => {
 const requestLocationPermission = async () => {
   const { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== 'granted') {
-    console.error('Location permission not granted');
+    console.warn('Location permission not granted');
     return false;
   }
   return true;
@@ -125,7 +125,7 @@ export const registerPushToken = async (token: string) => {
 
     return await response.json();
   } catch (error) {
-    console.error('Error registering push token:', error);
+    console.warn('Error registering push token:', error);
     throw error;
   }
 };
