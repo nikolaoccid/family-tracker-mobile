@@ -45,7 +45,7 @@ export default function SettingsScreen() {
 
   const handleLogout = () => {
     logout();
-    router.replace('/');
+    router.replace('/(auth)');
   };
 
   const handleEditProfile = () => {

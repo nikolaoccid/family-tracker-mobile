@@ -126,77 +126,111 @@ export const safeZoneController = {
     zoneId: string,
     param2: { endDate: any; userId: any; startDate: any }
   ): Promise<ZoneAnalytics> {
-    // Mock data
-    return Promise.resolve({
-      zoneId,
-      zoneName: "Home",
-      userId: param2.userId,
-      userName: "John Doe",
-      totalTimeSpent: 120, // minutes
-      visits: [
-        {
-          visitId: "v1",
-          entryTime: new Date(param2.startDate).toISOString(),
-          exitTime: new Date(param2.endDate).toISOString(),
-          duration: 60,
-        },
-        {
-          visitId: "v2",
-          entryTime: new Date(Date.now() - 86400000).toISOString(),
-          exitTime: new Date(Date.now() - 86340000).toISOString(),
-          duration: 60,
-        },
-      ],
-      timeByDay: [
-        { date: new Date(param2.startDate).toISOString().split("T")[0], minutes: 60 },
-        { date: new Date(param2.endDate).toISOString().split("T")[0], minutes: 60 },
-      ],
-    });
+    console.log('about to call', `${API_URL}/zone-analytics/${zoneId}/${param2.userId}?startDate=${param2.startDate ?? ''}&endDate=${param2.endDate ?? ''}`);
+    try {
+      const response = await fetch(`${API_URL}/zone-analytics/${zoneId}/${param2.userId}?startDate=${param2.startDate ?? ''}&endDate=${param2.endDate ?? ''}`, {
+        method: 'GET',
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.warn('Toggle safe zone status error:', error);
+      throw error;
+    }
+    // // Mock data
+    // return Promise.resolve({
+    //   zoneId,
+    //   zoneName: "Home",
+    //   userId: param2.userId,
+    //   userName: "John Doe",
+    //   totalTimeSpent: 120, // minutes
+    //   visits: [
+    //     {
+    //       visitId: "v1",
+    //       entryTime: new Date(param2.startDate).toISOString(),
+    //       exitTime: new Date(param2.endDate).toISOString(),
+    //       duration: 60,
+    //     },
+    //     {
+    //       visitId: "v2",
+    //       entryTime: new Date(Date.now() - 86400000).toISOString(),
+    //       exitTime: new Date(Date.now() - 86340000).toISOString(),
+    //       duration: 60,
+    //     },
+    //   ],
+    //   timeByDay: [
+    //     { date: new Date(param2.startDate).toISOString().split("T")[0], minutes: 60 },
+    //     { date: new Date(param2.endDate).toISOString().split("T")[0], minutes: 60 },
+    //   ],
+    // });
   },
   async getAllZonesAnalytics(
     familyId: any,
     param2: { endDate: any; userId: any; startDate: any }
   ): Promise<ZoneAnalytics[]> {
+    try {
+      console.log('about to call', `${API_URL}/zone-analytics/user/${param2.userId}/summary?startDate=${param2.startDate ?? ''}&endDate=${param2.endDate ?? ''}`);
+      const response = await fetch(`${API_URL}/zone-analytics/user/${param2.userId}/summary?startDate=${param2.startDate ?? ''}&endDate=${param2.endDate ?? ''}`, {
+        method: 'GET',
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.warn('Toggle safe zone status error:', error);
+      throw error;
+    }
+
+
     // Mock data for two zones
-    return Promise.resolve([
-      {
-        zoneId: "zone1",
-        zoneName: "Home",
-        userId: param2.userId,
-        userName: "John Doe",
-        totalTimeSpent: 120,
-        visits: [
-          {
-            visitId: "v1",
-            entryTime: new Date(param2.startDate).toISOString(),
-            exitTime: new Date(param2.endDate).toISOString(),
-            duration: 60,
-          },
-        ],
-        timeByDay: [
-          { date: new Date(param2.startDate).toISOString().split("T")[0], minutes: 60 },
-          { date: new Date(param2.endDate).toISOString().split("T")[0], minutes: 60 },
-        ],
-      },
-      {
-        zoneId: "zone2",
-        zoneName: "School",
-        userId: param2.userId,
-        userName: "Jane Smith",
-        totalTimeSpent: 90,
-        visits: [
-          {
-            visitId: "v2",
-            entryTime: new Date(Date.now() - 172800000).toISOString(),
-            exitTime: new Date(Date.now() - 172200000).toISOString(),
-            duration: 90,
-          },
-        ],
-        timeByDay: [
-          { date: new Date(param2.startDate).toISOString().split("T")[0], minutes: 45 },
-          { date: new Date(param2.endDate).toISOString().split("T")[0], minutes: 45 },
-        ],
-      },
-    ]);
+  //   return Promise.resolve([
+  //     {
+  //       zoneId: "zone1",
+  //       zoneName: "Home",
+  //       userId: param2.userId,
+  //       userName: "John Doe",
+  //       totalTimeSpent: 120,
+  //       visits: [
+  //         {
+  //           visitId: "v1",
+  //           entryTime: new Date(param2.startDate).toISOString(),
+  //           exitTime: new Date(param2.endDate).toISOString(),
+  //           duration: 60,
+  //         },
+  //       ],
+  //       timeByDay: [
+  //         { date: new Date(param2.startDate).toISOString().split("T")[0], minutes: 60 },
+  //         { date: new Date(param2.endDate).toISOString().split("T")[0], minutes: 60 },
+  //       ],
+  //     },
+  //     {
+  //       zoneId: "zone2",
+  //       zoneName: "School",
+  //       userId: param2.userId,
+  //       userName: "Jane Smith",
+  //       totalTimeSpent: 90,
+  //       visits: [
+  //         {
+  //           visitId: "v2",
+  //           entryTime: new Date(Date.now() - 172800000).toISOString(),
+  //           exitTime: new Date(Date.now() - 172200000).toISOString(),
+  //           duration: 90,
+  //         },
+  //       ],
+  //       timeByDay: [
+  //         { date: new Date(param2.startDate).toISOString().split("T")[0], minutes: 45 },
+  //         { date: new Date(param2.endDate).toISOString().split("T")[0], minutes: 45 },
+  //       ],
+  //     },
+  //   ]);
   }
 };

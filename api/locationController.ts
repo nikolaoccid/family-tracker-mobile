@@ -9,6 +9,7 @@ let lastLocation: Location | null = null
 function getDateDifferenceInSeconds(date1: Date, date2: Date): number {
   return Math.abs(date1.getTime() - date2.getTime()) / 1000;
 }
+
 function checkRepeatingLocation(location: Location): boolean {
   if (!lastLocation) {
     return false;

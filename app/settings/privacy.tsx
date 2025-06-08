@@ -93,11 +93,11 @@ export default function PrivacySettingsScreen() {
   };
 
   const handleAddSchedule = () => {
-    router.push('/settings/schedule/create');
+    router.push('/schedule/create');
   };
 
   const handleEditSchedule = (scheduleId: string) => {
-    router.push(`/settings/schedule/edit?id=${scheduleId}`);
+    router.push(`/schedule/edit?id=${scheduleId}`);
   };
 
   const handleDeleteSchedule = (scheduleId: string) => {

@@ -8,7 +8,7 @@ import { useFamilyStore } from '@/store/familyStore';
 import { useAuthStore } from '@/store/authStore';
 import Button from '@/components/Button';
 import { formatDate } from '@/utils/date';
-import {FamilyMember} from "@/types";
+import {FamilyMember, SafeZone} from "@/types";
 
 const { width } = Dimensions.get('window');
 
@@ -21,7 +21,7 @@ export default function ZoneAnalyticsScreen() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [selectedZone, setSelectedZone] = useState(null);
+  const [selectedZone, setSelectedZone] = useState<SafeZone | null>(null);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days ago
     endDate: new Date().toISOString().split('T')[0], // today
@@ -86,7 +86,7 @@ export default function ZoneAnalyticsScreen() {
     }
   };
 
-  const handleSelectDateRange = (range) => {
+  const handleSelectDateRange = (range: 'day' | 'week' | 'month') => {
     let startDate;
     const endDate = new Date().toISOString().split('T')[0]; // today
 
@@ -108,16 +108,16 @@ export default function ZoneAnalyticsScreen() {
     setDateRange({ startDate, endDate });
   };
 
-  const handleSelectUser = (user) => {
+  const handleSelectUser = (user: FamilyMember) => {
     setSelectedUser(user);
   };
 
-  const handleSelectZone = (zone) => {
+  const handleSelectZone = (zone: SafeZone) => {
     setSelectedZone(zone === selectedZone ? null : zone);
   };
 
   // Format minutes to hours and minutes
-  const formatDuration = (minutes) => {
+  const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
 
@@ -150,7 +150,7 @@ export default function ZoneAnalyticsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* User selector */}
-        {family && family.members.length > 1 && (
+        {family && family.members?.length > 1 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Select Family Member</Text>
             <ScrollView
@@ -158,7 +158,7 @@ export default function ZoneAnalyticsScreen() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.userList}
             >
-              {family.members.map(member => (
+              {family?.members?.map(member => (
                 <TouchableOpacity
                   key={member.id}
                   style={[
@@ -189,7 +189,7 @@ export default function ZoneAnalyticsScreen() {
         )}
 
         {/* Zone selector */}
-        {safeZones && safeZones.length > 0 && (
+        {safeZones && safeZones?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Select Zone</Text>
             <ScrollView
@@ -197,7 +197,7 @@ export default function ZoneAnalyticsScreen() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.zoneList}
             >
-              {safeZones.map(zone => (
+              {safeZones?.map(zone => (
                 <TouchableOpacity
                   key={zone.id}
                   style={[
@@ -295,7 +295,7 @@ export default function ZoneAnalyticsScreen() {
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={Colors.primary} />
             </View>
-          ) : zoneAnalytics.length > 0 ? (
+          ) : zoneAnalytics?.length > 0 ? (
             <>
               {/* Summary card */}
               <View style={styles.summaryCard}>
@@ -320,7 +320,7 @@ export default function ZoneAnalyticsScreen() {
               </View>
 
               {/* Zone breakdown */}
-              {!selectedZone && zoneAnalytics.length > 1 && (
+              {!selectedZone && zoneAnalytics?.length >= 1 && (
                 <View style={styles.breakdownSection}>
                   <Text style={styles.breakdownTitle}>Zone Breakdown</Text>
 
@@ -332,7 +332,7 @@ export default function ZoneAnalyticsScreen() {
                       <TouchableOpacity
                         key={zone.zoneId}
                         style={styles.zoneBreakdownItem}
-                        onPress={() => handleSelectZone(safeZone)}
+                        onPress={() => safeZone && handleSelectZone(safeZone)}
                       >
                         <View style={[styles.zoneColorIndicator, { backgroundColor: zoneColor }]} />
                         <View style={styles.zoneBreakdownInfo}>
@@ -356,7 +356,7 @@ export default function ZoneAnalyticsScreen() {
               <View style={styles.breakdownSection}>
                 <Text style={styles.breakdownTitle}>Daily Breakdown</Text>
 
-                {zoneAnalytics[0].timeByDay.map(day => (
+                {zoneAnalytics[0]?.timeByDay?.map(day => (
                   <View key={day.date} style={styles.dayBreakdownItem}>
                     <Text style={styles.dayBreakdownDate}>
                       {formatDate(new Date(day.date))}
@@ -380,11 +380,11 @@ export default function ZoneAnalyticsScreen() {
               </View>
 
               {/* Recent visits */}
-              {selectedZone && zoneAnalytics[0].visits.length > 0 && (
+              {selectedZone && zoneAnalytics[0]?.visits?.length > 0 && (
                 <View style={styles.breakdownSection}>
                   <Text style={styles.breakdownTitle}>Recent Visits</Text>
 
-                  {zoneAnalytics[0].visits.slice(0, 5).map((visit, index) => (
+                  {zoneAnalytics[0]?.visits?.slice(0, 5)?.map((visit, index) => (
                     <View key={index} style={styles.visitItem}>
                       <View style={styles.visitTimeContainer}>
                         <Text style={styles.visitDate}>
@@ -401,9 +401,9 @@ export default function ZoneAnalyticsScreen() {
                     </View>
                   ))}
 
-                  {zoneAnalytics[0].visits.length > 5 && (
+                  {zoneAnalytics[0]?.visits?.length > 5 && (
                     <Text style={styles.moreVisitsText}>
-                      + {zoneAnalytics[0].visits.length - 5} more visits
+                      + {zoneAnalytics[0].visits?.length - 5} more visits
                     </Text>
                   )}
                 </View>
@@ -424,7 +424,7 @@ export default function ZoneAnalyticsScreen() {
         </View>
 
         {/* Export button for premium users */}
-        {currentUser?.isPremium && zoneAnalytics.length > 0 && (
+        {currentUser?.isPremium && zoneAnalytics?.length > 0 && (
           <Button
             title="Export Analytics Data"
             onPress={() => {}}

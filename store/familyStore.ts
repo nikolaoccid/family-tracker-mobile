@@ -328,6 +328,7 @@ export const useFamilyStore = create<FamilyStore>()(
         set({ isLoading: true, error: null });
         try {
           const analytics = await safeZoneController.getZoneAnalytics(zoneId, { startDate, endDate, userId });
+          console.log('Fetched zone analytics:', analytics);
           set({ zoneAnalytics: [analytics], isLoading: false, lastFetchTime: { ...get().lastFetchTime, zoneAnalytics: Date.now() } });
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
@@ -340,6 +341,7 @@ export const useFamilyStore = create<FamilyStore>()(
           const familyId = get().family?.id;
           if (!familyId) throw new Error('Family ID not found');
           const analytics = await safeZoneController.getAllZonesAnalytics(familyId, { startDate, endDate, userId });
+          console.log('Fetched all zones analytics:', analytics);
           set({ zoneAnalytics: analytics, isLoading: false, lastFetchTime: { ...get().lastFetchTime, zoneAnalytics: Date.now() } });
         } catch (error) {
           set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });

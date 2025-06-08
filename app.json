@@ -72,7 +72,7 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
+    "plugins": ["./withLargeHeap.js",
       ["expo-location",  {
         "locationAlwaysAndWhenInUsePermission": "Allow FamilyTracker to use your location to connect with your family.",
         "isIosBackgroundLocationEnabled": true,

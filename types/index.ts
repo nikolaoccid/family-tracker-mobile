@@ -146,7 +146,7 @@ export interface LocationHistory {
   accuracy?: number;
   heading?: number;
   timestamp: string;
-  whoCanSeeLocation: string[]; // Array of user IDs
+  whoCanSeeLocation?: string[]; // Array of user IDs
 }
 
 export interface ZoneVisit {
