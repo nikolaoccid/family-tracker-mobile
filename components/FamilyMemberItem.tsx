@@ -96,13 +96,13 @@ export default function FamilyMemberItem({
 
         {isAdmin && !isCurrentUser && (
           <View style={styles.adminActions}>
-            {onPromote && (
+            {onPromote && member.role === 'member' && (
               <TouchableOpacity style={styles.adminAction} onPress={onPromote}>
                 <UserCog size={18} color={Colors.primary} />
               </TouchableOpacity>
             )}
 
-            {onDemote && (
+            {onDemote && member.role === 'admin' && (
               <TouchableOpacity style={styles.adminAction} onPress={onDemote}>
                 <UserCog size={18} color={Colors.warning} />
               </TouchableOpacity>

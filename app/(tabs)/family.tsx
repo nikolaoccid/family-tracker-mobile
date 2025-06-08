@@ -55,7 +55,7 @@ export default function FamilyScreen() {
   }, [family, fetchFamily]);
 
   // Check if current user is admin
-  const isAdmin = user && family?.members.some(m => m.id === user.id && m.role === 'admin');
+  const isAdmin = (user && family?.members.some(m => m.id === user.id && m.role === 'admin')) ?? false;
 
   // Handle create family
   const handleCreateFamily = () => {
@@ -107,52 +107,6 @@ export default function FamilyScreen() {
     }
   };
 
-  // Handle member options
-  const handleMemberOptions = (member: FamilyMember) => {
-    if (member.id === user?.id) {
-      // Can't manage yourself this way
-      return;
-    }
-
-    setSelectedMember(member);
-
-    const options = [];
-
-    // Only admins can promote/remove members
-    if (isAdmin) {
-      if (member.role !== 'admin') {
-        options.push({
-          text: 'Make Admin',
-          icon: 'crown',
-          onPress: () => handlePromoteToAdmin(member)
-        });
-      }
-
-      options.push({
-        text: 'Remove from Family',
-        icon: 'trash',
-        onPress: () => handleRemoveMember(member),
-        destructive: true
-      });
-    }
-
-    // If no options available, don't show menu
-    if (options.length === 0) return;
-
-    Alert.alert(
-      `${member.name}`,
-      'Choose an action:',
-      [
-        ...options.map(option => ({
-          text: option.text,
-          onPress: option.onPress,
-          style: option.destructive ? 'destructive' : 'default'
-        })),
-        { text: 'Cancel', style: 'cancel' }
-      ]
-    );
-  };
-
   // Handle promote to admin
   const handlePromoteToAdmin = async (member: FamilyMember) => {
     if (!family || !isAdmin) return;
@@ -172,6 +126,35 @@ export default function FamilyScreen() {
               Alert.alert("Success", `${member.name} is now an admin.`);
             } catch (error) {
               console.error('Error promoting member:', error);
+              Alert.alert("Error", "Failed to update member role. Please try again.");
+            } finally {
+              setIsLoading(false);
+              setSelectedMember(null);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleDemoteToMember = async (member: FamilyMember) => {
+    if (!family || !isAdmin) return;
+
+    Alert.alert(
+      "Remove Admin",
+      `Are you sure you want to remove admin rights from ${member.name}?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Remove Admin",
+          style: "destructive",
+          onPress: async () => {
+            setIsLoading(true);
+            try {
+              await updateMemberRole(member.id, 'member');
+              Alert.alert("Success", `${member.name} is now a member.`);
+            } catch (error) {
+              console.error('Error demoting member:', error);
               Alert.alert("Error", "Failed to update member role. Please try again.");
             } finally {
               setIsLoading(false);
@@ -401,9 +384,11 @@ export default function FamilyScreen() {
               key={item.id}
               member={item}
               isCurrentUser={item.id === user?.id}
+              isAdmin={isAdmin}
               onPress={() => handleViewProfile(item.id)}
-              // onOptions={() => handleMemberOptions(item)}
-              // showOptions={isAdmin && item.id !== user?.id}
+              onPromote={() => handlePromoteToAdmin(item)}
+              onDelete={() => handleRemoveMember(item)}
+              onDemote={()=> handleDemoteToMember(item)}
             />
           ))}
         </View>

@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/authStore';
 import Button from '@/components/Button';
 import { formatDate } from '@/utils/date';
 import MockMap from "@/components/MockMap";
+import {FamilyMember, User as UserType} from "@/types";
 
 const { width } = Dimensions.get('window');
 
@@ -20,7 +21,7 @@ export default function LocationHistoryScreen() {
   const { family, locationHistory, fetchLocationHistory, clearLocationHistory } = useFamilyStore();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<FamilyMember | UserType | null>(null);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days ago
     endDate: new Date().toISOString().split('T')[0], // today
@@ -76,7 +77,7 @@ export default function LocationHistoryScreen() {
     }
   };
 
-  const handleSelectDateRange = (range) => {
+  const handleSelectDateRange = (range : 'day' | 'month' | 'week') => {
     let startDate;
     const endDate = new Date().toISOString().split('T')[0]; // today
 
@@ -98,7 +99,7 @@ export default function LocationHistoryScreen() {
     setDateRange({ startDate, endDate });
   };
 
-  const handleSelectUser = (user) => {
+  const handleSelectUser = (user: UserType) => {
     setSelectedUser(user);
   };
 
@@ -277,7 +278,7 @@ export default function LocationHistoryScreen() {
                   <View style={styles.locationTimeContainer}>
                     <Clock size={14} color={Colors.light.subtext} />
                     <Text style={styles.locationTime}>
-                      {formatDate(new Date(location.timestamp), true)}
+                      {formatDate(new Date(location.timestamp))}
                     </Text>
                   </View>
                 </View>
