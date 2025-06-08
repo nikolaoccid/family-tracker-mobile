@@ -1,6 +1,7 @@
 import {PrivacySettings, User} from '@/types';
 import { handleApiError } from './utils';
 import { getAuthHeaders } from './authUtils';
+import {fromBackendDto, toBackendDto} from "@/utils/privacySettingsMapper";
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 
@@ -209,10 +210,43 @@ export const userController = {
       throw error;
     }
   },
-  updatePrivacySettings(settings: PrivacySettings) {
-    //TODO: Implement this method to update user privacy settings
+  getPrivacySettings: async (): Promise<PrivacySettings> => {
+    try {
+      const response = await fetch(`${API_URL}/privacy-settings`, {
+        method: 'GET',
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      const raw = await response.json();
+      return fromBackendDto(raw);
+    } catch (error) {
+      console.warn('Get privacy settings error:', error);
+      throw error;
+    }
   },
-  getPrivacySettings() {
-    //TODO: Implement this method to fetch user privacy settings
-  }
+
+  updatePrivacySettings: async (settings: PrivacySettings) => {
+    try {
+      const payload = toBackendDto(settings);
+
+      const response = await fetch(`${API_URL}/privacy-settings`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.warn('Update privacy settings error:', error);
+      throw error;
+    }
+  },
 };

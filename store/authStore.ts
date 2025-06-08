@@ -153,20 +153,20 @@ export const useAuthStore = create<AuthStore>()(
         fetchPrivacySettings: async () => {
           set({ isLoading: true, error: null });
           try {
-            // const settings = await userController.getPrivacySettings(); // TODO: Implement in backend
-            const settings: PrivacySettings = {
-              notificationSettings: {
-                enabled: true,
-                lowBattery: true,
-                zoneEntry: true,
-                zoneExit: true,
-              },
-              locationSharing: {
-                enabled: true,
-                visibleTo: "all",
-                selectedMembers: [],
-              },
-            };
+            const settings = await userController.getPrivacySettings();
+            // const settings: PrivacySettings = {
+            //   notificationSettings: {
+            //     enabled: true,
+            //     lowBattery: true,
+            //     zoneEntry: true,
+            //     zoneExit: true,
+            //   },
+            //   locationSharing: {
+            //     enabled: true,
+            //     visibleTo: "all",
+            //     selectedMembers: [],
+            //   },
+            // };
             set({
               privacySettings: settings,
               isLoading: false,
