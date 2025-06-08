@@ -51,7 +51,7 @@ export default function ZoneAnalyticsScreen() {
         setSelectedUser(currentUser);
       }
     }
-  }, [userId, family, currentUser]);
+  }, [userId, currentUser]);
 
   // Fetch zone analytics when selected user, zone, or date range changes
   useEffect(() => {

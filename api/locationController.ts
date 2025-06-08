@@ -28,9 +28,9 @@ export const locationController = {
   // Send user location
   sendLocation: async (location: Location) => {
     try {
-      if (checkRepeatingLocation(location)){
-        return
-      }
+      // if (checkRepeatingLocation(location)){
+      //   return
+      // }
       lastLocation = location;
       console.log('Sending location:', location);
       return await retryWithBackoff(async () => {

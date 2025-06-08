@@ -51,7 +51,7 @@ export default function LocationHistoryScreen() {
         setSelectedUser(currentUser);
       }
     }
-  }, [userId, family, currentUser]);
+  }, [userId, currentUser]);
 
   // Fetch location history when selected user or date range changes
   useEffect(() => {
@@ -231,14 +231,14 @@ export default function LocationHistoryScreen() {
           ) : locationHistory.length > 0 ? (
             <>
               <MockMap
-                style={styles.map}
-                locations={locationHistory.map(loc => ({
-                  latitude: loc.latitude,
-                  longitude: loc.longitude,
-                  timestamp: loc.timestamp,
-                }))}
-                showPath
-                showMarkers
+                // style={styles.map}
+                // familyLocations={locationHistory.map(loc => ({
+                //   latitude: loc.latitude,
+                //   longitude: loc.longitude,
+                //   timestamp: loc.timestamp,
+                // }))}
+                // showPath
+                // showMarkers
               />
               <View style={styles.mapOverlay}>
                 <View style={styles.mapInfoContainer}>

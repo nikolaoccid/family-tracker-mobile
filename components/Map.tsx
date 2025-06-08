@@ -7,6 +7,13 @@ import { Plus, Minus } from 'lucide-react-native';
 function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[]; safeZones?: any[] }) {
   const mapRef = useRef<MapView>(null);
   const [famLocations, setFamLocations] = useState(familyLocations);
+  const [mapReady, setMapReady] = useState(false);
+
+  useEffect(() => {
+    // Delay mount by one tick to ensure stability
+    const timeout = setTimeout(() => setMapReady(true), 50);
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     const data = familyLocations.map((location) => ({
@@ -58,9 +65,10 @@ function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[];
 
   return (
     <View style={styles.container}>
-      {familyLocations.length > 0 ? (
+      {mapReady && famLocations.length > 0 ? (
         <>
           <MapView
+            onMapReady={() => setMapReady(true)}
             ref={mapRef}
             style={styles.map}
             provider={PROVIDER_GOOGLE}

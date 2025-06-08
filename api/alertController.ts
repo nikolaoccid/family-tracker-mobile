@@ -29,7 +29,7 @@ export const alertController = {
   // Create an emergency alert
   createEmergencyAlert: async (alert: Omit<BackendAlert, 'read' | 'id'>) => {
     try {
-      const response = await fetch(`${API_URL}/emergency`, {
+      const response = await fetch(`${API_URL}/alert/emergency`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(alert),
