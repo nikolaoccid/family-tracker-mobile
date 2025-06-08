@@ -1,4 +1,4 @@
-import { User } from '@/types';
+import {PrivacySettings, User} from '@/types';
 import { handleApiError } from './utils';
 import { getAuthHeaders } from './authUtils';
 
@@ -209,4 +209,10 @@ export const userController = {
       throw error;
     }
   },
+  updatePrivacySettings(settings: PrivacySettings) {
+    //TODO: Implement this method to update user privacy settings
+  },
+  getPrivacySettings() {
+    //TODO: Implement this method to fetch user privacy settings
+  }
 };

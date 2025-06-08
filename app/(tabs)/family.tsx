@@ -1,129 +1,294 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { UserPlus, Users, Trash2, UserCog } from 'lucide-react-native';
+import {
+  Plus,
+  Users,
+  QrCode,
+  MoreVertical,
+  Crown,
+  Trash2,
+  UserPlus,
+  MapPin,
+  BarChart2,
+  Clock,
+  ChevronRight
+} from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { useFamilyStore } from '@/store/familyStore';
 import { useAuthStore } from '@/store/authStore';
+import { useFamilyStore } from '@/store/familyStore';
 import FamilyMemberItem from '@/components/FamilyMemberItem';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
+import {FamilyMember, User} from "@/types";
 
 export default function FamilyScreen() {
   const router = useRouter();
-  const { family, isLoading, deleteFamily, removeFamilyMember, updateMemberRole } = useFamilyStore();
   const { user } = useAuthStore();
+  const { family, fetchFamily, updateMemberRole, removeFamilyMember, deleteFamily } = useFamilyStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<FamilyMember | User | null>(null);
+  const initialLoadDoneRef = useRef(false);
 
-  const [showQRCode, setShowQRCode] = useState(false);
+  // Load family data if not already loaded
+  useEffect(() => {
+    // Only load data once to prevent infinite loops
+    if (initialLoadDoneRef.current) return;
 
-  const handleAddMember = () => {
-    router.push('/family/add-member');
-  };
+    const loadData = async () => {
+      if (!family) {
+        setIsLoading(true);
+        try {
+          await fetchFamily();
+          initialLoadDoneRef.current = true;
+        } catch (error) {
+          console.error('Error loading family data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        initialLoadDoneRef.current = true;
+      }
+    };
 
+    loadData();
+  }, [family, fetchFamily]);
+
+  // Check if current user is admin
+  const isAdmin = user && family?.members.some(m => m.id === user.id && m.role === 'admin');
+
+  // Handle create family
   const handleCreateFamily = () => {
     router.push('/family/create');
   };
 
-  const handleMemberPress = (memberId: string) => {
-    router.push(`/profile/view/${memberId}`);
+  // Handle join family
+  const handleJoinFamily = () => {
+    Alert.alert(
+      "Join a Family",
+      "To join a family, you need an invitation link or QR code from a family admin.",
+      [
+        { text: "OK", style: "default" }
+      ]
+    );
   };
 
-  const isAdmin = (user && family?.members?.find(m => m.id === user.id)?.role === 'admin') ?? false;
+  // Handle add member
+  const handleAddMember = () => {
+    router.push('/family/add-member');
+  };
 
-  const handleDeleteMember = (memberId: string, memberName: string) => {
-    if (!isAdmin) return;
+  // Handle location history
+  const handleLocationHistory = () => {
+    router.push('/location/history');
+  };
+
+  // Handle zone analytics
+  const handleZoneAnalytics = () => {
+    router.push('/zones/analytics');
+  };
+
+  // Handle sharing schedules
+  const handleSharingSchedules = () => {
+    if (user?.isPremium) {
+      router.push('/schedule/create');
+    } else {
+      Alert.alert(
+        "Premium Feature",
+        "Sharing schedules is a premium feature. Upgrade your subscription to access this feature.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Upgrade",
+            onPress: () => router.push('/subscription')
+          }
+        ]
+      );
+    }
+  };
+
+  // Handle member options
+  const handleMemberOptions = (member: FamilyMember) => {
+    if (member.id === user?.id) {
+      // Can't manage yourself this way
+      return;
+    }
+
+    setSelectedMember(member);
+
+    const options = [];
+
+    // Only admins can promote/remove members
+    if (isAdmin) {
+      if (member.role !== 'admin') {
+        options.push({
+          text: 'Make Admin',
+          icon: 'crown',
+          onPress: () => handlePromoteToAdmin(member)
+        });
+      }
+
+      options.push({
+        text: 'Remove from Family',
+        icon: 'trash',
+        onPress: () => handleRemoveMember(member),
+        destructive: true
+      });
+    }
+
+    // If no options available, don't show menu
+    if (options.length === 0) return;
+
+    Alert.alert(
+      `${member.name}`,
+      'Choose an action:',
+      [
+        ...options.map(option => ({
+          text: option.text,
+          onPress: option.onPress,
+          style: option.destructive ? 'destructive' : 'default'
+        })),
+        { text: 'Cancel', style: 'cancel' }
+      ]
+    );
+  };
+
+  // Handle promote to admin
+  const handlePromoteToAdmin = async (member: FamilyMember) => {
+    if (!family || !isAdmin) return;
+
+    Alert.alert(
+      "Make Admin",
+      `Are you sure you want to make ${member.name} an admin? They will have full control over the family group.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Make Admin",
+          style: "default",
+          onPress: async () => {
+            setIsLoading(true);
+            try {
+              await updateMemberRole(member.id, 'admin');
+              Alert.alert("Success", `${member.name} is now an admin.`);
+            } catch (error) {
+              console.error('Error promoting member:', error);
+              Alert.alert("Error", "Failed to update member role. Please try again.");
+            } finally {
+              setIsLoading(false);
+              setSelectedMember(null);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  // Handle remove member
+  const handleRemoveMember = async (member: FamilyMember) => {
+    if (!family || !isAdmin) return;
 
     Alert.alert(
       "Remove Member",
-      `Are you sure you want to remove ${memberName} from the family?`,
+      `Are you sure you want to remove ${member.name} from the family?`,
       [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Remove",
-          onPress: () => removeFamilyMember(memberId),
-          style: "destructive"
+          style: "destructive",
+          onPress: async () => {
+            setIsLoading(true);
+            try {
+              await removeFamilyMember(member.id);
+              Alert.alert("Success", `${member.name} has been removed from the family.`);
+            } catch (error) {
+              console.error('Error removing member:', error);
+              Alert.alert("Error", "Failed to remove member. Please try again.");
+            } finally {
+              setIsLoading(false);
+              setSelectedMember(null);
+            }
+          }
         }
       ]
     );
   };
 
-  const handlePromoteToAdmin = (memberId: string, memberName: string) => {
-    if (!isAdmin) return;
-
-    Alert.alert(
-      "Promote to Admin",
-      `Are you sure you want to make ${memberName} an admin of the family?`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Promote",
-          onPress: () => updateMemberRole(memberId, 'admin')
-        }
-      ]
-    );
-  };
-
-  const handleDemoteToMember = (memberId: string, memberName: string) => {
-    if (!isAdmin) return;
-
-    Alert.alert(
-      "Demote to Member",
-      `Are you sure you want to demote ${memberName} to a regular member?`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Demote",
-          onPress: () => updateMemberRole(memberId, 'member')
-        }
-      ]
-    );
-  };
-
-  const handleDeleteFamily = () => {
-    if (!isAdmin) return;
+  // Handle delete family
+  const handleDeleteFamily = async () => {
+    if (!family || !isAdmin) return;
 
     Alert.alert(
       "Delete Family",
-      "Are you sure you want to delete this family? This action cannot be undone.",
+      "Are you sure you want to delete this family? This action cannot be undone and all members will be removed.",
       [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
-          onPress: () => deleteFamily(),
-          style: "destructive"
+          style: "destructive",
+          onPress: async () => {
+            setIsLoading(true);
+            try {
+              await deleteFamily();
+              Alert.alert("Success", "Family has been deleted.");
+            } catch (error) {
+              console.error('Error deleting family:', error);
+              Alert.alert("Error", "Failed to delete family. Please try again.");
+            } finally {
+              setIsLoading(false);
+            }
+          }
         }
       ]
     );
   };
 
-  // If no family exists, show a different UI
-  if (!family) {
+  // Handle view profile
+  const handleViewProfile = (memberId: string) => {
+    router.push(`/profile/view/${memberId}`);
+  };
+
+  // Render loading state
+  if (isLoading) {
     return (
-      <View style={styles.emptyContainer}>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
+  // Render no family state
+  if (!family || family.members.length === 0) {
+    return (
+      <View style={styles.container}>
         <StatusBar style="dark" />
-        <Users size={64} color={Colors.light.icon} />
-        <Text style={styles.emptyTitle}>No Family Group</Text>
-        <Text style={styles.emptyText}>
-          Create a family group to start tracking your loved ones
-        </Text>
-        <Button
-          title="Create Family Group"
-          onPress={handleCreateFamily}
-          style={styles.createButton}
-        />
+
+        <View style={styles.noFamilyContainer}>
+          <View style={styles.iconContainer}>
+            <Users size={60} color={Colors.primary} />
+          </View>
+
+          <Text style={styles.noFamilyTitle}>No Family Group</Text>
+          <Text style={styles.noFamilyText}>
+            Create a family group or join an existing one to start tracking your loved ones.
+          </Text>
+
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Create Family"
+              onPress={handleCreateFamily}
+              fullWidth
+              style={styles.createButton}
+            />
+
+            <Button
+              title="Join Family"
+              onPress={handleJoinFamily}
+              variant="outline"
+              fullWidth
+              style={styles.joinButton}
+            />
+          </View>
+        </View>
       </View>
     );
   }
@@ -132,67 +297,126 @@ export default function FamilyScreen() {
     <View style={styles.container}>
       <StatusBar style="dark" />
 
-      <View style={styles.header}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Your Family</Text>
-          {family && (
-            <View style={styles.countBadge}>
-              <Text style={styles.countText}>{family.members?.length}</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.familyName}>{family.name}</Text>
+            <Text style={styles.memberCount}>{family.members.length} members</Text>
+          </View>
+
+          {isAdmin && (
+            <View style={styles.headerActions}>
+              <TouchableOpacity
+                style={styles.headerButton}
+                onPress={() => {
+                  Alert.alert(
+                    "Family Options",
+                    "Choose an action:",
+                    [
+                      {
+                        text: "Add Member",
+                        onPress: handleAddMember
+                      },
+                      {
+                        text: "Delete Family",
+                        onPress: handleDeleteFamily,
+                        style: "destructive"
+                      },
+                      {
+                        text: "Cancel",
+                        style: "cancel"
+                      }
+                    ]
+                  );
+                }}
+              >
+                <MoreVertical size={24} color={Colors.primary} />
+              </TouchableOpacity>
             </View>
           )}
         </View>
 
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={handleAddMember}
-        >
-          <UserPlus size={20} color={Colors.primary} />
-        </TouchableOpacity>
-      </View>
+        {/* Family Analytics Section */}
+        <View style={styles.analyticsSection}>
+          <Text style={styles.sectionTitle}>Family Analytics</Text>
+          <View style={styles.analyticsCards}>
+            <TouchableOpacity
+              style={styles.analyticsCard}
+              onPress={handleLocationHistory}
+            >
+              <View style={styles.analyticsIconContainer}>
+                <MapPin size={24} color={Colors.primary} />
+              </View>
+              <Text style={styles.analyticsTitle}>Location History</Text>
+              <Text style={styles.analyticsDescription}>
+                View where family members have been
+              </Text>
+            </TouchableOpacity>
 
-      <Card title={family.name} subtitle={`Created ${new Date(family.createdAt).toLocaleDateString()}`}>
-        <View style={styles.familyInfo}>
-          <View style={styles.infoItem}>
-            <Users size={16} color={Colors.primary} />
-            <Text style={styles.infoText}>
-              {family.members?.length} members
-            </Text>
+            <TouchableOpacity
+              style={styles.analyticsCard}
+              onPress={handleZoneAnalytics}
+            >
+              <View style={styles.analyticsIconContainer}>
+                <BarChart2 size={24} color={Colors.primary} />
+              </View>
+              <Text style={styles.analyticsTitle}>Zone Analytics</Text>
+              <Text style={styles.analyticsDescription}>
+                Track time spent in safe zones
+              </Text>
+            </TouchableOpacity>
           </View>
-          <Text style={styles.infoText}>
-            {family.members?.filter(m => m.isSharing)?.length} sharing location
-          </Text>
         </View>
 
-        {isAdmin && (
+        {/* Sharing Schedules Section */}
+        <View style={styles.schedulesSection}>
+          <Text style={styles.sectionTitle}>Sharing Options</Text>
           <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={handleDeleteFamily}
+            style={styles.scheduleCard}
+            onPress={handleSharingSchedules}
           >
-            <Trash2 size={16} color={Colors.danger} />
-            <Text style={styles.deleteText}>Delete Family</Text>
+            <View style={styles.scheduleIconContainer}>
+              <Clock size={24} color={Colors.primary} />
+            </View>
+            <View style={styles.scheduleContent}>
+              <Text style={styles.scheduleTitle}>Sharing Schedules</Text>
+              <Text style={styles.scheduleDescription}>
+                Set up automatic location sharing based on time and day
+              </Text>
+              {!user?.isPremium && (
+                <View style={styles.premiumTag}>
+                  <Text style={styles.premiumTagText}>Premium</Text>
+                </View>
+              )}
+            </View>
+            <ChevronRight size={20} color={Colors.light.icon} />
           </TouchableOpacity>
-        )}
-      </Card>
+        </View>
 
-      <FlatList
-        data={family.members}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <FamilyMemberItem
-            member={item}
-            onPress={() => handleMemberPress(item.id)}
-            isCurrentUser={user?.id === item.id}
-            isAdmin={isAdmin}
-            onDelete={isAdmin && item.id !== user?.id ? () => handleDeleteMember(item.id, item.name) : undefined}
-            onPromote={isAdmin && item.id !== user?.id && item.role !== 'admin' && !item.isInvited ?
-              () => handlePromoteToAdmin(item.id, item.name) : undefined}
-            onDemote={isAdmin && item.id !== user?.id && item.role === 'admin' && !item.isInvited ?
-              () => handleDemoteToMember(item.id, item.name) : undefined}
-          />
-        )}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
+        {/* Members Section */}
+        <View style={styles.membersSection}>
+          <Text style={styles.sectionTitle}>Family Members</Text>
+          {family.members.map((item) => (
+            <FamilyMemberItem
+              key={item.id}
+              member={item}
+              isCurrentUser={item.id === user?.id}
+              onPress={() => handleViewProfile(item.id)}
+              // onOptions={() => handleMemberOptions(item)}
+              // showOptions={isAdmin && item.id !== user?.id}
+            />
+          ))}
+        </View>
+      </ScrollView>
+
+      {isAdmin && (
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={handleAddMember}
+        >
+          <UserPlus size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -201,90 +425,187 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,
-    paddingHorizontal: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.light.background,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 20,
+  familyName: {
+    fontSize: 24,
     fontWeight: '700',
     color: Colors.light.text,
   },
-  countBadge: {
-    backgroundColor: Colors.primary,
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+  memberCount: {
+    fontSize: 14,
+    color: Colors.light.subtext,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerButton: {
+    padding: 8,
     marginLeft: 8,
   },
-  countText: {
-    color: '#FFFFFF',
-    fontSize: 12,
+  sectionTitle: {
+    fontSize: 18,
     fontWeight: '600',
+    color: Colors.light.text,
+    marginBottom: 16,
+    paddingHorizontal: 24,
   },
-  addButton: {
-    padding: 8,
+  analyticsSection: {
+    marginBottom: 24,
   },
-  familyInfo: {
+  analyticsCards: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+  },
+  analyticsCard: {
+    flex: 1,
+    backgroundColor: Colors.light.card,
+    borderRadius: 16,
+    padding: 16,
+    marginHorizontal: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  analyticsIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: `${Colors.primary}20`,
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
   },
-  infoItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  analyticsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.light.text,
+    marginBottom: 4,
   },
-  infoText: {
-    fontSize: 14,
+  analyticsDescription: {
+    fontSize: 12,
     color: Colors.light.subtext,
-    marginLeft: 4,
   },
-  deleteButton: {
+  schedulesSection: {
+    marginBottom: 24,
+  },
+  scheduleCard: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: Colors.light.card,
+    borderRadius: 16,
+    padding: 16,
+    marginHorizontal: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  scheduleIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: `${Colors.primary}20`,
     justifyContent: 'center',
-    paddingVertical: 8,
-    borderTopWidth: 1,
-    borderTopColor: Colors.light.border,
-    marginTop: 8,
-  },
-  deleteText: {
-    color: Colors.danger,
-    marginLeft: 8,
-    fontWeight: '500',
-  },
-  listContent: {
-    paddingBottom: 100,
-  },
-  emptyContainer: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
+    marginRight: 16,
   },
-  emptyTitle: {
-    fontSize: 20,
+  scheduleContent: {
+    flex: 1,
+  },
+  scheduleTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.light.text,
+    marginBottom: 4,
+  },
+  scheduleDescription: {
+    fontSize: 12,
+    color: Colors.light.subtext,
+  },
+  premiumTag: {
+    backgroundColor: Colors.secondary,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+    marginTop: 6,
+  },
+  premiumTagText: {
+    color: Colors.light.text,
+    fontSize: 10,
+    fontWeight: '600',
+  },
+  membersSection: {
+    paddingBottom: 80,
+  },
+  noFamilyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  iconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: `${Colors.primary}20`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  noFamilyTitle: {
+    fontSize: 24,
     fontWeight: '700',
     color: Colors.light.text,
-    marginTop: 16,
-    marginBottom: 8,
+    marginBottom: 12,
+    textAlign: 'center',
   },
-  emptyText: {
+  noFamilyText: {
     fontSize: 16,
     color: Colors.light.subtext,
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 32,
+  },
+  buttonContainer: {
+    width: '100%',
+    gap: 12,
   },
   createButton: {
-    marginTop: 8,
+    marginBottom: 12,
+  },
+  joinButton: {},
+  fab: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 });

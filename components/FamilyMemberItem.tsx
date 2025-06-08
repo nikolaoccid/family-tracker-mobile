@@ -1,10 +1,10 @@
+import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { FamilyMember } from '@/types';
 import Colors from '@/constants/colors';
 import Avatar from './Avatar';
 import { formatDistanceToNow } from '@/utils/date';
 import { BatteryMedium, MapPin, Trash2, UserCog } from 'lucide-react-native';
-import {useEffect, useState} from "react";
 
 interface FamilyMemberItemProps {
   member: FamilyMember;
@@ -13,7 +13,7 @@ interface FamilyMemberItemProps {
   isAdmin?: boolean;
   onDelete?: () => void;
   onPromote?: () => void;
-  onDemote?: ()=> void;
+  onDemote?: () => void;
 }
 
 export default function FamilyMemberItem({
@@ -23,7 +23,7 @@ export default function FamilyMemberItem({
                                            isAdmin = false,
                                            onDelete,
                                            onPromote,
-                                           onDemote
+                                           onDemote,
                                          }: FamilyMemberItemProps) {
   const getBatteryColor = () => {
     if (!member.batteryLevel) return Colors.light.icon;
@@ -31,8 +31,11 @@ export default function FamilyMemberItem({
     if (member.batteryLevel < 50) return Colors.warning;
     return Colors.success;
   };
-  const isOnline = member.isSharing && member.lastSeen &&
-    new Date().getTime() - new Date(member.lastSeen).getTime() < 5 * 60 * 1000; // 5 minutes
+
+  const isOnline =
+    member.isSharing &&
+    member.lastSeen &&
+    new Date().getTime() - new Date(member.lastSeen).getTime() < 5 * 60 * 1000;
 
   return (
     <TouchableOpacity
@@ -54,14 +57,14 @@ export default function FamilyMemberItem({
             {member.name?.length > 23 ? `${member.name.substring(0, 23)}...` : member.name}
             {isCurrentUser ? ' (You)' : ''}
           </Text>
-          {member.role === 'admin' ? (
+          {member.role === 'admin' && (
             <View style={styles.adminBadge}>
               <Text style={styles.adminText}>Admin</Text>
             </View>
-          ) : null}
+          )}
         </View>
 
-        {member.lastSeen ? (
+        {member.lastSeen && (
           <Text style={styles.lastSeen}>
             {member.isSharing
               ? isOnline
@@ -69,53 +72,44 @@ export default function FamilyMemberItem({
                 : `Last seen ${formatDistanceToNow(new Date(member.lastSeen))} ago`
               : 'Location sharing disabled'}
           </Text>
-        ) : null}
+        )}
 
-        {member.location && member.isSharing ? (
+        {member.location && member.isSharing && (
           <View style={styles.locationRow}>
             <MapPin size={14} color={Colors.primary} />
             <Text style={styles.location}>
               {member.location.latitude.toFixed(6)}, {member.location.longitude.toFixed(6)}
             </Text>
           </View>
-        ) : null}
+        )}
       </View>
 
       <View style={styles.rightContainer}>
-        {member.batteryLevel !== undefined ? (
+        {member.batteryLevel !== undefined && (
           <View style={styles.batteryContainer}>
             <BatteryMedium size={16} color={getBatteryColor()} />
             <Text style={[styles.batteryText, { color: getBatteryColor() }]}>
               {member.batteryLevel}%
             </Text>
           </View>
-        ) : null}
+        )}
 
         {isAdmin && !isCurrentUser && (
           <View style={styles.adminActions}>
             {onPromote && (
-              <TouchableOpacity
-                style={styles.adminAction}
-                onPress={onPromote}
-              >
+              <TouchableOpacity style={styles.adminAction} onPress={onPromote}>
                 <UserCog size={18} color={Colors.primary} />
               </TouchableOpacity>
             )}
 
             {onDemote && (
-              <TouchableOpacity
-                style={styles.adminAction}
-                onPress={onDemote}
-              >
+              <TouchableOpacity style={styles.adminAction} onPress={onDemote}>
                 <UserCog size={18} color={Colors.warning} />
               </TouchableOpacity>
             )}
 
             {onDelete && (
-              <TouchableOpacity
-                style={styles.adminAction}
-                onPress={onDelete}
-              >
+              <TouchableOpacity style={styles.adminAction} onPress={onDelete}>
                 <Trash2 size={18} color={Colors.danger} />
               </TouchableOpacity>
             )}

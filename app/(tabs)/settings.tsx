@@ -11,7 +11,9 @@ import {
   LogOut,
   ChevronRight,
   BatteryMedium,
-  MapPin
+  MapPin,
+  Clock,
+  Lock
 } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useAuthStore } from '@/store/authStore';
@@ -19,12 +21,11 @@ import { useLocationStore } from '@/store/locationStore';
 import Avatar from '@/components/Avatar';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useLocation } from '@/hooks/useLocation';
-import {useFamilyStore} from "@/store/familyStore";
 
 export default function SettingsScreen() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
-  const { isBackgroundTrackingEnabled } = useLocationStore();
+  const { isBackgroundTrackingEnabled, setBackgroundTrackingEnabled } = useLocationStore();
   const { registerForPushNotifications } = usePushNotifications();
   const { isBackgroundActive } = useLocation();
 
@@ -38,17 +39,31 @@ export default function SettingsScreen() {
     }
   };
 
+  const handleToggleBackgroundTracking = (value: boolean) => {
+    setBackgroundTrackingEnabled(value);
+  };
+
   const handleLogout = () => {
     logout();
-    router.replace('/(auth)');
+    router.replace('/');
   };
 
   const handleEditProfile = () => {
-    router.push('/profile/view');
+    if (user) {
+      router.push(`/profile/view/${user.id}`);
+    }
   };
 
   const handleSubscription = () => {
     router.push('/subscription');
+  };
+
+  const handlePrivacySettings = () => {
+    router.push('/settings/privacy');
+  };
+
+  const handleScheduleSettings = () => {
+    router.push('/schedule/create');
   };
 
   return (
@@ -109,6 +124,34 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Privacy & Location</Text>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handlePrivacySettings}
+          >
+            <View style={styles.menuIconContainer}>
+              <Lock size={20} color={Colors.primary} />
+            </View>
+            <Text style={styles.menuText}>Privacy Settings</Text>
+            <ChevronRight size={20} color={Colors.light.icon} />
+          </TouchableOpacity>
+
+          {user?.isPremium && (
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={handleScheduleSettings}
+            >
+              <View style={styles.menuIconContainer}>
+                <Clock size={20} color={Colors.primary} />
+              </View>
+              <Text style={styles.menuText}>Sharing Schedules</Text>
+              <ChevronRight size={20} color={Colors.light.icon} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Preferences</Text>
 
           <View style={styles.menuItem}>
@@ -129,15 +172,40 @@ export default function SettingsScreen() {
             <View style={styles.menuIconContainer}>
               <MapPin size={20} color={Colors.primary} />
             </View>
-            <Text style={styles.menuText}>Location Services</Text>
-            <View style={styles.statusContainer}>
-              <View style={[
-                styles.statusIndicator,
-                isBackgroundActive ? styles.statusActive : styles.statusInactive
-              ]} />
-              <Text style={styles.statusText}>
-                {isBackgroundActive ? 'Running' : 'Inactive'}
-              </Text>
+            <View style={styles.locationSettingContainer}>
+              <View>
+                <Text style={styles.menuText}>Location Tracking</Text>
+                <Text style={styles.locationDescription}>
+                  {isBackgroundTrackingEnabled
+                    ? "Background tracking enabled"
+                    : "Only tracks when app is open"}
+                </Text>
+              </View>
+              <Switch
+                value={isBackgroundTrackingEnabled}
+                onValueChange={handleToggleBackgroundTracking}
+                trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}
+                thumbColor={isBackgroundTrackingEnabled ? Colors.primary : Colors.light.icon}
+                ios_backgroundColor={Colors.light.border}
+              />
+            </View>
+          </View>
+
+          <View style={styles.menuItem}>
+            <View style={styles.menuIconContainer}>
+              <MapPin size={20} color={Colors.primary} />
+            </View>
+            <View style={styles.locationStatusContainer}>
+              <Text style={styles.menuText}>Location Status</Text>
+              <View style={styles.statusContainer}>
+                <View style={[
+                  styles.statusIndicator,
+                  isBackgroundActive ? styles.statusActive : styles.statusInactive
+                ]} />
+                <Text style={styles.statusText}>
+                  {isBackgroundActive ? 'Active' : 'Inactive'}
+                </Text>
+              </View>
             </View>
           </View>
 
@@ -266,9 +334,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.light.text,
   },
+  locationSettingContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  locationDescription: {
+    fontSize: 12,
+    color: Colors.light.subtext,
+    marginTop: 4,
+  },
+  locationStatusContainer: {
+    flex: 1,
+    marginLeft: 12,
+  },
   statusContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 4,
   },
   statusIndicator: {
     width: 8,

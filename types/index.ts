@@ -104,3 +104,66 @@ export interface ApiError {
   message: string;
   code?: string;
 }
+
+export interface PrivacySettings {
+  locationSharing: {
+    enabled: boolean;
+    visibleTo: 'all' | 'selected' | 'none';
+    selectedMembers: string[]; // Array of user IDs
+    schedules?: SharingSchedule[];
+  };
+  notificationSettings: {
+    enabled: boolean;
+    lowBattery: boolean;
+    zoneEntry: boolean;
+    zoneExit: boolean;
+  };
+}
+
+export interface SharingSchedule {
+  id: string;
+  name: string;
+  days: (
+    'monday' |
+    'tuesday' |
+    'wednesday' |
+    'thursday' |
+    'friday' |
+    'saturday' |
+    'sunday'
+    )[];
+  startTime: string; // Format: "HH:MM"
+  endTime: string; // Format: "HH:MM"
+  enabled: boolean;
+}
+
+export interface LocationHistory {
+  id: string;
+  userId: string;
+  latitude: number;
+  longitude: number;
+  speed?: number;
+  accuracy?: number;
+  heading?: number;
+  timestamp: string;
+  whoCanSeeLocation: string[]; // Array of user IDs
+}
+
+export interface ZoneVisit {
+  entryTime: string;
+  exitTime: string;
+  duration: number; // In minutes
+}
+
+export interface ZoneAnalytics {
+  zoneId: string;
+  zoneName: string;
+  userId: string;
+  userName: string;
+  totalTimeSpent: number; // In minutes
+  visits: ZoneVisit[];
+  timeByDay: {
+    date: string;
+    minutes: number;
+  }[];
+}

@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthState, User } from '@/types';
+import { AuthState, User, PrivacySettings } from '@/types';
 import { userController } from '@/api/userController';
-import {resetStores} from "@/store/resetStores";
+import { resetStores } from '@/store/resetStores';
 
 interface AuthStore extends AuthState {
   accessToken: string | null;
+  privacySettings: PrivacySettings | null;
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: (name: string, email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
@@ -14,20 +15,34 @@ interface AuthStore extends AuthState {
   resetPassword: (email: string) => Promise<void>;
   completePasswordReset: (token: string, newPassword: string) => Promise<void>;
   updateUser: (user: Partial<User>) => void;
+  fetchPrivacySettings: () => Promise<void>;
+  updatePrivacySettings: (settings: PrivacySettings) => Promise<void>;
   clearError: () => void;
   setError: (error: string | null) => void;
 }
 
 const ERROR_TIMEOUT = 5000;
 
+const defaultPrivacySettings: PrivacySettings = {
+  locationSharing: {
+    enabled: true,
+    visibleTo: 'all',
+    selectedMembers: [],
+  },
+  notificationSettings: {
+    enabled: true,
+    lowBattery: true,
+    zoneEntry: true,
+    zoneExit: true,
+  }
+};
+
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set) => {
+    (set, get) => {
       const setErrorWithTimeout = (error: string | null) => {
         set({ error });
-        if (error) {
-          setTimeout(() => set({ error: null }), ERROR_TIMEOUT);
-        }
+        if (error) setTimeout(() => set({ error: null }), ERROR_TIMEOUT);
       };
 
       return {
@@ -36,19 +51,21 @@ export const useAuthStore = create<AuthStore>()(
         isAuthenticated: false,
         isLoading: false,
         error: null,
+        privacySettings: null,
 
         setError: setErrorWithTimeout,
 
         login: async (email, password) => {
-          set({ isLoading: true, error: null });
+          set({isLoading: true, error: null});
           try {
             const response = await userController.login(email, password);
             set({
               user: response.user,
               accessToken: response.token,
               isAuthenticated: true,
-              isLoading: false
+              isLoading: false,
             });
+            await get().fetchPrivacySettings();
           } catch (error) {
             set({ isLoading: false });
             setErrorWithTimeout(error instanceof Error ? error.message : 'An error occurred');
@@ -63,8 +80,9 @@ export const useAuthStore = create<AuthStore>()(
               user: response.user,
               accessToken: response.token,
               isAuthenticated: true,
-              isLoading: false
+              isLoading: false,
             });
+            await get().fetchPrivacySettings();
           } catch (error) {
             set({ isLoading: false });
             setErrorWithTimeout(error instanceof Error ? error.message : 'An error occurred');
@@ -79,7 +97,8 @@ export const useAuthStore = create<AuthStore>()(
               user: response.user,
               accessToken: response.token,
               isAuthenticated: true,
-              isLoading: false
+              isLoading: false,
+              privacySettings: defaultPrivacySettings,
             });
             return response.ok;
           } catch (error) {
@@ -90,12 +109,6 @@ export const useAuthStore = create<AuthStore>()(
         },
 
         logout: () => {
-          // set({
-          //   user: null,
-          //   accessToken: null,
-          //   isAuthenticated: false,
-          //   error: null,
-          // });
           resetStores();
         },
 
@@ -137,14 +150,60 @@ export const useAuthStore = create<AuthStore>()(
           });
         },
 
+        fetchPrivacySettings: async () => {
+          set({ isLoading: true, error: null });
+          try {
+            // const settings = await userController.getPrivacySettings(); // TODO: Implement in backend
+            const settings: PrivacySettings = {
+              notificationSettings: {
+                enabled: true,
+                lowBattery: true,
+                zoneEntry: true,
+                zoneExit: true,
+              },
+              locationSharing: {
+                enabled: true,
+                visibleTo: "all",
+                selectedMembers: [],
+              },
+            };
+            set({
+              privacySettings: settings,
+              isLoading: false,
+            });
+          } catch (error) {
+            console.log('API fetch privacy failed, using mock:', error); // TODO: Remove fallback
+            await new Promise((r) => setTimeout(r, 500));
+            set({ privacySettings: defaultPrivacySettings, isLoading: false });
+          }
+        },
+
+        updatePrivacySettings: async (settings) => {
+          set({ isLoading: true, error: null });
+          try {
+            await userController.updatePrivacySettings(settings);
+            set({ privacySettings: settings, isLoading: false });
+          } catch (error) {
+            console.log('API update privacy failed, using mock:', error); // TODO: Remove fallback
+            await new Promise((r) => setTimeout(r, 500));
+            set({ privacySettings: settings, isLoading: false });
+          }
+        },
+
         clearError: () => {
           set({ error: null });
-        }
+        },
       };
     },
     {
       name: 'family-tracker-auth',
       storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        user: state.user,
+        accessToken: state.accessToken,
+        isAuthenticated: state.isAuthenticated,
+        privacySettings: state.privacySettings,
+      }),
     }
   )
 );

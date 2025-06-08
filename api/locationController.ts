@@ -1,4 +1,4 @@
-import { Location } from '@/types';
+import {Location, LocationHistory} from '@/types';
 import { handleApiError, retryWithBackoff } from './utils';
 import { useAuthStore } from '@/store/authStore';
 import { getAuthHeaders } from './authUtils';
@@ -125,4 +125,34 @@ export const locationController = {
       throw error;
     }
   },
+ async getDetailedLocationHistory(
+    userId: string,
+    param2: { includePrivacyInfo: boolean; endDate: any; startDate: any }
+  ): Promise<LocationHistory[]> {
+    // Mock data
+    return Promise.resolve([
+      {
+        id: '1',
+        userId,
+        latitude: 40.7128,
+        longitude: -74.0060,
+        speed: 10,
+        accuracy: 5,
+        heading: 90,
+        timestamp: new Date().toISOString(),
+        whoCanSeeLocation: param2.includePrivacyInfo ? ['userA', 'userB'] : [],
+      },
+      {
+        id: '2',
+        userId,
+        latitude: 40.7138,
+        longitude: -74.0050,
+        speed: 12,
+        accuracy: 4,
+        heading: 100,
+        timestamp: new Date(Date.now() - 60000).toISOString(),
+        whoCanSeeLocation: param2.includePrivacyInfo ? ['userA'] : [],
+      },
+    ]);
+  }
 };
