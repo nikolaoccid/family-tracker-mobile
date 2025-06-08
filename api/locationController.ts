@@ -126,34 +126,33 @@ export const locationController = {
       throw error;
     }
   },
- async getDetailedLocationHistory(
+  async getDetailedLocationHistory(
     userId: string,
-    param2: { includePrivacyInfo: boolean; endDate: any; startDate: any }
+    params: { includePrivacyInfo: boolean; startDate?: string; endDate?: string }
   ): Promise<LocationHistory[]> {
-    // Mock data
-    return Promise.resolve([
-      {
-        id: '1',
-        userId,
-        latitude: 40.7128,
-        longitude: -74.0060,
-        speed: 10,
-        accuracy: 5,
-        heading: 90,
-        timestamp: new Date().toISOString(),
-        whoCanSeeLocation: param2.includePrivacyInfo ? ['userA', 'userB'] : [],
-      },
-      {
-        id: '2',
-        userId,
-        latitude: 40.7138,
-        longitude: -74.0050,
-        speed: 12,
-        accuracy: 4,
-        heading: 100,
-        timestamp: new Date(Date.now() - 60000).toISOString(),
-        whoCanSeeLocation: param2.includePrivacyInfo ? ['userA'] : [],
-      },
-    ]);
+    const query = new URLSearchParams({
+      startDate: params.startDate ?? '',
+      endDate: params.endDate ?? '',
+      limit: '1000', // optional: adjust as needed
+    });
+
+    try {
+      const response = await fetch(
+        `${API_URL}/location/history/${userId}?${query.toString()}`,
+        {
+          method: 'GET',
+          headers: getAuthHeaders(),
+        }
+      );
+
+      if (!response.ok) {
+        throw await handleApiError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.warn('Get location history error:', error);
+      throw error;
+    }
   }
 };
