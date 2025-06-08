@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  TextInput, 
-  View, 
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
   TouchableOpacity,
   TextInputProps,
   ViewStyle,
@@ -63,32 +63,32 @@ export default function Input({
   return (
     <View style={[styles.container, containerStyle]}>
       {label ? <Text style={styles.label}>{label}</Text> : null}
-      
-      <View 
+
+      <View
         style={[
-          styles.inputContainer, 
+          styles.inputContainer,
           { borderColor: getBorderColor() },
           isFocused && styles.inputContainerFocused
         ]}
       >
         {leftIcon ? <View style={styles.leftIcon}>{leftIcon}</View> : null}
-        
+
         <TextInput
           {...props}
           style={[
             styles.input,
-            leftIcon && styles.inputWithLeftIcon,
-            (rightIcon || secureTextEntry) && styles.inputWithRightIcon,
+            leftIcon ? styles.inputWithLeftIcon : undefined,
+            (rightIcon || secureTextEntry) ? styles.inputWithRightIcon : undefined,
           ]}
           placeholderTextColor={Colors.light.subtext}
           onFocus={handleFocus}
           onBlur={handleBlur}
           secureTextEntry={secureTextEntry && !isPasswordVisible}
         />
-        
+
         {secureTextEntry ? (
-          <TouchableOpacity 
-            style={styles.rightIcon} 
+          <TouchableOpacity
+            style={styles.rightIcon}
             onPress={togglePasswordVisibility}
           >
             {isPasswordVisible ? (
@@ -98,12 +98,12 @@ export default function Input({
             )}
           </TouchableOpacity>
         ) : null}
-        
+
         {rightIcon && !secureTextEntry ? (
           <View style={styles.rightIcon}>{rightIcon}</View>
         ) : null}
       </View>
-      
+
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
