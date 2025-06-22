@@ -502,5 +502,6 @@ const styles = StyleSheet.create({
   exportButton: {
     marginHorizontal: 24,
     marginTop: 8,
+    maxWidth: 90
   },
 });

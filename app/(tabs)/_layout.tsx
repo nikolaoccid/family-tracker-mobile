@@ -8,12 +8,12 @@ import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'expo-router';
 import OfflineNotice from '@/components/OfflineNotice';
 import {startLocationTracking} from "@/background/locationTask";
-import {useLocationStore} from "@/store/locationStore";
 import {useLocation} from "@/hooks/useLocation";
+import {Ionicons} from "@expo/vector-icons";
 
 export default function TabLayout() {
   const router = useRouter();
-  const { fetchFamily, fetchSafeZones, fetchAlerts } = useFamilyStore();
+  const { fetchFamily, fetchSafeZones, fetchAlerts, } = useFamilyStore();
   const { user } = useAuthStore();
   const { getCurrentLocation } = useLocation();
   const isMountedRef = useRef(true);
@@ -147,6 +147,15 @@ export default function TabLayout() {
           options={{
             title: 'Settings',
             tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="chat"
+          options={{
+            title: 'Chat',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="chatbubble-ellipses-outline" size={size} color={color} />
+            ),
           }}
         />
       </Tabs>

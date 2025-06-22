@@ -12,6 +12,7 @@ import { useLocationStore } from '@/store/locationStore';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import * as Linking from 'expo-linking';
 import {StripeProvider} from "@stripe/stripe-react-native";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 
 // Create a client
@@ -185,13 +186,15 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ''}>
-      <ErrorBoundary>
-        <RootLayoutNav />
-      </ErrorBoundary>
-        </StripeProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ''}>
+        <ErrorBoundary>
+          <RootLayoutNav />
+        </ErrorBoundary>
+          </StripeProvider>
+      </QueryClientProvider>
+      </GestureHandlerRootView>
   );
 }
 
