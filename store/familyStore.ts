@@ -327,7 +327,7 @@ export const useFamilyStore = create<FamilyStore>()(
       fetchZoneAnalytics: async (zoneId, startDate, endDate, userId) => {
         set({ isLoading: true, error: null });
         try {
-          const analytics = await safeZoneController.getZoneAnalytics(zoneId, { startDate, endDate, userId });
+          const analytics = await safeZoneController.getZoneAnalytics(zoneId, { endDate: endDate, userId: userId, startDate: startDate });
           console.log('Fetched zone analytics:', analytics);
           set({ zoneAnalytics: [analytics], isLoading: false, lastFetchTime: { ...get().lastFetchTime, zoneAnalytics: Date.now() } });
         } catch (error) {
@@ -340,7 +340,7 @@ export const useFamilyStore = create<FamilyStore>()(
         try {
           const familyId = get().family?.id;
           if (!familyId) throw new Error('Family ID not found');
-          const analytics = await safeZoneController.getAllZonesAnalytics(familyId, { startDate, endDate, userId });
+          const analytics = await safeZoneController.getAllZonesAnalytics(familyId, { startDate: startDate, endDate: endDate, userId: userId });
           console.log('Fetched all zones analytics:', analytics);
           set({ zoneAnalytics: analytics, isLoading: false, lastFetchTime: { ...get().lastFetchTime, zoneAnalytics: Date.now() } });
         } catch (error) {

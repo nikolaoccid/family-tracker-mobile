@@ -143,13 +143,6 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="settings"
-          options={{
-            title: 'Settings',
-            tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
-          }}
-        />
-        <Tabs.Screen
           name="chat"
           options={{
             title: 'Chat',
@@ -158,6 +151,14 @@ export default function TabLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: 'Settings',
+            tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
+          }}
+        />
+
       </Tabs>
     </>
   );

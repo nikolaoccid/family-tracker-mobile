@@ -424,15 +424,15 @@ export default function ZoneAnalyticsScreen() {
         </View>
 
         {/* Export button for premium users */}
-        {currentUser?.isPremium && zoneAnalytics?.length > 0 && (
-          <Button
-            title="Export Analytics Data"
-            onPress={() => {}}
-            variant="outline"
-            fullWidth
-            style={styles.exportButton}
-          />
-        )}
+        {/*{currentUser?.isPremium && zoneAnalytics?.length > 0 && (*/}
+        {/*  <Button*/}
+        {/*    title="Export Analytics Data"*/}
+        {/*    onPress={() => {}}*/}
+        {/*    variant="outline"*/}
+        {/*    fullWidth*/}
+        {/*    style={styles.exportButton}*/}
+        {/*  />*/}
+        {/*)}*/}
       </ScrollView>
     </View>
   );

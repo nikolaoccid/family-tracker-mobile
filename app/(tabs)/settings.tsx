@@ -151,78 +151,78 @@ export default function SettingsScreen() {
           )}
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Preferences</Text>
+        {/*<View style={styles.section}>*/}
+        {/*  <Text style={styles.sectionTitle}>Preferences</Text>*/}
 
-          <View style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <Bell size={20} color={Colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Notifications</Text>
-            <Switch
-              value={notificationsEnabled}
-              onValueChange={handleToggleNotifications}
-              trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}
-              thumbColor={notificationsEnabled ? Colors.primary : Colors.light.icon}
-              ios_backgroundColor={Colors.light.border}
-            />
-          </View>
+        {/*  <View style={styles.menuItem}>*/}
+        {/*    <View style={styles.menuIconContainer}>*/}
+        {/*      <Bell size={20} color={Colors.primary} />*/}
+        {/*    </View>*/}
+        {/*    <Text style={styles.menuText}>Notifications</Text>*/}
+        {/*    <Switch*/}
+        {/*      value={notificationsEnabled}*/}
+        {/*      onValueChange={handleToggleNotifications}*/}
+        {/*      trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}*/}
+        {/*      thumbColor={notificationsEnabled ? Colors.primary : Colors.light.icon}*/}
+        {/*      ios_backgroundColor={Colors.light.border}*/}
+        {/*    />*/}
+        {/*  </View>*/}
 
-          <View style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <MapPin size={20} color={Colors.primary} />
-            </View>
-            <View style={styles.locationSettingContainer}>
-              <View>
-                <Text style={styles.menuText}>Location Tracking</Text>
-                <Text style={styles.locationDescription}>
-                  {isBackgroundTrackingEnabled
-                    ? "Background tracking enabled"
-                    : "Only tracks when app is open"}
-                </Text>
-              </View>
-              <Switch
-                value={isBackgroundTrackingEnabled}
-                onValueChange={handleToggleBackgroundTracking}
-                trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}
-                thumbColor={isBackgroundTrackingEnabled ? Colors.primary : Colors.light.icon}
-                ios_backgroundColor={Colors.light.border}
-              />
-            </View>
-          </View>
+        {/*  <View style={styles.menuItem}>*/}
+        {/*    <View style={styles.menuIconContainer}>*/}
+        {/*      <MapPin size={20} color={Colors.primary} />*/}
+        {/*    </View>*/}
+        {/*    <View style={styles.locationSettingContainer}>*/}
+        {/*      <View>*/}
+        {/*        <Text style={styles.menuText}>Location Tracking</Text>*/}
+        {/*        <Text style={styles.locationDescription}>*/}
+        {/*          {isBackgroundTrackingEnabled*/}
+        {/*            ? "Background tracking enabled"*/}
+        {/*            : "Only tracks when app is open"}*/}
+        {/*        </Text>*/}
+        {/*      </View>*/}
+        {/*      <Switch*/}
+        {/*        value={isBackgroundTrackingEnabled}*/}
+        {/*        onValueChange={handleToggleBackgroundTracking}*/}
+        {/*        trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}*/}
+        {/*        thumbColor={isBackgroundTrackingEnabled ? Colors.primary : Colors.light.icon}*/}
+        {/*        ios_backgroundColor={Colors.light.border}*/}
+        {/*      />*/}
+        {/*    </View>*/}
+        {/*  </View>*/}
 
-          <View style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <MapPin size={20} color={Colors.primary} />
-            </View>
-            <View style={styles.locationStatusContainer}>
-              <Text style={styles.menuText}>Location Status</Text>
-              <View style={styles.statusContainer}>
-                <View style={[
-                  styles.statusIndicator,
-                  isBackgroundActive ? styles.statusActive : styles.statusInactive
-                ]} />
-                <Text style={styles.statusText}>
-                  {isBackgroundActive ? 'Active' : 'Inactive'}
-                </Text>
-              </View>
-            </View>
-          </View>
+        {/*  <View style={styles.menuItem}>*/}
+        {/*    <View style={styles.menuIconContainer}>*/}
+        {/*      <MapPin size={20} color={Colors.primary} />*/}
+        {/*    </View>*/}
+        {/*    <View style={styles.locationStatusContainer}>*/}
+        {/*      <Text style={styles.menuText}>Location Status</Text>*/}
+        {/*      <View style={styles.statusContainer}>*/}
+        {/*        <View style={[*/}
+        {/*          styles.statusIndicator,*/}
+        {/*          isBackgroundActive ? styles.statusActive : styles.statusInactive*/}
+        {/*        ]} />*/}
+        {/*        <Text style={styles.statusText}>*/}
+        {/*          {isBackgroundActive ? 'Active' : 'Inactive'}*/}
+        {/*        </Text>*/}
+        {/*      </View>*/}
+        {/*    </View>*/}
+        {/*  </View>*/}
 
-          <View style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <BatteryMedium size={20} color={Colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Battery Alerts</Text>
-            <Switch
-              value={batteryAlertsEnabled}
-              onValueChange={setBatteryAlertsEnabled}
-              trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}
-              thumbColor={batteryAlertsEnabled ? Colors.primary : Colors.light.icon}
-              ios_backgroundColor={Colors.light.border}
-            />
-          </View>
-        </View>
+        {/*  <View style={styles.menuItem}>*/}
+        {/*    <View style={styles.menuIconContainer}>*/}
+        {/*      <BatteryMedium size={20} color={Colors.primary} />*/}
+        {/*    </View>*/}
+        {/*    <Text style={styles.menuText}>Battery Alerts</Text>*/}
+        {/*    <Switch*/}
+        {/*      value={batteryAlertsEnabled}*/}
+        {/*      onValueChange={setBatteryAlertsEnabled}*/}
+        {/*      trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}*/}
+        {/*      thumbColor={batteryAlertsEnabled ? Colors.primary : Colors.light.icon}*/}
+        {/*      ios_backgroundColor={Colors.light.border}*/}
+        {/*    />*/}
+        {/*  </View>*/}
+        {/*</View>*/}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Support</Text>

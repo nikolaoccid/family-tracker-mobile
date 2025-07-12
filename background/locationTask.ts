@@ -116,17 +116,17 @@ export const startLocationTracking = async () => {
     }
 
     // Start background location updates
-    await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
-      accuracy: Location.Accuracy.Balanced,
-      timeInterval: 60000, // Update every 1 minute
-      distanceInterval: 10, // Update every 10 meters
-      foregroundService: {
-        notificationTitle: 'Family Tracker',
-        notificationBody: 'Tracking your location for your family',
-      },
-      activityType: Location.ActivityType.Other,
-      showsBackgroundLocationIndicator: true,
-    });
+    // await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
+    //   accuracy: Location.Accuracy.Balanced,
+    //   timeInterval: 60000, // Update every 1 minute
+    //   distanceInterval: 10, // Update every 10 meters
+    //   foregroundService: {
+    //     notificationTitle: 'Family Tracker',
+    //     notificationBody: 'Tracking your location for your family',
+    //   },
+    //   activityType: Location.ActivityType.Other,
+    //   showsBackgroundLocationIndicator: true,
+    // });
 
     console.log('Background location tracking started');
     return true;
