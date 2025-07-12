@@ -3,29 +3,19 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MapView, { Circle, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import Colors from '@/constants/colors';
 import { Plus, Minus } from 'lucide-react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[]; safeZones?: any[] }) {
   const mapRef = useRef<MapView>(null);
   const [famLocations, setFamLocations] = useState(familyLocations);
-  const [mapReady, setMapReady] = useState(false);
+  const [mapKey, setMapKey] = useState(0);
 
-  useEffect(() => {
-    // Delay mount by one tick to ensure stability
-    const timeout = setTimeout(() => setMapReady(true), 50);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  useEffect(() => {
-    const data = familyLocations.map((location) => ({
-      latitude: location.latitude || 0,
-      longitude: location.longitude || 0,
-      user: {
-        name: location.user?.name || 'Unknown',
-        id: location.user?.id || 'unknown',
-      },
-    }));
-    setFamLocations(familyLocations);
-  }, [familyLocations]);
+  useFocusEffect(
+    useCallback(() => {
+      setMapKey(prev => prev + 1);
+    }, [])
+  );
 
   const defaultLat = 37.78825;
   const defaultLng = -122.4324;
@@ -38,6 +28,7 @@ function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[];
   });
 
   useEffect(() => {
+    setFamLocations(familyLocations);
     if (familyLocations.length > 0) {
       const lat = familyLocations[0].latitude;
       const lng = familyLocations[0].longitude;
@@ -65,18 +56,18 @@ function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[];
 
   return (
     <View style={styles.container}>
-      {mapReady && famLocations.length > 0 ? (
+      {famLocations.length > 0 ? (
         <>
           <MapView
-            onMapReady={() => setMapReady(true)}
+            key={mapKey}
             ref={mapRef}
             style={styles.map}
             provider={PROVIDER_GOOGLE}
-            initialRegion={zoomRegion}
+            region={zoomRegion}
           >
             {famLocations.map((location, index) => (
               <Marker
-                key={index}
+                key={index + location.id}
                 coordinate={{
                   latitude: location.latitude || 0,
                   longitude: location.longitude || 0,
@@ -85,7 +76,7 @@ function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[];
               />
             ))}
 
-            {safeZones?.filter((zone)=> zone.isActive).map((zone) => (
+            {safeZones?.filter(zone => zone.isActive).map(zone => (
               <React.Fragment key={zone.id}>
                 <Circle
                   center={{
@@ -106,7 +97,8 @@ function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[];
                   tracksViewChanges={false}
                 >
                   <View style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.4)', paddingHorizontal: 8,
+                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                    paddingHorizontal: 8,
                     paddingVertical: 4,
                     borderRadius: 10,
                   }}>
