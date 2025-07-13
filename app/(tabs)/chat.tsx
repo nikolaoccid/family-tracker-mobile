@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
 import { useFamilyStore } from '@/store/familyStore';
 import { useRouter } from 'expo-router';
+import FamilyMemberItem from '@/components/FamilyMemberItem';
 
 export default function ChatScreen() {
   const { user } = useAuthStore();
@@ -11,23 +12,25 @@ export default function ChatScreen() {
 
   const members = family?.members?.filter((m) => m.id !== user?.id) || [];
 
+  const handleOpenChat = (memberId: string, name: string) => {
+    router.push({
+      pathname: '/chat/private',
+      params: { targetUserId: memberId, name },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={members}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.memberItem}
-            onPress={() => {
-              router.push({
-                pathname: '/chat/private',
-                params: { targetUserId: item.id, name: item.name },
-              });
-            }}
-          >
-            <Text style={styles.memberText}>{item.name}</Text>
-          </TouchableOpacity>
+          <FamilyMemberItem
+            member={item}
+            isCurrentUser={false}
+            isAdmin={false}
+            onPress={() => handleOpenChat(item.id, item.name)}
+          />
         )}
         ListEmptyComponent={<Text>No other family members</Text>}
       />
@@ -36,7 +39,9 @@ export default function ChatScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: 'white' },
-  memberItem: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#eee' },
-  memberText: { fontSize: 18 },
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: 'white',
+  },
 });

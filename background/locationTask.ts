@@ -89,37 +89,39 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
 
 // Start location tracking
 export const startLocationTracking = async () => {
-  // Check if we already have permissions
-  const { status } = await Location.requestForegroundPermissionsAsync();
+  // Check foreground permission first
+  // const foreground = await Location.getForegroundPermissionsAsync();
+  //
+  // if (foreground.status !== 'granted') {
+    const { status: requestedForeground } = await Location.requestForegroundPermissionsAsync();
+    if (requestedForeground !== 'granted') {
+      console.error('Location permission not granted');
+      return false;
+    }
+  // }
 
-  if (status !== 'granted') {
-    console.error('Location permission not granted');
-    return false;
-  }
+  // Check background permission next
+  // const background = await Location.getBackgroundPermissionsAsync();
 
-  // Request background permissions
-  const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+  // if (background.status !== 'granted') {
+    const { status: requestedBackground } = await Location.requestBackgroundPermissionsAsync();
+    if (requestedBackground !== 'granted') {
+      console.error('Background location permission not granted');
+      return false;
+    }
+  // }
 
-  if (backgroundStatus !== 'granted') {
-    console.error('Background location permission not granted');
-    return false;
-  }
-
-  // Start background location tracking
   try {
-    // Check if task is already registered
     const isRegistered = await TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING);
-
     if (isRegistered) {
-      // console.log('Background location tracking already active');
       return true;
     }
 
-    // Start background location updates
+    // Uncomment when ready to enable background tracking
     // await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
     //   accuracy: Location.Accuracy.Balanced,
-    //   timeInterval: 60000, // Update every 1 minute
-    //   distanceInterval: 10, // Update every 10 meters
+    //   timeInterval: 60000,
+    //   distanceInterval: 10,
     //   foregroundService: {
     //     notificationTitle: 'Family Tracker',
     //     notificationBody: 'Tracking your location for your family',
@@ -128,13 +130,13 @@ export const startLocationTracking = async () => {
     //   showsBackgroundLocationIndicator: true,
     // });
 
-    console.log('Background location tracking started');
     return true;
   } catch (error) {
     console.error('Error starting location tracking:', error);
     return false;
   }
 };
+
 
 // Stop location tracking
 export const stopLocationTracking = async () => {

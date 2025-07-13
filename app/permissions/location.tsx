@@ -14,45 +14,45 @@ export default function LocationPermissionScreen() {
   const router = useRouter();
   const { updateUser } = useAuthStore();
   const { setBackgroundTrackingEnabled } = useLocationStore();
-  
+
   const [permissionStatus, setPermissionStatus] = useState<'pending' | 'granted' | 'denied'>('pending');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRequestPermission = async () => {
     setIsLoading(true);
-    
+
     try {
       // First request foreground permission
       const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
-      
+
       if (foregroundStatus !== 'granted') {
         setPermissionStatus('denied');
         setIsLoading(false);
         return;
       }
-      
+
       // Then request background permission
       if (Platform.OS === 'web') {
         // Web doesn't support background location
         setPermissionStatus('granted');
         updateUser({ hasLocationEnabled: true });
-        
+
         setTimeout(() => {
           router.replace('/(tabs)');
         }, 1000);
         return;
       }
-      
+
       const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-      
+
       if (backgroundStatus === 'granted') {
         setPermissionStatus('granted');
         updateUser({ hasLocationEnabled: true });
-        
+
         // Start background tracking
         const success = await startLocationTracking();
         setBackgroundTrackingEnabled(success);
-        
+
         // Navigate to the main app after a short delay
         setTimeout(() => {
           router.replace('/(tabs)');
@@ -62,7 +62,7 @@ export default function LocationPermissionScreen() {
         // we still mark as granted but with limited functionality
         setPermissionStatus('granted');
         updateUser({ hasLocationEnabled: true });
-        
+
         setTimeout(() => {
           router.replace('/(tabs)');
         }, 1000);
@@ -83,20 +83,20 @@ export default function LocationPermissionScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
+
       <View style={styles.content}>
         <View style={styles.iconContainer}>
           <MapPin size={64} color={Colors.primary} />
         </View>
-        
+
         <Text style={styles.title}>Location Sharing</Text>
-        
+
         <Text style={styles.description}>
-          Enable location services to share your location with family members and 
-          receive updates about their whereabouts. This is essential for the core 
+          Enable location services to share your location with family members and
+          receive updates about their whereabouts. This is essential for the core
           functionality of Family Tracker.
         </Text>
-        
+
         <View style={styles.permissionCard}>
           <Text style={styles.permissionTitle}>Why we need your location</Text>
           <Text style={styles.permissionDescription}>
@@ -120,14 +120,14 @@ export default function LocationPermissionScreen() {
             Your location data is only shared with your family members and is never sold to third parties.
           </Text>
         </View>
-        
+
         <Image
           source={{ uri: 'https://images.unsplash.com/photo-1581579438747-104c53d7fbc4?q=80&w=1470&auto=format&fit=crop' }}
           style={styles.image}
           resizeMode="cover"
         />
       </View>
-      
+
       <View style={styles.footer}>
         {permissionStatus === 'denied' && (
           <View style={styles.errorContainer}>
@@ -136,7 +136,7 @@ export default function LocationPermissionScreen() {
             </Text>
           </View>
         )}
-        
+
         {permissionStatus === 'granted' ? (
           <Button
             title="Continue to App"
@@ -151,8 +151,8 @@ export default function LocationPermissionScreen() {
               fullWidth
               loading={isLoading}
             />
-            
-            <TouchableOpacity 
+
+            <TouchableOpacity
               style={styles.skipButton}
               onPress={handleSkip}
             >
