@@ -10,6 +10,7 @@ import Button from '@/components/Button';
 import { formatDate } from '@/utils/date';
 import MockMap from "@/components/MockMap";
 import {FamilyMember, User as UserType} from "@/types";
+import Map from "@/components/Map";
 
 const { width } = Dimensions.get('window');
 
@@ -230,16 +231,8 @@ export default function LocationHistoryScreen() {
             </View>
           ) : locationHistory.length > 0 ? (
             <>
-              <MockMap
-                // style={styles.map}
-                // familyLocations={locationHistory.map(loc => ({
-                //   latitude: loc.latitude,
-                //   longitude: loc.longitude,
-                //   timestamp: loc.timestamp,
-                // }))}
-                // showPath
-                // showMarkers
-              />
+              <Map familyLocations={locationHistory} />
+
               <View style={styles.mapOverlay}>
                 <View style={styles.mapInfoContainer}>
                   <Text style={styles.mapInfoTitle}>
@@ -421,17 +414,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 16,
+    padding: 9,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
   },
   mapInfoContainer: {},
   mapInfoTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     color: Colors.light.text,
   },
   mapInfoSubtitle: {
-    fontSize: 14,
+    fontSize: 12,
     color: Colors.light.subtext,
   },
   loadingContainer: {

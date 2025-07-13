@@ -153,7 +153,6 @@ export const useLocation = () => {
           const location = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.Highest
           });
-          console.log('[getCurrentLocation] Current location:', location);
 
           // Update local state
           if (isMountedRef.current) {
