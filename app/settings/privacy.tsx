@@ -384,13 +384,15 @@ export default function PrivacySettingsScreen() {
           )}
         </View>
 
-        <Button
-          title={isSaving ? "Saving..." : "Save Settings"}
-          onPress={handleSaveSettings}
-          disabled={isSaving}
-          fullWidth
-          style={styles.saveButton}
-        />
+        <View style={styles.contentWrapper}>
+          <Button
+            title={isSaving ? "Saving..." : "Save Settings"}
+            onPress={handleSaveSettings}
+            disabled={isSaving}
+            fullWidth
+            style={styles.saveButton}
+          />
+        </View>
       </ScrollView>
     </View>
   );
@@ -589,5 +591,12 @@ const styles = StyleSheet.create({
   saveButton: {
     marginHorizontal: 24,
     marginTop: 8,
+  },
+  contentWrapper: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
   },
 });

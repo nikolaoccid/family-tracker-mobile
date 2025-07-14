@@ -325,13 +325,46 @@ export const useFamilyStore = create<FamilyStore>()(
       },
 
       fetchZoneAnalytics: async (zoneId, startDate, endDate, userId) => {
-        set({ isLoading: true, error: null });
+        set({
+          isLoading: true,
+          error: null,
+          zoneAnalytics: undefined,
+        });
+
         try {
-          const analytics = await safeZoneController.getZoneAnalytics(zoneId, { endDate: endDate, userId: userId, startDate: startDate });
-          console.log('Fetched zone analytics:', analytics);
-          set({ zoneAnalytics: [analytics], isLoading: false, lastFetchTime: { ...get().lastFetchTime, zoneAnalytics: Date.now() } });
+          const analytics = await safeZoneController.getZoneAnalytics(zoneId, {
+            startDate,
+            endDate,
+            userId,
+          });
+
+          console.log('✅ Fetched zone analytics:', analytics);
+
+          set({
+            zoneAnalytics: [analytics],
+            isLoading: false,
+            lastFetchTime: {
+              ...get().lastFetchTime,
+              zoneAnalytics: Date.now(),
+            },
+          });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
+          const isNotFound =
+            (error as any)?.response?.status === 404 ||
+            (error as any)?.message?.includes('No visits') ||
+            (error as any)?.message?.includes('Analytics not found');
+
+          console.warn('⚠️ Zone analytics fetch failed:', error);
+
+          set({
+            isLoading: false,
+            zoneAnalytics: isNotFound ? [] : undefined,
+            error: isNotFound
+              ? null
+              : error instanceof Error
+                ? error.message
+                : 'An error occurred',
+          });
         }
       },
 
