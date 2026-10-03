@@ -233,16 +233,16 @@ export default function LocationHistoryScreen() {
             <>
               <Map familyLocations={locationHistory} />
 
-              <View style={styles.mapOverlay}>
-                <View style={styles.mapInfoContainer}>
-                  <Text style={styles.mapInfoTitle}>
-                    {selectedUser?.name}'s Location History
-                  </Text>
-                  <Text style={styles.mapInfoSubtitle}>
-                    {locationHistory.length} locations recorded
-                  </Text>
-                </View>
-              </View>
+              {/*<View style={styles.mapOverlay}>*/}
+              {/*  <View style={styles.mapInfoContainer}>*/}
+              {/*    <Text style={styles.mapInfoTitle}>*/}
+              {/*      {selectedUser?.name}'s Location History*/}
+              {/*    </Text>*/}
+              {/*    <Text style={styles.mapInfoSubtitle}>*/}
+              {/*      {locationHistory.length} locations recorded*/}
+              {/*    </Text>*/}
+              {/*  </View>*/}
+              {/*</View>*/}
             </>
           ) : (
             <View style={styles.emptyContainer}>

@@ -4,10 +4,9 @@ import { locationController } from '@/api/locationController';
 import { useAuthStore } from '@/store/authStore';
 import { useLocationStore } from '@/store/locationStore';
 
-export const LOCATION_TRACKING = 'location-tracking';
+export const TASK = 'BG_LOCATION';
 
-// Define the background task
-TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
+TaskManager.defineTask(TASK, async ({ data, error }) => {
   if (error) {
     console.error('Location tracking task error:', error);
     return;
@@ -90,18 +89,18 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
 // Start location tracking
 export const startLocationTracking = async () => {
   // Check foreground permission first
-  // const foreground = await Location.getForegroundPermissionsAsync();
+  const foreground = await Location.getForegroundPermissionsAsync();
   //
-  // if (foreground.status !== 'granted') {
+  if (foreground.status !== 'granted') {
     const { status: requestedForeground } = await Location.requestForegroundPermissionsAsync();
     if (requestedForeground !== 'granted') {
       console.error('Location permission not granted');
       return false;
     }
-  // }
+  }
 
   // Check background permission next
-  // const background = await Location.getBackgroundPermissionsAsync();
+  const background = await Location.getBackgroundPermissionsAsync();
 
   // if (background.status !== 'granted') {
     const { status: requestedBackground } = await Location.requestBackgroundPermissionsAsync();
@@ -112,23 +111,23 @@ export const startLocationTracking = async () => {
   // }
 
   try {
-    const isRegistered = await TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING);
+    const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK);
     if (isRegistered) {
       return true;
     }
 
     // Uncomment when ready to enable background tracking
-    // await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
-    //   accuracy: Location.Accuracy.Balanced,
-    //   timeInterval: 60000,
-    //   distanceInterval: 10,
-    //   foregroundService: {
-    //     notificationTitle: 'Family Tracker',
-    //     notificationBody: 'Tracking your location for your family',
-    //   },
-    //   activityType: Location.ActivityType.Other,
-    //   showsBackgroundLocationIndicator: true,
-    // });
+    await Location.startLocationUpdatesAsync(TASK, {
+      accuracy: Location.Accuracy.Balanced,
+      timeInterval: 60000,
+      distanceInterval: 50,
+      foregroundService: {
+        notificationTitle: 'Family Tracker',
+        notificationBody: 'Tracking your location for your family',
+      },
+      activityType: Location.ActivityType.Other,
+      showsBackgroundLocationIndicator: true,
+    });
 
     return true;
   } catch (error) {
@@ -141,10 +140,10 @@ export const startLocationTracking = async () => {
 // Stop location tracking
 export const stopLocationTracking = async () => {
   try {
-    const isRegistered = await TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING);
+    const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK);
 
     if (isRegistered) {
-      await Location.stopLocationUpdatesAsync(LOCATION_TRACKING);
+      await Location.stopLocationUpdatesAsync(TASK);
       console.log('Location tracking stopped');
     }
 
@@ -158,7 +157,7 @@ export const stopLocationTracking = async () => {
 // Check if location tracking is active
 export const isLocationTrackingActive = async () => {
   try {
-    return await TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING);
+    return await TaskManager.isTaskRegisteredAsync(TASK);
   } catch (error) {
     console.error('Error checking location tracking status:', error);
     return false;
