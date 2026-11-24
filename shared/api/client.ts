@@ -56,6 +56,14 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
   const sleep = config.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
   const random = config.random ?? Math.random;
 
+  // Concurrent 401s on the same token report the end of the session once.
+  let reportedToken: string | null | undefined;
+  const reportUnauthorized = (token: string | null) => {
+    if (reportedToken === token) return;
+    reportedToken = token;
+    config.onUnauthorized?.();
+  };
+
   // Single-flight refresh: concurrent 401s share one refresh call.
   let refreshing: Promise<string | null> | null = null;
   const refreshOnce = (): Promise<string | null> => {
@@ -120,6 +128,14 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
         const { response, text } = await send(method, url, token, options);
 
         if (response.status === 401 && useAuth) {
+          // A concurrent request may already have renewed the token; reuse it instead of refreshing again.
+          const latest = config.getToken();
+          if (!refreshedOnce && latest && latest !== token) {
+            refreshedOnce = true;
+            token = latest;
+            attempt--;
+            continue;
+          }
           if (!refreshedOnce && config.refreshToken) {
             refreshedOnce = true;
             const fresh = await refreshOnce();
@@ -129,7 +145,7 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
               continue;
             }
           }
-          config.onUnauthorized?.();
+          reportUnauthorized(token);
           throw new ApiError({ kind: 'unauthorized', status: 401, message: 'Your session has expired' });
         }
 

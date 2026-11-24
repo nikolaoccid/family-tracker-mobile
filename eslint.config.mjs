@@ -58,8 +58,13 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.test.{ts,tsx}', 'jest.setup.ts', '__tests__/**'],
+    files: ['**/*.test.{ts,tsx}', 'jest.setup.ts', '__tests__/**', 'test-utils/**'],
     languageOptions: { globals: { ...globals.jest } },
-    rules: { '@typescript-eslint/no-explicit-any': 'off', 'boundaries/entry-point': 'off', 'boundaries/element-types': 'off' },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+      'boundaries/dependencies': 'off',
+      'no-restricted-imports': 'off',
+    },
   },
 );

@@ -4,7 +4,7 @@ import { openEnum, opt } from '@/shared/api';
 export const KNOWN_ALERT_TYPES = ['emergency', 'zone_exit', 'zone_entry', 'low_battery', 'heading_home'] as const;
 export type KnownAlertType = (typeof KNOWN_ALERT_TYPES)[number];
 
-const num = z.number().nullish().transform((v) => v ?? undefined);
+const num = z.number().nullish().transform((v) => v ?? undefined).optional();
 
 /** Wire shape of `GET /family/:id/alerts` rows, mapped to the app's `Alert`. */
 export const alertSchema = z

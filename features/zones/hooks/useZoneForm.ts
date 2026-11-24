@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   DEFAULT_CENTER,
   DEFAULT_RADIUS_M,
@@ -21,11 +21,13 @@ export function useZoneForm(initial: ZoneFormValues = emptyZoneForm()) {
   const [values, setValues] = useState(initial);
   const [errors, setErrors] = useState<ZoneFormErrors>({});
 
+  // Stable identity: screens list `change` in effect dependencies.
+  const change = useCallback((changes: Partial<ZoneFormValues>) => setValues((v) => ({ ...v, ...changes })), []);
+
   return {
     values,
     errors,
-    change: (changes: Partial<ZoneFormValues>) => setValues((v) => ({ ...v, ...changes })),
-    replace: setValues,
+    change,
     /** Returns true when the form is valid, and records the errors otherwise. */
     validate: () => {
       const found = validateZoneForm(values);

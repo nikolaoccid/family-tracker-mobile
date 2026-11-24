@@ -4,7 +4,7 @@ import Colors from './colors';
 
 export default function LoadingState() {
   return (
-    <View style={styles.container} accessibilityRole="progressbar">
+    <View style={styles.container} accessible accessibilityRole="progressbar">
       <ActivityIndicator size="large" color={Colors.primary} />
     </View>
   );

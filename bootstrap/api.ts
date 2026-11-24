@@ -36,8 +36,12 @@ export function startApp(): void {
   // Headless context (background location): rebuild the session from secure storage on demand.
   let hydrating: Promise<void> | null = null;
   registerLocationTask(async () => {
-    if (!useAuthStore.getState().hydrated) hydrating ??= hydrateAuth();
-    await hydrating;
+    if (!useAuthStore.getState().hydrated) {
+      hydrating ??= hydrateAuth().finally(() => {
+        hydrating = null;
+      });
+      await hydrating;
+    }
     return useAuthStore.getState().isAuthenticated;
   });
 }

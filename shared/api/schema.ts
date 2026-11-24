@@ -2,7 +2,7 @@ import { z, type ZodType } from 'zod';
 
 /** Optional field that also accepts `null` (the server serialises missing columns as null). */
 export const opt = <T extends ZodType>(schema: T) =>
-  schema.nullish().transform((value) => value ?? undefined);
+  schema.nullish().transform((value) => value ?? undefined).optional();
 
 /**
  * Open enum: known values pass through, anything the server adds later maps to

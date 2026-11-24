@@ -14,7 +14,7 @@ interface Props {
 /** The one place a screen shows a failed load. */
 export default function ErrorState({ error, title = 'Something went wrong', onRetry }: Props) {
   return (
-    <View style={styles.container} accessibilityRole="alert">
+    <View style={styles.container} accessible accessibilityRole="alert">
       <AlertTriangle size={40} color={Colors.danger} />
       <Text style={styles.title}>{title}</Text>
       {error ? <Text style={styles.message}>{errorMessage(error)}</Text> : null}

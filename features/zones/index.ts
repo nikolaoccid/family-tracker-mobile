@@ -5,3 +5,4 @@ export { ZonesScreen } from './screens/ZonesScreen';
 export { CreateZoneScreen } from './screens/CreateZoneScreen';
 export { EditZoneScreen } from './screens/EditZoneScreen';
 export { ZoneAnalyticsScreen } from './screens/ZoneAnalyticsScreen';
+export { zonesApi } from './api/zonesApi';
