@@ -71,8 +71,6 @@ Rules, enforced by `npm run lint` and `__tests__/architecture.test.ts`:
 - `shared/` imports no feature.
 - No `console.*`, no `any` without a comment.
 
-
-
 ## Run it
 
 Requirements: Node 20+, and for device builds Xcode or the Android SDK.
