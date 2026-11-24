@@ -1,121 +1,58 @@
-import { useState, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import { useAuthStore } from '@/store/authStore';
-import {registerPushToken} from "@/api/utils";
+import { logger } from '@/shared/logger';
+import { useAuthStore, authApi } from '@/features/auth';
 
-// Configure notifications
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 });
 
-export const usePushNotifications = () => {
+async function ensureAndroidChannel() {
+  if (Platform.OS !== 'android') return;
+  await Notifications.setNotificationChannelAsync('default', {
+    name: 'default',
+    importance: Notifications.AndroidImportance.MAX,
+    vibrationPattern: [0, 250, 250, 250],
+    lightColor: '#FF231F7C',
+  });
+}
+
+/** Push permission, token registration with the API, and the last notification received in the foreground. */
+export function usePushNotifications() {
+  const userId = useAuthStore((s) => s.user?.id);
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>();
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);
-  const notificationListener = useRef<Notifications.Subscription>();
-  const responseListener = useRef<Notifications.Subscription>();
-  const { user } = useAuthStore();
 
-  // Register for push notifications
-  const registerForPushNotifications = async () => {
-    if (Platform.OS === 'web') {
-      console.log('Push notifications not supported on web');
-      return;
-    }
-
+  const registerForPushNotifications = useCallback(async () => {
+    if (Platform.OS === 'web') return undefined;
     try {
-      // Request permission
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
+      const existing = await Notifications.getPermissionsAsync();
+      const status = existing.status === 'granted' ? existing.status : (await Notifications.requestPermissionsAsync()).status;
+      if (status !== 'granted') return undefined;
 
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-
-      if (finalStatus !== 'granted') {
-        console.log('Failed to get push token for push notification!');
-        return;
-      }
-
-      // Get the token
       const token = (await Notifications.getExpoPushTokenAsync()).data;
       setExpoPushToken(token);
-
-      // Register with server if user is logged in
-      if (user?.id) {
-        await registerPushToken(token);
-      }
-
-      // Configure for Android
-      if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
-          importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
-          lightColor: '#FF231F7C',
-        });
-      }
-
+      if (userId) await authApi.registerPushToken(token);
+      await ensureAndroidChannel();
       return token;
     } catch (error) {
-      console.error('Error registering for push notifications:', error);
+      logger.warn('push registration failed', error);
+      return undefined;
     }
-  };
+  }, [userId]);
 
-  // Send a local notification
-  const sendLocalNotification = async (title: string, body: string, data = {}) => {
-    if (Platform.OS === 'web') {
-      console.log('Local notifications not supported on web');
-      return;
-    }
-
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title,
-        body,
-        data,
-      },
-      trigger: null, // Send immediately
-    });
-  };
-
-  // Set up notification listeners
   useEffect(() => {
     if (Platform.OS === 'web') return;
+    const received = Notifications.addNotificationReceivedListener(setNotification);
+    return () => received.remove();
+  }, []);
 
-    // Register for push notifications
-    registerForPushNotifications();
-
-    // Listen for incoming notifications
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
-
-    // Listen for notification responses
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log('Notification response:', response);
-      // Handle notification response (e.g., navigate to a specific screen)
-    });
-
-    return () => {
-      if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(notificationListener.current);
-      }
-      if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
-      }
-    };
-  }, [user?.id]);
-
-  return {
-    expoPushToken,
-    notification,
-    registerForPushNotifications,
-    sendLocalNotification,
-  };
-};
+  return { expoPushToken, notification, registerForPushNotifications };
+}

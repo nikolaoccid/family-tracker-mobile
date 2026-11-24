@@ -2,22 +2,19 @@ import React from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Bell } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import { useFamilyStore } from '@/store/familyStore';
-import AlertItem from '@/components/AlertItem';
+import Colors from '@/shared/ui/colors';
+import { useFamily } from '@/features/family';
+import { QueryBoundary } from '@/shared/ui';
+import { useAlerts } from '../hooks/useAlerts';
+import { useReadAlertsStore } from '../model/readAlertsStore';
+import AlertItem from '../components/AlertItem';
 
-export default function AlertsScreen() {
-  const { markAlertAsRead, filteredAlerts } = useFamilyStore();
-
-  const unreadCount = filteredAlerts().filter(alert => !alert.read).length;
-
-  const handleAlertPress = (alertId: string) => {
-    markAlertAsRead(alertId);
-  };
-
-  const handleMarkAsRead = (alertId: string) => {
-    markAlertAsRead(alertId);
-  };
+export function AlertsScreen() {
+  const family = useFamily().data;
+  const query = useAlerts(family?.id);
+  const markRead = useReadAlertsStore((s) => s.markRead);
+  const { alerts } = query;
+  const unreadCount = alerts.filter((alert) => !alert.read).length;
 
   return (
     <View style={styles.container}>
@@ -34,15 +31,16 @@ export default function AlertsScreen() {
         </View>
       </View>
 
-      {filteredAlerts().length > 0 ? (
+      <QueryBoundary query={query}>
+        {() => alerts.length > 0 ? (
         <FlatList
-          data={filteredAlerts()}
+          data={alerts}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <AlertItem
               alert={item}
-              onPress={() => handleAlertPress(item.id)}
-              onMarkAsRead={() => handleMarkAsRead(item.id)}
+              onPress={() => markRead(item.id)}
+              onMarkAsRead={() => markRead(item.id)}
             />
           )}
           contentContainerStyle={styles.listContent}
@@ -57,6 +55,7 @@ export default function AlertsScreen() {
           </Text>
         </View>
       )}
+      </QueryBoundary>
     </View>
   );
 }

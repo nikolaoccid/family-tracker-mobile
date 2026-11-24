@@ -3,14 +3,14 @@ import { StyleSheet, View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingV
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
-import { useAuthStore } from '@/store/authStore';
+import Colors from '@/shared/ui/colors';
+import Button from '@/shared/ui/Button';
+import Input from '@/shared/ui/Input';
+import { useAuthFlow } from '../hooks/useAuthFlow';
 
-export default function RegisterScreen() {
+export function RegisterScreen() {
   const router = useRouter();
-  const { register, isLoading, error, clearError } = useAuthStore();
+  const { register, isLoading, error, clearError } = useAuthFlow();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

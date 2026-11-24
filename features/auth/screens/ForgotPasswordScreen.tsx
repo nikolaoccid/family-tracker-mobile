@@ -3,15 +3,15 @@ import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platfor
 import { useRouter, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
-import { useAuthStore } from '@/store/authStore';
+import Colors from '@/shared/ui/colors';
+import Button from '@/shared/ui/Button';
+import Input from '@/shared/ui/Input';
+import { useAuthFlow } from '../hooks/useAuthFlow';
 
-export default function ForgotPasswordScreen() {
+export function ForgotPasswordScreen() {
   const router = useRouter();
   const navigation = useNavigation();
-  const { resetPassword, isLoading, error, clearError } = useAuthStore();
+  const { requestPasswordReset: resetPassword, isLoading, error, clearError } = useAuthFlow();
 
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -49,12 +49,7 @@ export default function ForgotPasswordScreen() {
 
   const handleResetPassword = async () => {
     if (validateForm()) {
-      try {
-        await resetPassword(email);
-          setIsSubmitted(true);
-      } catch (error) {
-        // Error is handled by the store
-      }
+      if (await resetPassword(email)) setIsSubmitted(true);
     }
   };
 

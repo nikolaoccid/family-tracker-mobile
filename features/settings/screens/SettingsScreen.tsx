@@ -1,381 +1,59 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch, Platform } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import {
-  User,
-  CreditCard,
-  Bell,
-  Shield,
-  HelpCircle,
-  LogOut,
-  ChevronRight,
-  BatteryMedium,
-  MapPin,
-  Clock,
-  Lock
-} from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import { useAuthStore } from '@/store/authStore';
-import { useLocationStore } from '@/store/locationStore';
-import Avatar from '@/components/Avatar';
-import { usePushNotifications } from '@/hooks/usePushNotifications';
-import { useLocation } from '@/hooks/useLocation';
+import { Clock, CreditCard, Lock, LogOut, User } from 'lucide-react-native';
+import { useAuthStore } from '@/features/auth';
+import { config } from '@/shared/api';
+import Colors from '@/shared/ui/colors';
+import MenuItem from '@/shared/ui/MenuItem';
+import { ProfileCard } from '../components/ProfileCard';
 
-export default function SettingsScreen() {
+export function SettingsScreen() {
   const router = useRouter();
-  const { user, logout } = useAuthStore();
-  const { isBackgroundTrackingEnabled, setBackgroundTrackingEnabled } = useLocationStore();
-  const { registerForPushNotifications } = usePushNotifications();
-  const { isBackgroundActive } = useLocation();
+  const user = useAuthStore((s) => s.user);
+  const signOut = useAuthStore((s) => s.signOut);
 
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [batteryAlertsEnabled, setBatteryAlertsEnabled] = useState(true);
-
-  const handleToggleNotifications = async (value: boolean) => {
-    setNotificationsEnabled(value);
-    if (value && Platform.OS !== 'web') {
-      await registerForPushNotifications();
-    }
-  };
-
-  const handleToggleBackgroundTracking = (value: boolean) => {
-    setBackgroundTrackingEnabled(value);
-  };
-
-  const handleLogout = () => {
-    logout();
+  const openProfile = () => user && router.push(`/profile/view/${user.id}`);
+  const logout = () => {
+    signOut();
     router.replace('/(auth)');
-  };
-
-  const handleEditProfile = () => {
-    if (user) {
-      router.push(`/profile/view/${user.id}`);
-    }
-  };
-
-  const handleSubscription = () => {
-    router.push('/subscription');
-  };
-
-  const handlePrivacySettings = () => {
-    router.push('/settings/privacy');
-  };
-
-  const handleScheduleSettings = () => {
-    router.push('/schedule/create');
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {user ? (
-          <TouchableOpacity
-            style={styles.profileCard}
-            onPress={handleEditProfile}
-          >
-            <Avatar
-              source={user.avatar}
-              name={user.name}
-              size={60}
-            />
-            <View style={styles.profileInfo}>
-              <Text style={styles.profileName}>{user.name}</Text>
-              <Text style={styles.profileEmail}>{user.email}</Text>
-              {user.isPremium ? (
-                <View style={styles.premiumBadge}>
-                  <Text style={styles.premiumText}>Premium</Text>
-                </View>
-              ) : null}
-            </View>
-            <ChevronRight size={20} color={Colors.light.icon} />
-          </TouchableOpacity>
-        ) : null}
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {user ? <ProfileCard user={user} onPress={openProfile} /> : null}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account</Text>
-
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={handleEditProfile}
-          >
-            <View style={styles.menuIconContainer}>
-              <User size={20} color={Colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Personal Information</Text>
-            <ChevronRight size={20} color={Colors.light.icon} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={handleSubscription}
-          >
-            <View style={styles.menuIconContainer}>
-              <CreditCard size={20} color={Colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Subscription</Text>
-            <ChevronRight size={20} color={Colors.light.icon} />
-          </TouchableOpacity>
+          <MenuItem label="Personal Information" Icon={User} onPress={openProfile} />
+          <MenuItem label="Subscription" Icon={CreditCard} onPress={() => router.push('/subscription')} />
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Privacy & Location</Text>
-
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={handlePrivacySettings}
-          >
-            <View style={styles.menuIconContainer}>
-              <Lock size={20} color={Colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Privacy Settings</Text>
-            <ChevronRight size={20} color={Colors.light.icon} />
-          </TouchableOpacity>
-
+          <MenuItem label="Privacy Settings" Icon={Lock} onPress={() => router.push('/settings/privacy')} />
           {user?.isPremium && (
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={handleScheduleSettings}
-            >
-              <View style={styles.menuIconContainer}>
-                <Clock size={20} color={Colors.primary} />
-              </View>
-              <Text style={styles.menuText}>Sharing Schedules</Text>
-              <ChevronRight size={20} color={Colors.light.icon} />
-            </TouchableOpacity>
+            <MenuItem label="Sharing Schedules" Icon={Clock} onPress={() => router.push('/schedule/create')} />
           )}
         </View>
 
-        {/*<View style={styles.section}>*/}
-        {/*  <Text style={styles.sectionTitle}>Preferences</Text>*/}
-
-        {/*  <View style={styles.menuItem}>*/}
-        {/*    <View style={styles.menuIconContainer}>*/}
-        {/*      <Bell size={20} color={Colors.primary} />*/}
-        {/*    </View>*/}
-        {/*    <Text style={styles.menuText}>Notifications</Text>*/}
-        {/*    <Switch*/}
-        {/*      value={notificationsEnabled}*/}
-        {/*      onValueChange={handleToggleNotifications}*/}
-        {/*      trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}*/}
-        {/*      thumbColor={notificationsEnabled ? Colors.primary : Colors.light.icon}*/}
-        {/*      ios_backgroundColor={Colors.light.border}*/}
-        {/*    />*/}
-        {/*  </View>*/}
-
-        {/*  <View style={styles.menuItem}>*/}
-        {/*    <View style={styles.menuIconContainer}>*/}
-        {/*      <MapPin size={20} color={Colors.primary} />*/}
-        {/*    </View>*/}
-        {/*    <View style={styles.locationSettingContainer}>*/}
-        {/*      <View>*/}
-        {/*        <Text style={styles.menuText}>Location Tracking</Text>*/}
-        {/*        <Text style={styles.locationDescription}>*/}
-        {/*          {isBackgroundTrackingEnabled*/}
-        {/*            ? "Background tracking enabled"*/}
-        {/*            : "Only tracks when app is open"}*/}
-        {/*        </Text>*/}
-        {/*      </View>*/}
-        {/*      <Switch*/}
-        {/*        value={isBackgroundTrackingEnabled}*/}
-        {/*        onValueChange={handleToggleBackgroundTracking}*/}
-        {/*        trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}*/}
-        {/*        thumbColor={isBackgroundTrackingEnabled ? Colors.primary : Colors.light.icon}*/}
-        {/*        ios_backgroundColor={Colors.light.border}*/}
-        {/*      />*/}
-        {/*    </View>*/}
-        {/*  </View>*/}
-
-        {/*  <View style={styles.menuItem}>*/}
-        {/*    <View style={styles.menuIconContainer}>*/}
-        {/*      <MapPin size={20} color={Colors.primary} />*/}
-        {/*    </View>*/}
-        {/*    <View style={styles.locationStatusContainer}>*/}
-        {/*      <Text style={styles.menuText}>Location Status</Text>*/}
-        {/*      <View style={styles.statusContainer}>*/}
-        {/*        <View style={[*/}
-        {/*          styles.statusIndicator,*/}
-        {/*          isBackgroundActive ? styles.statusActive : styles.statusInactive*/}
-        {/*        ]} />*/}
-        {/*        <Text style={styles.statusText}>*/}
-        {/*          {isBackgroundActive ? 'Active' : 'Inactive'}*/}
-        {/*        </Text>*/}
-        {/*      </View>*/}
-        {/*    </View>*/}
-        {/*  </View>*/}
-
-        {/*  <View style={styles.menuItem}>*/}
-        {/*    <View style={styles.menuIconContainer}>*/}
-        {/*      <BatteryMedium size={20} color={Colors.primary} />*/}
-        {/*    </View>*/}
-        {/*    <Text style={styles.menuText}>Battery Alerts</Text>*/}
-        {/*    <Switch*/}
-        {/*      value={batteryAlertsEnabled}*/}
-        {/*      onValueChange={setBatteryAlertsEnabled}*/}
-        {/*      trackColor={{ false: Colors.light.border, true: `${Colors.primary}80` }}*/}
-        {/*      thumbColor={batteryAlertsEnabled ? Colors.primary : Colors.light.icon}*/}
-        {/*      ios_backgroundColor={Colors.light.border}*/}
-        {/*    />*/}
-        {/*  </View>*/}
-        {/*</View>*/}
-
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Support</Text>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuIconContainer}>
-              <HelpCircle size={20} color={Colors.primary} />
-            </View>
-            <Text style={styles.menuText}>Help & Support</Text>
-            <ChevronRight size={20} color={Colors.light.icon} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={handleLogout}
-          >
-            <View style={[styles.menuIconContainer, { backgroundColor: `${Colors.danger}20` }]}>
-              <LogOut size={20} color={Colors.danger} />
-            </View>
-            <Text style={[styles.menuText, { color: Colors.danger }]}>Log Out</Text>
-          </TouchableOpacity>
+          <MenuItem label="Log Out" Icon={LogOut} variant="danger" onPress={logout} />
         </View>
 
-        <Text style={styles.versionText}>Version 1.0.0</Text>
+        <Text style={styles.version}>Version {config.appVersion}</Text>
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 40,
-  },
-  profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.light.card,
-    borderRadius: 16,
-    padding: 16,
-    marginTop: 16,
-    marginBottom: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  profileInfo: {
-    flex: 1,
-    marginLeft: 16,
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: Colors.light.text,
-    marginBottom: 4,
-  },
-  profileEmail: {
-    fontSize: 14,
-    color: Colors.light.subtext,
-  },
-  premiumBadge: {
-    backgroundColor: Colors.secondary,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-    marginTop: 4,
-  },
-  premiumText: {
-    color: Colors.light.text,
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.light.text,
-    marginBottom: 12,
-    paddingLeft: 8,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-  },
-  menuIconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: `${Colors.primary}20`,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  menuText: {
-    flex: 1,
-    fontSize: 16,
-    color: Colors.light.text,
-  },
-  locationSettingContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 12,
-  },
-  locationDescription: {
-    fontSize: 12,
-    color: Colors.light.subtext,
-    marginTop: 4,
-  },
-  locationStatusContainer: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  statusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  statusIndicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginRight: 6,
-  },
-  statusActive: {
-    backgroundColor: Colors.success,
-  },
-  statusInactive: {
-    backgroundColor: Colors.danger,
-  },
-  statusText: {
-    fontSize: 14,
-    color: Colors.light.text,
-    fontWeight: '500',
-  },
-  versionText: {
-    fontSize: 12,
-    color: Colors.light.subtext,
-    textAlign: 'center',
-    marginTop: 16,
-  },
+  container: { flex: 1, backgroundColor: Colors.light.background },
+  content: { paddingHorizontal: 16, paddingBottom: 40 },
+  section: { marginBottom: 24 },
+  sectionTitle: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 12, paddingLeft: 8 },
+  version: { fontSize: 12, color: Colors.light.subtext, textAlign: 'center', marginTop: 16 },
 });

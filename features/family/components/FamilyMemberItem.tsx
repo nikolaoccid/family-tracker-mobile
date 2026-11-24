@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { FamilyMember } from '@/types';
-import Colors from '@/constants/colors';
-import Avatar from './Avatar';
-import { formatDistanceToNow } from '@/utils/date';
+import type { FamilyMember } from '../model/family';
+import Colors from '@/shared/ui/colors';
+import Avatar from '@/shared/ui/Avatar';
+import { formatDistanceToNow } from '@/shared/utils/date';
 import { BatteryMedium, MapPin, Trash2, UserCog } from 'lucide-react-native';
 
 interface FamilyMemberItemProps {

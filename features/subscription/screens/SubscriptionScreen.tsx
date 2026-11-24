@@ -1,121 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import Button from '@/components/Button';
-import SubscriptionCard from '@/components/SubscriptionCard';
-import { useSubscriptionStore } from '@/store/subscriptionStore';
-import { useAuthStore } from '@/store/authStore';
-import { useStripe } from '@stripe/stripe-react-native';
-import {paymentController} from "@/api/paymentController";
-import {subscriptionController} from "@/api";
+import { AlertCircle, ArrowLeft, RefreshCw } from 'lucide-react-native';
+import { useAuthStore } from '@/features/auth';
+import { QueryBoundary } from '@/shared/ui';
+import Button from '@/shared/ui/Button';
+import Colors from '@/shared/ui/colors';
+import { confirm } from '@/shared/utils/confirm';
+import SubscriptionCard from '../components/SubscriptionCard';
+import { usePlans } from '../hooks/usePlans';
+import { useSubscriptionActions } from '../hooks/useSubscriptionActions';
 
-export default function SubscriptionScreen() {
+export function SubscriptionScreen() {
   const router = useRouter();
-  const {
-    fetchSubscriptions,
-    subscriptions,
-    selectedPlan,
-    selectPlan,
-    isLoading,
-    error,
-    clearError
-  } = useSubscriptionStore();
-  const { user, updateUser } = useAuthStore();
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
-
-  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(
-    user?.isPremium ? 'premium' : 'free'
-  );
-  const [transactionFailed, setTransactionFailed] = useState(false);
-  const [transactionError, setTransactionError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchSubscriptions();
-  }, []);
+  const user = useAuthStore((s) => s.user);
+  const plans = usePlans();
+  const actions = useSubscriptionActions();
+  const [selectedPlanId, setSelectedPlanId] = useState<string>(user?.isPremium ? 'premium' : 'free');
+  const [failure, setFailure] = useState<string | null>(null);
 
   const handleSelectPlan = (planId: string) => {
     setSelectedPlanId(planId);
-    selectPlan(planId);
-    setTransactionFailed(false);
-    setTransactionError(null);
-    clearError();
+    setFailure(null);
   };
 
   const handleContinue = async () => {
-    if (selectedPlanId === 'premium') {
-      try {
-        setTransactionFailed(false);
-        setTransactionError(null);
-
-        if (!user?.email) {
-          throw new Error('User email is required for payment processing');
-        }
-        const { clientSecret, customerId } = await paymentController.createPaymentIntent(
-          999,
-          'usd',
-          user.email
-        );
-
-        const { error: initError } = await initPaymentSheet({
-            paymentIntentClientSecret: clientSecret,
-            merchantDisplayName: 'Family Tracker',
-        });
-
-        if (initError) throw initError;
-
-        const { error: paymentError } = await presentPaymentSheet();
-        if (paymentError) throw paymentError;
-
-        await subscriptionController.subscribeToPlan('premium');
-        updateUser({ isPremium: true });
-        router.back();
-      } catch (error: any) {
-        console.error(error);
-        setTransactionFailed(true);
-        setTransactionError(error.message || 'Unexpected payment error');
-      }
-    } else {
-      await subscriptionController.subscribeToPlan('free');
-      updateUser({ isPremium: false });
-      router.back();
-    }
+    setFailure(null);
+    const outcome = selectedPlanId === 'premium' ? await actions.subscribePremium() : await actions.subscribeFree();
+    if (outcome.ok) router.back();
+    else setFailure(outcome.message);
   };
 
-  const handleCancelSubscription = () => {
-    if (Platform.OS === 'web') {
-      if (confirm('Are you sure you want to cancel your premium subscription? You will lose access to premium features at the end of your billing period.')) {
-        updateUser({ isPremium: false });
-        setSelectedPlanId('free');
-        selectPlan('free');
-      }
-    } else {
-      Alert.alert(
-        'Cancel Subscription',
+  const handleCancelSubscription = async () => {
+    const ok = await confirm({
+      title: 'Cancel Subscription',
+      message:
         'Are you sure you want to cancel your premium subscription? You will lose access to premium features at the end of your billing period.',
-        [
-          { text: 'No', style: 'cancel' },
-          {
-            text: 'Yes, Cancel',
-            style: 'destructive',
-            onPress: () => {
-              updateUser({ isPremium: false });
-              setSelectedPlanId('free');
-              selectPlan('free');
-            }
-          }
-        ]
-      );
-    }
+      confirmLabel: 'Yes, Cancel',
+      destructive: true,
+    });
+    if (!ok) return;
+    const outcome = await actions.cancel();
+    if (outcome.ok) setSelectedPlanId('free');
+    else setFailure(outcome.message);
   };
 
-  const handleRetry = () => {
-    setTransactionFailed(false);
-    setTransactionError(null);
-    handleContinue();
-  };
+  const transactionFailed = failure !== null;
+  const isLoading = actions.busy;
 
   return (
     <View style={styles.container}>
@@ -140,22 +72,16 @@ export default function SubscriptionScreen() {
           Choose the plan that best fits your family's needs
         </Text>
 
-        {error ? (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        ) : null}
-
         {transactionFailed ? (
           <View style={styles.transactionErrorContainer}>
             <AlertCircle size={24} color={Colors.danger} />
             <Text style={styles.transactionErrorTitle}>Transaction Failed</Text>
             <Text style={styles.transactionErrorText}>
-              {transactionError || 'There was a problem processing your payment. Please try again.'}
+              {failure || 'There was a problem processing your payment. Please try again.'}
             </Text>
             <TouchableOpacity
               style={styles.retryButton}
-              onPress={handleRetry}
+              onPress={() => void handleContinue()}
             >
               <RefreshCw size={16} color={Colors.primary} />
               <Text style={styles.retryText}>Retry Payment</Text>
@@ -163,7 +89,8 @@ export default function SubscriptionScreen() {
           </View>
         ) : null}
 
-        {subscriptions.map((plan) => (
+        <QueryBoundary query={plans}>
+          {(subscriptions) => subscriptions.map((plan) => (
           <SubscriptionCard
             key={plan.id}
             plan={plan}
@@ -171,6 +98,7 @@ export default function SubscriptionScreen() {
             onSelect={() => handleSelectPlan(plan.id)}
           />
         ))}
+        </QueryBoundary>
 
         <Text style={styles.disclaimer}>
           You can change or cancel your subscription at any time from the settings.
@@ -181,7 +109,7 @@ export default function SubscriptionScreen() {
         {user?.isPremium && selectedPlanId === 'free' ? (
           <Button
             title="Cancel Premium Subscription"
-            onPress={handleCancelSubscription}
+            onPress={() => void handleCancelSubscription()}
             variant="danger"
             fullWidth
             style={styles.cancelButton}
@@ -189,7 +117,7 @@ export default function SubscriptionScreen() {
         ) : (
           <Button
             title={user?.isPremium ? "Update Subscription" : "Continue"}
-            onPress={handleContinue}
+            onPress={() => void handleContinue()}
             disabled={!selectedPlanId || isLoading || (user?.isPremium && selectedPlanId === 'premium') || transactionFailed}
             loading={isLoading}
             fullWidth

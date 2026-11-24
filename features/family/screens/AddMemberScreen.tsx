@@ -2,15 +2,21 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, Mail, Share2 } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
-import { useFamilyStore } from '@/store/familyStore';
+import { ArrowLeft, Mail } from 'lucide-react-native';
+import Colors from '@/shared/ui/colors';
+import Button from '@/shared/ui/Button';
+import Input from '@/shared/ui/Input';
+import { errorMessage } from '@/shared/api';
+import { useFamily } from '../hooks/useFamily';
+import { useAddMember } from '../hooks/useFamilyMutations';
 
-export default function AddMemberScreen() {
+export function AddMemberScreen() {
   const router = useRouter();
-  const { addFamilyMember, isLoading, error, clearError } = useFamilyStore();
+  const family = useFamily().data;
+  const add = useAddMember(family?.id);
+  const isLoading = add.isPending;
+  const error = add.error ? errorMessage(add.error) : null;
+  const clearError = add.reset;
 
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -38,17 +44,12 @@ export default function AddMemberScreen() {
   const handleAddMember = async () => {
     if (validateForm()) {
       try {
-        await addFamilyMember(email);
+        await add.mutateAsync(email);
         setIsSubmitted(true);
-      } catch (error) {
-        // Error is handled by the store
+      } catch {
+        // surfaced through `error`
       }
     }
-  };
-
-  const handleShareInvite = () => {
-    // In a real app, this would use the Share API
-    console.log('Sharing invite link');
   };
 
   return (
@@ -78,14 +79,6 @@ export default function AddMemberScreen() {
           <Text style={styles.successMessage}>
             We've sent an invitation to {email}. They'll be added to your family group once they accept.
           </Text>
-          {/*<Button*/}
-          {/*  title="Share Invite Link"*/}
-          {/*  onPress={handleShareInvite}*/}
-          {/*  variant="outline"*/}
-          {/*  icon={<Share2 size={20} color={Colors.primary} />}*/}
-          {/*  fullWidth*/}
-          {/*  style={styles.shareButton}*/}
-          {/*/>*/}
           <Button
             title="Done"
             onPress={() => router.back()}
@@ -119,7 +112,7 @@ export default function AddMemberScreen() {
           <Button
             title="Send Invitation"
             onPress={handleAddMember}
-            loading={isSubmitted}
+            loading={isLoading}
             fullWidth
             style={styles.sendButton}
           />

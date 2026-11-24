@@ -3,15 +3,16 @@ import { StyleSheet, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingVi
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Users } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import { useFamilyStore } from '@/store/familyStore';
-import { useAuthStore } from '@/store/authStore';
-import Button from '@/components/Button';
+import Colors from '@/shared/ui/colors';
+import { useAuthStore } from '@/features/auth';
+import { useCreateFamily } from '../hooks/useFamilyMutations';
+import Button from '@/shared/ui/Button';
 
-export default function CreateFamilyScreen() {
+export function CreateFamilyScreen() {
   const router = useRouter();
-  const { createFamily, isLoading } = useFamilyStore();
-  const { user } = useAuthStore();
+  const create = useCreateFamily();
+  const isLoading = create.isPending;
+  const user = useAuthStore((s) => s.user);
 
   const [familyName, setFamilyName] = useState('');
   const [error, setError] = useState('');
@@ -28,9 +29,9 @@ export default function CreateFamilyScreen() {
     }
 
     try {
-      await createFamily(familyName);
+      await create.mutateAsync(familyName.trim());
       router.replace('/');
-    } catch (err) {
+    } catch {
       setError('Failed to create family. Please try again.');
     }
   };

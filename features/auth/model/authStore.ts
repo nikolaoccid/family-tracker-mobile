@@ -53,6 +53,7 @@ export const useAuthStore = create<AuthStore>()(
 
 /** Loads the token from secure storage once persisted state has been restored. */
 export async function hydrateAuth(): Promise<void> {
+  if (!useAuthStore.persist.hasHydrated()) await useAuthStore.persist.rehydrate();
   const token = await readAccessToken();
   const { isAuthenticated } = useAuthStore.getState();
   useAuthStore.setState({

@@ -3,79 +3,64 @@ import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { PlusCircle, MapPin } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import { useFamilyStore } from '@/store/familyStore';
-import SafeZoneItem from '@/components/SafeZoneItem';
-import Button from '@/components/Button';
+import { useFamily } from '@/features/family';
+import { QueryBoundary } from '@/shared/ui';
+import Button from '@/shared/ui/Button';
+import Colors from '@/shared/ui/colors';
+import SafeZoneItem from '../components/SafeZoneItem';
+import { useZones } from '../hooks/useZones';
 
-export default function SafeZonesScreen() {
+export function ZonesScreen() {
   const router = useRouter();
-  const { safeZones, family } = useFamilyStore();
-
-  const handleCreateZone = () => {
-    router.push('/zones/create');
-  };
-
-  const handleZonePress = (zoneId: string) => {
-    router.push({
-      pathname: '/zones/edit',
-      params: { id: zoneId }
-    });
-  };
+  const family = useFamily().data;
+  const zones = useZones(family?.id);
+  const createZone = () => router.push('/zones/create');
 
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.title}>Safe Zones</Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={handleCreateZone}
-        >
+        <TouchableOpacity style={styles.addButton} onPress={createZone} accessibilityLabel="Add safe zone">
           <PlusCircle size={24} color={Colors.primary} />
         </TouchableOpacity>
       </View>
 
-      {safeZones?.length > 0 ? (
-        <FlatList
-          data={safeZones}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <SafeZoneItem
-              zone={item}
-              onPress={() => handleZonePress(item.id)}
-              memberCount={item?.membersToTrack?.length}
+      <QueryBoundary query={zones}>
+        {(list) =>
+          list.length > 0 ? (
+            <FlatList
+              data={list}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <SafeZoneItem
+                  zone={item}
+                  onPress={() => router.push({ pathname: '/zones/edit', params: { id: item.id } })}
+                />
+              )}
+              contentContainerStyle={styles.listContent}
+              showsVerticalScrollIndicator={false}
+              ListHeaderComponent={
+                <Text style={styles.subtitle}>
+                  Safe zones alert you when family members enter or leave important locations.
+                </Text>
+              }
             />
-          )}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={
-            <Text style={styles.subtitle}>
-              Safe zones alert you when family members enter or leave important locations.
-            </Text>
-          }
-        />
-      ) : (
-        <View style={styles.emptyContainer}>
-          <MapPin size={64} color={Colors.light.icon} />
-          <Text style={styles.emptyTitle}>No Safe Zones</Text>
-          <Text style={styles.emptyText}>
-            Create safe zones to get alerts when family members enter or leave important locations.
-          </Text>
-          <Button
-            title="Create Safe Zone"
-            onPress={handleCreateZone}
-            style={styles.createButton}
-          />
-        </View>
-      )}
+          ) : (
+            <View style={styles.emptyContainer}>
+              <MapPin size={64} color={Colors.light.icon} />
+              <Text style={styles.emptyTitle}>No Safe Zones</Text>
+              <Text style={styles.emptyText}>
+                Create safe zones to get alerts when family members enter or leave important locations.
+              </Text>
+              <Button title="Create Safe Zone" onPress={createZone} style={styles.createButton} />
+            </View>
+          )
+        }
+      </QueryBoundary>
     </View>
   );
 }

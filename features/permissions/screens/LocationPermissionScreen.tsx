@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { MapPin, ArrowRight, CheckCircle } from 'lucide-react-native';
+import { MapPin, ArrowRight } from 'lucide-react-native';
 import * as Location from 'expo-location';
-import Colors from '@/constants/colors';
-import Button from '@/components/Button';
-import { useAuthStore } from '@/store/authStore';
-import { useLocationStore } from '@/store/locationStore';
-import { startLocationTracking } from '@/background/locationTask';
+import Colors from '@/shared/ui/colors';
+import Button from '@/shared/ui/Button';
+import { useUpdateProfile } from '@/features/auth';
+import { startLocationTracking, useLocationStore } from '@/features/location';
+import { logger } from '@/shared/logger';
+import { requestLocationGrant } from '../model/locationGrant';
 
-export default function LocationPermissionScreen() {
+export function LocationPermissionScreen() {
   const router = useRouter();
-  const { updateUser } = useAuthStore();
-  const { setBackgroundTrackingEnabled } = useLocationStore();
+  const { mutate: updateUser } = useUpdateProfile();
+  const setBackgroundTrackingEnabled = useLocationStore((s) => s.setBackgroundTrackingEnabled);
 
   const [permissionStatus, setPermissionStatus] = useState<'pending' | 'granted' | 'denied'>('pending');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,53 +23,20 @@ export default function LocationPermissionScreen() {
     setIsLoading(true);
 
     try {
-      // First request foreground permission
-      const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
-
-      if (foregroundStatus !== 'granted') {
+      const grant = await requestLocationGrant(
+        { requestForeground: Location.requestForegroundPermissionsAsync, requestBackground: Location.requestBackgroundPermissionsAsync },
+        Platform.OS === 'web',
+      );
+      if (grant === 'denied') {
         setPermissionStatus('denied');
-        setIsLoading(false);
         return;
       }
-
-      // Then request background permission
-      if (Platform.OS === 'web') {
-        // Web doesn't support background location
-        setPermissionStatus('granted');
-        updateUser({ hasLocationEnabled: true });
-
-        setTimeout(() => {
-          router.replace('/(tabs)');
-        }, 1000);
-        return;
-      }
-
-      const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-
-      if (backgroundStatus === 'granted') {
-        setPermissionStatus('granted');
-        updateUser({ hasLocationEnabled: true });
-
-        // Start background tracking
-        const success = await startLocationTracking();
-        setBackgroundTrackingEnabled(success);
-
-        // Navigate to the main app after a short delay
-        setTimeout(() => {
-          router.replace('/(tabs)');
-        }, 1000);
-      } else {
-        // If background permission is denied but foreground is granted,
-        // we still mark as granted but with limited functionality
-        setPermissionStatus('granted');
-        updateUser({ hasLocationEnabled: true });
-
-        setTimeout(() => {
-          router.replace('/(tabs)');
-        }, 1000);
-      }
+      setPermissionStatus('granted');
+      updateUser({ hasLocationEnabled: true });
+      if (grant === 'background') setBackgroundTrackingEnabled(await startLocationTracking());
+      setTimeout(() => router.replace('/(tabs)'), 1000);
     } catch (error) {
-      console.error('Error requesting location permission:', error);
+      logger.warn('location permission request failed', error);
       setPermissionStatus('denied');
     } finally {
       setIsLoading(false);

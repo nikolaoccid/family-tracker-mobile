@@ -1,6 +1,7 @@
 import React from 'react';
+export { RouterErrorBoundary as ErrorBoundary } from '@/shared/ui';
 import { Stack } from 'expo-router';
-import Colors from '@/constants/colors';
+import Colors from '@/shared/ui/colors';
 
 export default function ScheduleLayout() {
   return (

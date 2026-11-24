@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Bell, ArrowRight, CheckCircle } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import Button from '@/components/Button';
-import { usePushNotifications } from '@/hooks/usePushNotifications';
-import { useAuthStore } from '@/store/authStore';
+import Colors from '@/shared/ui/colors';
+import Button from '@/shared/ui/Button';
+import { usePushNotifications } from '@/features/notifications';
+import { useUpdateProfile } from '@/features/auth';
+import { logger } from '@/shared/logger';
 
-export default function NotificationsPermissionScreen() {
+export function NotificationPermissionScreen() {
   const router = useRouter();
   const { registerForPushNotifications } = usePushNotifications();
-  const { updateUser } = useAuthStore();
+  const { mutate: updateUser } = useUpdateProfile();
   
   const [permissionStatus, setPermissionStatus] = useState<'pending' | 'granted' | 'denied'>('pending');
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +45,7 @@ export default function NotificationsPermissionScreen() {
         setPermissionStatus('denied');
       }
     } catch (error) {
-      console.error('Error requesting notification permission:', error);
+      logger.warn('notification permission request failed', error);
       setPermissionStatus('denied');
     } finally {
       setIsLoading(false);

@@ -6,3 +6,7 @@ export { RegisterScreen } from './screens/RegisterScreen';
 export { ForgotPasswordScreen } from './screens/ForgotPasswordScreen';
 export { ResetPasswordScreen } from './screens/ResetPasswordScreen';
 export { OAuthRedirectScreen } from './screens/OAuthRedirectScreen';
+export { useProtectedRoute } from './hooks/useProtectedRoute';
+export { decideRoute, type GuardDecision } from './model/routeGuard';
+export { useAuthFlow } from './hooks/useAuthFlow';
+export { useUpdateProfile } from './hooks/useUpdateProfile';

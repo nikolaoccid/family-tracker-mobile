@@ -1,11 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { formatDistanceToNow } from '@/utils/date';
-import { Alert } from '@/types';
-import Colors from '@/constants/colors';
-import Avatar from './Avatar';
+import { formatDistanceToNow } from '@/shared/utils/date';
+import type { Alert } from '../model/alert';
+import Colors from '@/shared/ui/colors';
 import { AlertCircle, Battery, MapPin, Home, LogOut } from 'lucide-react-native';
-import {alertController} from "@/api";
 
 interface AlertItemProps {
   alert: Alert;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { FamilyMember } from '@/types';
-import Colors from '@/constants/colors';
-import Avatar from '@/components/Avatar';
+import type { FamilyMember } from '../model/family';
+import Colors from '@/shared/ui/colors';
+import Avatar from '@/shared/ui/Avatar';
 import { Check } from 'lucide-react-native';
 
 interface MemberSelectorProps {
@@ -11,7 +11,7 @@ interface MemberSelectorProps {
   onSelectMember: (id: string) => void;
 }
 
-export default function MemberSelector({ 
+export function MemberSelector({ 
   members, 
   selectedMemberIds, 
   onSelectMember 

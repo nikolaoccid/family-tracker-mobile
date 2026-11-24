@@ -1,1 +1,1 @@
-export { LocationHistoryScreen as default } from '@/features/location';
+export { LocationHistoryScreen as default } from '@/features/map';

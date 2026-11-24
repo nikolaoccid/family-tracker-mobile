@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Text } from '../components/Themed';
+import { Text } from '@/shared/ui/Themed';
+import { logger } from '@/shared/logger';
 
 import * as WebBrowser from 'expo-web-browser';
-import {useAuthStore} from "@/store/authStore";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function Oauthredirect() {
+export function OAuthRedirectScreen() {
   const params = useLocalSearchParams<{
     code?: string;
     error?: string;
@@ -18,19 +18,18 @@ export default function Oauthredirect() {
     prompt?: string;
   }>();
   const router = useRouter();
-  console.log('OAuth Redirect Params:', params);
 
   useEffect(() => {
     const handleRedirect = async () => {
       try {
         if (params.error) {
-          console.error('OAuth error:', params.error);
+          logger.warn('OAuth error', params.error);
           router.replace('/');
           return;
         }
 
         if (!params.code) {
-          console.error('No OAuth code received');
+          logger.warn('No OAuth code received');
           router.replace('/');
           return;
         }
@@ -41,12 +40,13 @@ export default function Oauthredirect() {
         // Redirect to the main app after successful authentication
         router.replace('/(tabs)');
       } catch (err) {
-        console.error('Error handling OAuth redirect:', err);
+        logger.warn('Error handling OAuth redirect', err);
         router.replace('/');
       }
     };
 
     handleRedirect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once per redirect params
   }, [params]);
 
   return (

@@ -14,5 +14,4 @@ export {
   handleLocationUpdate,
   TASK as LOCATION_TASK,
 } from './background/locationTask';
-export { MapScreen } from './screens/MapScreen';
-export { LocationHistoryScreen } from './screens/LocationHistoryScreen';
+export { useCurrentPosition } from './hooks/useCurrentPosition';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { Subscription } from '@/types';
-import Colors from '@/constants/colors';
+import type { Plan } from '../model/plan';
+import Colors from '@/shared/ui/colors';
 import { Check } from 'lucide-react-native';
 
 interface SubscriptionCardProps {
-  plan: Subscription;
+  plan: Plan;
   isSelected: boolean;
   onSelect: () => void;
 }

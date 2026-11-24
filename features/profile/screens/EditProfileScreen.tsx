@@ -4,19 +4,21 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, User, Mail, Phone, Camera } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
-import Colors from '@/constants/colors';
-import { useAuthStore } from '@/store/authStore';
-import Avatar from '@/components/Avatar';
-import Input from '@/components/Input';
-import Button from '@/components/Button';
+import Colors from '@/shared/ui/colors';
+import { useAuthStore, useUpdateProfile, type User as AppUser } from '@/features/auth';
+import { logger } from '@/shared/logger';
+import Avatar from '@/shared/ui/Avatar';
+import Input from '@/shared/ui/Input';
+import Button from '@/shared/ui/Button';
 
-export default function ProfileEditScreen() {
+export function EditProfileScreen() {
+  const user = useAuthStore((s) => s.user);
+  return user ? <EditProfileForm user={user} /> : null;
+}
+
+function EditProfileForm({ user }: { user: AppUser }) {
   const router = useRouter();
-  const { user, updateUser } = useAuthStore();
-
-  if (!user) {
-    return null;
-  }
+  const updateProfile = useUpdateProfile();
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
@@ -52,7 +54,7 @@ export default function ProfileEditScreen() {
     }
     
     // Validate phone (optional)
-    if (phone && !/^\+?[0-9\s\-\(\)]+$/.test(phone)) {
+    if (phone && !/^\+?[0-9\s\-()]+$/.test(phone)) {
       setPhoneError('Phone number is invalid');
       isValid = false;
     }
@@ -65,19 +67,10 @@ export default function ProfileEditScreen() {
       setIsLoading(true);
       
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        updateUser({
-          name,
-          email,
-          phone: phone || undefined,
-          avatar,
-        });
-        
+        await updateProfile.mutateAsync({ name, email, phone: phone || undefined, avatar });
         router.back();
       } catch (error) {
-        console.error('Failed to update profile:', error);
+        logger.warn('profile update failed', error);
       } finally {
         setIsLoading(false);
       }
@@ -93,11 +86,10 @@ export default function ProfileEditScreen() {
         quality: 0.8,
       });
       
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        setAvatar(result.assets[0].uri);
-      }
+      const picked = result.canceled ? undefined : result.assets[0];
+      if (picked) setAvatar(picked.uri);
     } catch (error) {
-      console.error('Error picking image:', error);
+      logger.warn('image picker failed', error);
     }
   };
 

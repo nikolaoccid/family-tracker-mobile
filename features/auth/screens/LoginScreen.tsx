@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { Link, useRouter, useLocalSearchParams } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, Lock, LogIn } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
-import { useAuthStore } from '@/store/authStore';
+import Colors from '@/shared/ui/colors';
+import Button from '@/shared/ui/Button';
+import Input from '@/shared/ui/Input';
+import { useAuthFlow } from '../hooks/useAuthFlow';
+import { useAuthStore } from '../model/authStore';
+import { config } from '@/shared/api';
+import { logger } from '@/shared/logger';
 import * as Google from 'expo-auth-session/providers/google';
-import { ActivityIndicator } from 'react-native';
 
-const androidClientId = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID ?? ''
 
-export default function LoginScreen() {
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId,
-    iosClientId: 'dummy',
+export function LoginScreen() {
+  const [, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: config.androidClientId,
+    iosClientId: config.iosClientId,
     scopes: ['profile', 'email'],
   });
   const router = useRouter();
-  const { login, loginWithGoogle, isLoading, error, clearError, isAuthenticated } = useAuthStore();
-
-  console.log('error', error);
+  const { login, loginWithGoogle, isLoading, error, clearError } = useAuthFlow();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -32,7 +32,6 @@ export default function LoginScreen() {
     const getUserInfo = async () => {
       if (response?.type === 'success') {
         const accessToken = response.authentication?.accessToken;
-        console.log('accessToken', accessToken);
         if (!accessToken) return;
 
         try {
@@ -42,15 +41,16 @@ export default function LoginScreen() {
             },
           });
           const userInfo = await res.json();
-          console.log('User Info:', userInfo);
-          loginWithGoogle(userInfo.name, userInfo.email, '');
+          await loginWithGoogle(userInfo.name, userInfo.email, '');
         } catch (err) {
-          console.error('Failed to fetch user info', err);
+          logger.warn('could not read Google profile', err);
         }
       }
     };
 
-    response && getUserInfo();
+    if (response) void getUserInfo();
+    // `loginWithGoogle` changes identity every render; the effect must run once per auth response.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [response]);
 
 
@@ -92,7 +92,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (validateForm()) {
-      await login(email, password);
+      await login({ email, password });
     }
   };
 
@@ -101,7 +101,7 @@ export default function LoginScreen() {
         if (Platform.OS === 'android') {
           await promptAsync();
           }} catch (err) {
-            console.error('Google login error:', err);
+            logger.warn('Google sign-in failed', err);
           }
 
       }

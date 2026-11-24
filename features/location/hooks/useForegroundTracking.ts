@@ -60,8 +60,14 @@ export function useForegroundTracking(userId: string | undefined, familyId: stri
   }, [mutate, updateMyLocation]);
 
   useEffect(() => {
-    void requestPermissions();
-  }, [requestPermissions]);
+    let alive = true;
+    ExpoLocation.requestForegroundPermissionsAsync()
+      .then(({ status }) => alive && setPermission(status))
+      .catch((error) => logger.warn('location permission request failed', error));
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (permission !== 'granted' || !userId) return;

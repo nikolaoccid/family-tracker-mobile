@@ -1,16 +1,14 @@
 import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
-import { useAuthStore } from '@/store/authStore';
-import { useFamilyStore } from '@/store/familyStore';
+import { useAuthStore } from '@/features/auth';
+import { FamilyMemberItem, useFamily } from '@/features/family';
+import { QueryBoundary } from '@/shared/ui';
 import { useRouter } from 'expo-router';
-import FamilyMemberItem from '@/components/FamilyMemberItem';
 
-export default function ChatScreen() {
-  const { user } = useAuthStore();
-  const { family } = useFamilyStore();
+export function ChatTabScreen() {
+  const user = useAuthStore((s) => s.user);
+  const familyQuery = useFamily();
   const router = useRouter();
-
-  const members = family?.members?.filter((m) => m.id !== user?.id) || [];
 
   const handleOpenChat = (memberId: string, name: string) => {
     router.push({
@@ -21,8 +19,10 @@ export default function ChatScreen() {
 
   return (
     <View style={styles.container}>
+      <QueryBoundary query={familyQuery}>
+        {(family) => (
       <FlatList
-        data={members}
+        data={(family?.members ?? []).filter((m) => m.id !== user?.id)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <FamilyMemberItem
@@ -34,6 +34,8 @@ export default function ChatScreen() {
         )}
         ListEmptyComponent={<Text>No other family members</Text>}
       />
+        )}
+      </QueryBoundary>
     </View>
   );
 }

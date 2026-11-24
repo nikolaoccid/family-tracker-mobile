@@ -3,13 +3,13 @@ import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-nati
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Edit2, Mail, Phone, Calendar, Crown } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import { useAuthStore } from '@/store/authStore';
-import Avatar from '@/components/Avatar';
-import Button from '@/components/Button';
-import { formatDate } from '@/utils/date';
+import Colors from '@/shared/ui/colors';
+import { useAuthStore } from '@/features/auth';
+import Avatar from '@/shared/ui/Avatar';
+import Button from '@/shared/ui/Button';
+import { formatDate } from '@/shared/utils/date';
 
-export default function ProfileViewScreen() {
+export function ProfileViewScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
 

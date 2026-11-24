@@ -1,16 +1,15 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { SafeZone } from '@/types';
-import Colors from '@/constants/colors';
+import type { SafeZone } from '../model/zone';
+import Colors from '@/shared/ui/colors';
 import { MapPin, Users } from 'lucide-react-native';
 
 interface SafeZoneItemProps {
   zone: SafeZone;
   onPress?: () => void;
-  memberCount?: number;
 }
 
-export default function SafeZoneItem({ zone, onPress, memberCount = 0 }: SafeZoneItemProps) {
+export default function SafeZoneItem({ zone, onPress }: SafeZoneItemProps) {
   return (
     <TouchableOpacity
       style={[styles.container, { borderLeftColor: zone.color }]}
@@ -42,7 +41,7 @@ export default function SafeZoneItem({ zone, onPress, memberCount = 0 }: SafeZon
       <View style={styles.membersContainer}>
         <Users size={16} color={Colors.light.subtext} />
         <Text style={styles.membersCount}>
-          {zone?.membersToTrack?.length}
+          {zone.membersToTrack.length}
         </Text>
       </View>
     </TouchableOpacity>

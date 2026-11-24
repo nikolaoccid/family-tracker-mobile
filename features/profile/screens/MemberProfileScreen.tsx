@@ -1,31 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Mail, Phone, Calendar, Crown, MapPin, BatteryMedium } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import { useAuthStore } from '@/store/authStore';
-import { useFamilyStore } from '@/store/familyStore';
-import Avatar from '@/components/Avatar';
-import Button from '@/components/Button';
-import { formatDate, formatDistanceToNow } from '@/utils/date';
-import { FamilyMember } from '@/types';
+import Colors from '@/shared/ui/colors';
+import { useAuthStore } from '@/features/auth';
+import { useFamily } from '@/features/family';
+import Avatar from '@/shared/ui/Avatar';
+import Button from '@/shared/ui/Button';
+import { formatDate, formatDistanceToNow } from '@/shared/utils/date';
 
-export default function MemberProfileScreen() {
+export function MemberProfileScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { user } = useAuthStore();
-  const { family } = useFamilyStore();
-  const [member, setMember] = useState<FamilyMember | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (family && id) {
-      const foundMember = family.members.find(m => m.id === id);
-      setMember(foundMember || null);
-    }
-    setLoading(false);
-  }, [family, id]);
+  const user = useAuthStore((s) => s.user);
+  const familyQuery = useFamily();
+  const member = familyQuery.data?.members.find((m) => m.id === id) ?? null;
+  const loading = familyQuery.isPending;
 
   const isCurrentUser = user?.id === id;
 

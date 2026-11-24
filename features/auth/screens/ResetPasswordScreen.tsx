@@ -1,31 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Lock, CheckCircle } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
-import { useAuthStore } from '@/store/authStore';
+import Colors from '@/shared/ui/colors';
+import Button from '@/shared/ui/Button';
+import Input from '@/shared/ui/Input';
+import { useAuthFlow } from '../hooks/useAuthFlow';
 
-export default function ResetPasswordScreen() {
+export function ResetPasswordScreen() {
   const router = useRouter();
   const { token } = useLocalSearchParams();
-  const { completePasswordReset, isLoading, error, clearError } = useAuthStore();
+  const { completePasswordReset, isLoading, error, clearError } = useAuthFlow();
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [tokenError, setTokenError] = useState('');
-
-  useEffect(() => {
-    // Validate token exists
-    if (!token) {
-      setTokenError('Invalid or missing reset token. Please request a new password reset link.');
-    }
-  }, [token]);
+  const tokenError = token ? '' : 'Invalid or missing reset token. Please request a new password reset link.';
 
   const validateForm = () => {
     let isValid = true;
@@ -58,12 +51,7 @@ export default function ResetPasswordScreen() {
 
   const handleResetPassword = async () => {
     if (validateForm() && token) {
-      try {
-        await completePasswordReset(String(token), password);
-        setIsSubmitted(true);
-      } catch (error) {
-        // Error is handled by the store
-      }
+      if (await completePasswordReset(String(token), password)) setIsSubmitted(true);
     }
   };
 
