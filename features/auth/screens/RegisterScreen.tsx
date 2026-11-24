@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react-native';
@@ -7,6 +7,8 @@ import Colors from '@/shared/ui/colors';
 import Button from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
+import { validateRegistration, type FieldErrors } from '../model/validation';
+import { styles } from './RegisterScreen.styles';
 
 export function RegisterScreen() {
   const router = useRouter();
@@ -17,55 +19,17 @@ export function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [nameError, setNameError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [errors, setErrors] = useState<FieldErrors<'name' | 'email' | 'password' | 'confirmPassword'>>({});
+  const nameError = errors.name ?? '';
+  const emailError = errors.email ?? '';
+  const passwordError = errors.password ?? '';
+  const confirmPasswordError = errors.confirmPassword ?? '';
 
   const validateForm = () => {
-    let isValid = true;
-
-    // Reset errors
-    setNameError('');
-    setEmailError('');
-    setPasswordError('');
-    setConfirmPasswordError('');
     clearError();
-
-    // Validate name
-    if (!name) {
-      setNameError('Name is required');
-      isValid = false;
-    }
-
-    // Validate email
-    if (!email) {
-      setEmailError('Email is required');
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError('Email is invalid');
-      isValid = false;
-    }
-
-    // Validate password
-    if (!password) {
-      setPasswordError('Password is required');
-      isValid = false;
-    } else if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
-      isValid = false;
-    }
-
-    // Validate confirm password
-    if (!confirmPassword) {
-      setConfirmPasswordError('Please confirm your password');
-      isValid = false;
-    } else if (password !== confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
-      isValid = false;
-    }
-
-    return isValid;
+    const found = validateRegistration({ name, email, password, confirmPassword });
+    setErrors(found);
+    return Object.keys(found).length === 0;
   };
 
   const handleRegister = async () => {
@@ -175,69 +139,3 @@ export function RegisterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 24,
-  },
-  header: {
-    paddingTop: 60,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
-  },
-  backButton: {
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-  },
-  formContainer: {
-    paddingHorizontal: 24,
-  },
-  errorContainer: {
-    backgroundColor: `${Colors.danger}20`,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  errorText: {
-    color: Colors.danger,
-    fontSize: 14,
-  },
-  registerButton: {
-    marginTop: 8,
-    marginBottom: 24,
-  },
-  loginContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  loginText: {
-    color: Colors.light.subtext,
-    fontSize: 14,
-    marginRight: 4,
-  },
-  loginLink: {
-    color: Colors.primary,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  termsText: {
-    color: Colors.light.subtext,
-    fontSize: 12,
-    textAlign: 'center',
-  },
-});

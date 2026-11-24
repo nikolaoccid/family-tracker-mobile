@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react-native';
@@ -7,6 +7,7 @@ import Colors from '@/shared/ui/colors';
 import Button from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
+import { styles } from './ForgotPasswordScreen.styles';
 
 export function ForgotPasswordScreen() {
   const router = useRouter();
@@ -129,66 +130,3 @@ export function ForgotPasswordScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-    paddingHorizontal: 24,
-  },
-  header: {
-    paddingTop: 60,
-    paddingBottom: 24,
-  },
-  backButton: {
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-    marginBottom: 24,
-  },
-  formContainer: {
-    flex: 1,
-  },
-  errorContainer: {
-    backgroundColor: `${Colors.danger}20`,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  errorText: {
-    color: Colors.danger,
-    fontSize: 14,
-  },
-  resetButton: {
-    marginTop: 8,
-  },
-  successContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  successTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginTop: 24,
-    marginBottom: 12,
-  },
-  successMessage: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  backToLoginButton: {
-    marginTop: 8,
-  },
-});

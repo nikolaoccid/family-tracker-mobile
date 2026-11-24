@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, User, Mail, Phone, Camera } from 'lucide-react-native';
@@ -7,9 +7,11 @@ import * as ImagePicker from 'expo-image-picker';
 import Colors from '@/shared/ui/colors';
 import { useAuthStore, useUpdateProfile, type User as AppUser } from '@/features/auth';
 import { logger } from '@/shared/logger';
+import { validateProfile, type ProfileErrors } from '../model/profileForm';
 import Avatar from '@/shared/ui/Avatar';
 import Input from '@/shared/ui/Input';
 import Button from '@/shared/ui/Button';
+import { styles } from './EditProfileScreen.styles';
 
 export function EditProfileScreen() {
   const user = useAuthStore((s) => s.user);
@@ -25,41 +27,16 @@ function EditProfileForm({ user }: { user: AppUser }) {
   const [phone, setPhone] = useState(user.phone || '');
   const [avatar, setAvatar] = useState(user.avatar);
   
-  const [nameError, setNameError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [phoneError, setPhoneError] = useState('');
+  const [errors, setErrors] = useState<ProfileErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const nameError = errors.name ?? '';
+  const emailError = errors.email ?? '';
+  const phoneError = errors.phone ?? '';
 
   const validateForm = () => {
-    let isValid = true;
-    
-    // Reset errors
-    setNameError('');
-    setEmailError('');
-    setPhoneError('');
-    
-    // Validate name
-    if (!name) {
-      setNameError('Name is required');
-      isValid = false;
-    }
-    
-    // Validate email
-    if (!email) {
-      setEmailError('Email is required');
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError('Email is invalid');
-      isValid = false;
-    }
-    
-    // Validate phone (optional)
-    if (phone && !/^\+?[0-9\s\-()]+$/.test(phone)) {
-      setPhoneError('Phone number is invalid');
-      isValid = false;
-    }
-    
-    return isValid;
+    const found = validateProfile({ name, email, phone });
+    setErrors(found);
+    return Object.keys(found).length === 0;
   };
 
   const handleSave = async () => {
@@ -174,52 +151,3 @@ function EditProfileForm({ user }: { user: AppUser }) {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 24,
-  },
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.light.text,
-  },
-  placeholder: {
-    width: 40,
-  },
-  scrollContent: {
-    paddingBottom: 40,
-  },
-  avatarContainer: {
-    alignItems: 'center',
-    paddingVertical: 24,
-  },
-  changePhotoButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  changePhotoText: {
-    color: Colors.primary,
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  formContainer: {
-    paddingHorizontal: 24,
-  },
-  saveButton: {
-    marginTop: 16,
-  },
-});
