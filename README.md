@@ -112,6 +112,7 @@ Everything here ships in the app bundle, so only public values belong in these v
 | `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY` | no | Premium checkout | payment sheet cannot open |
 | `EXPO_PUBLIC_STREAM_API_KEY` | no | Chat | chat shows "not configured" |
 | `EXPO_PUBLIC_ANDROID_CLIENT_ID`, `EXPO_PUBLIC_IOS_CLIENT_ID` | no | Google sign-in | Google button does nothing |
+| `EXPO_OWNER`, `EAS_PROJECT_ID` | no | Your EAS account and project, for EAS builds | EAS builds are not linked |
 | `GOOGLE_SERVICES_FILE` | no | Path to Firebase config, read at build time only | push is not configured in the build |
 
 ## Scripts

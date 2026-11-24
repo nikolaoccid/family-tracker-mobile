@@ -23,7 +23,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   scheme: 'app.familytracker',
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
-  owner: 'nikolasty',
+  // EAS account and project are per owner: set them in your own .env to build with EAS.
+  ...(env.EXPO_OWNER ? { owner: env.EXPO_OWNER } : {}),
   splash: {
     image: './assets/images/splash-icon.png',
     resizeMode: 'contain',
@@ -89,6 +90,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   experiments: { typedRoutes: true },
   extra: {
     router: { origin: 'https://family-tracker.app/' },
-    eas: { projectId: 'bf75b202-51ee-4a26-ae71-c821241c5765' },
+    ...(env.EAS_PROJECT_ID ? { eas: { projectId: env.EAS_PROJECT_ID } } : {}),
   },
 });

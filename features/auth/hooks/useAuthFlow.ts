@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { errorMessage } from '@/shared/api';
+import { errorMessage, toResult } from '@/shared/api';
 import { authApi } from '../api/authApi';
 import { useAuthStore } from '../model/authStore';
 
@@ -19,8 +19,10 @@ export function useAuthFlow() {
     setLoading(true);
     setError(null);
     try {
-      await call();
-      return true;
+      // Expected failures (wrong password, duplicate email) arrive as a typed result.
+      const result = await toResult(call());
+      if (!result.ok) setError(result.error.message);
+      return result.ok;
     } catch (e) {
       setError(errorMessage(e, 'An error occurred'));
       return false;
