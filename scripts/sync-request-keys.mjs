@@ -20,14 +20,18 @@ for (const [path, methods] of Object.entries(doc.paths)) {
     };
   }
 }
-// Two DTOs carry no OpenAPI decorators yet, so the document lists them as empty. Taken from the source:
+// Bodies the document lacks or lists as empty. Taken from the source:
 // RegisterPushTokenDto (notifications.controller.ts), CreatePaymentIntentDto (payments.controller.ts).
+// POST /auth/refresh (bearer only, no body) and POST /auth/google exist in the source but not yet in the document.
 const undocumented = {
+  'POST /auth/refresh': { allowed: [], required: [], bodyless: true },
+  'POST /auth/google': { allowed: ['idToken'], required: ['idToken'] },
   'POST /notifications/register': { allowed: ['token'], required: ['token'] },
   'POST /payments/create-payment-intent': { allowed: ['amount', 'currency'], required: ['amount', 'currency'] },
 };
 for (const [key, body] of Object.entries(undocumented)) {
-  if (routes[key] && routes[key].body && routes[key].body.allowed.length === 0) routes[key].body = body;
+  if (body.bodyless) routes[key] ??= { body: null, query: [] };
+  else if (!routes[key] || (routes[key].body && routes[key].body.allowed.length === 0)) routes[key] = { body, query: [] };
 }
 
 fs.writeFileSync(new URL('../__tests__/request-keys.json', import.meta.url), JSON.stringify(routes, null, 2) + '\n');

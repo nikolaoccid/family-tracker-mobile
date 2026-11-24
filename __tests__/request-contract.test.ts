@@ -59,6 +59,8 @@ beforeAll(async () => {
       authApi.updateProfile({ hasLocationEnabled: true }),
       authApi.updateProfile({ hasNotificationsEnabled: false }),
       authApi.registerPushToken('ExponentPushToken[x]'),
+      authApi.refresh(),
+      authApi.loginWithGoogle('google-id-token'),
       familyApi.current(),
       familyApi.create('The Examples'),
       familyApi.rename(ids.family, 'New'),

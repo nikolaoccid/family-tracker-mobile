@@ -1,5 +1,5 @@
 import { http } from '@/shared/api';
-import { sessionSchema, userSchema, type User } from '../model/user';
+import { refreshedTokenSchema, sessionSchema, userSchema, type User } from '../model/user';
 
 export const authApi = {
   login: (email: string, password: string) =>
@@ -7,6 +7,12 @@ export const authApi = {
 
   register: (name: string, email: string, password: string) =>
     http.post('/users', { name, email, password }, { auth: false, schema: sessionSchema }),
+
+  /** Trades the current (still valid) token for a new 30-day one. */
+  refresh: () => http.post('/auth/refresh', undefined, { schema: refreshedTokenSchema, refresh: false }),
+
+  /** The server verifies the Google ID token itself; first use creates the account. */
+  loginWithGoogle: (idToken: string) => http.post('/auth/google', { idToken }, { auth: false, schema: sessionSchema }),
 
   requestPasswordReset: (email: string) => http.post('/users/reset-password', { email }, { auth: false }),
 

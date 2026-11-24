@@ -1,6 +1,6 @@
 import { configureHttp, config } from '@/shared/api';
 import { logger } from '@/shared/logger';
-import { hydrateAuth, useAuthStore } from '@/features/auth';
+import { authApi, hydrateAuth, useAuthStore } from '@/features/auth';
 import { registerLocationTask } from '@/features/location';
 
 /**
@@ -16,6 +16,18 @@ function selectFetch(): typeof fetch | undefined {
   return undefined;
 }
 
+/** Exchanges the current token for a fresh one. Returns null when the server refuses (expired or revoked). */
+export async function refreshSession(): Promise<string | null> {
+  try {
+    const { token } = await authApi.refresh();
+    await useAuthStore.getState().setToken(token);
+    return token;
+  } catch (error) {
+    logger.info('token refresh refused', error);
+    return null;
+  }
+}
+
 let started = false;
 
 export function startApp(): void {
@@ -26,7 +38,8 @@ export function startApp(): void {
     baseUrl: config.apiBaseUrl,
     fetchImpl: selectFetch(),
     getToken: () => useAuthStore.getState().accessToken,
-    // The API has no refresh endpoint yet; a 401 ends the session.
+    // A 401 refreshes once (single-flight) and retries; the session ends only if the refresh is refused.
+    refreshToken: refreshSession,
     onUnauthorized: () => {
       logger.info('session expired, signing out');
       useAuthStore.getState().signOut();

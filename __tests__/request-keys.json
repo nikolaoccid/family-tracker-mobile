@@ -560,5 +560,20 @@
   "GET /health/ready": {
     "body": null,
     "query": []
+  },
+  "POST /auth/refresh": {
+    "body": null,
+    "query": []
+  },
+  "POST /auth/google": {
+    "body": {
+      "allowed": [
+        "idToken"
+      ],
+      "required": [
+        "idToken"
+      ]
+    },
+    "query": []
   }
 }

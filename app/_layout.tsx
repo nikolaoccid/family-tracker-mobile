@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import AppProviders from '@/bootstrap/AppProviders';
 import TrackingSetup from '@/bootstrap/TrackingSetup';
-import { startApp } from '@/bootstrap/api';
+import { refreshSession, startApp } from '@/bootstrap/api';
 import { hydrateAuth, useAuthStore, useProtectedRoute } from '@/features/auth';
 import { useInviteDeepLink } from '@/features/family';
 import { RouterErrorBoundary } from '@/shared/ui';
@@ -45,6 +45,11 @@ function RootNavigator() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   useProtectedRoute();
   useInviteDeepLink();
+
+  // Best effort once per launch: keeps a long-lived session from reaching its expiry.
+  useEffect(() => {
+    if (isAuthenticated) void refreshSession();
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return (

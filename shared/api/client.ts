@@ -11,8 +11,12 @@ export interface RequestOptions<T> {
   schema?: ZodType<T>;
   /** Skip the Authorization header and the 401 refresh flow (login, register, reset). */
   auth?: boolean;
+  /** Set false on the refresh call itself: its 401 means "cannot refresh", not "try refreshing". */
+  refresh?: boolean;
   /** Allow automatic retries for a non-idempotent call that is safe to repeat. */
   retry?: boolean;
+  /** Sent as `Idempotency-Key`; a keyed create is safe to retry, so it is retried like an idempotent call. */
+  idempotencyKey?: string;
   timeoutMs?: number;
   signal?: AbortSignal;
 }
@@ -91,6 +95,7 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
       const headers: Record<string, string> = { Accept: 'application/json' };
       if (options.body !== undefined) headers['Content-Type'] = 'application/json';
       if (token) headers.Authorization = `Bearer ${token}`;
+      if (options.idempotencyKey) headers['Idempotency-Key'] = options.idempotencyKey;
       const response = await fetchImpl(url, {
         method,
         headers,
@@ -121,7 +126,7 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
   async function request<T>(method: HttpMethod, path: string, options: RequestOptions<T> = {}): Promise<T> {
     const url = buildUrl(config.baseUrl, path, options.query);
     const useAuth = options.auth !== false;
-    const retryable = IDEMPOTENT_METHODS.has(method) || options.retry === true;
+    const retryable = IDEMPOTENT_METHODS.has(method) || options.retry === true || options.idempotencyKey !== undefined;
     let token = useAuth ? config.getToken() : null;
     let refreshedOnce = false;
 
@@ -129,6 +134,9 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
       try {
         const { response, text } = await send(method, url, token, options);
 
+        if (response.status === 401 && useAuth && options.refresh === false) {
+          throw new ApiError({ kind: 'unauthorized', status: 401, message: 'Your session has expired' });
+        }
         if (response.status === 401 && useAuth) {
           // A concurrent request may already have renewed the token; reuse it instead of refreshing again.
           const latest = config.getToken();
@@ -162,6 +170,7 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
           throw new ApiError({ kind: 'http', status: response.status, message, code });
         }
 
+        reportedToken = undefined; // a working session re-arms the sign-out report
         const data = parseBody(text, response.status);
         if (!options.schema) return data as T;
         const parsed = options.schema.safeParse(data);

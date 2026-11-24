@@ -22,3 +22,6 @@ export const sessionSchema = z.object({
 });
 
 export type Session = z.infer<typeof sessionSchema>;
+
+/** `POST /auth/refresh`: a fresh token and the moment it stops working. */
+export const refreshedTokenSchema = z.object({ token: z.string().min(1), expiresAt: z.string().nullish() });

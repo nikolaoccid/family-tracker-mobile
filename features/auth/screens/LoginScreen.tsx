@@ -17,7 +17,7 @@ export function LoginScreen() {
   const router = useRouter();
   const { login, loginWithGoogle, isLoading, error, clearError } = useAuthFlow();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const handleGoogleLogin = useGoogleSignIn((name, email) => loginWithGoogle(name, email, ''));
+  const handleGoogleLogin = useGoogleSignIn(loginWithGoogle);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<FieldErrors<'email' | 'password'>>({});

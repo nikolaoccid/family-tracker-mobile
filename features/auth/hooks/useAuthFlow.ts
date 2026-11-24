@@ -38,9 +38,7 @@ export function useAuthFlow() {
     login: ({ email, password }: Credentials) => run(async () => signIn(await authApi.login(email, password))),
     register: (name: string, email: string, password: string) =>
       run(async () => signIn(await authApi.register(name, email, password))),
-    // Google sign-in creates the account on first use, with the same endpoint as registration.
-    loginWithGoogle: (name: string, email: string, password: string) =>
-      run(async () => signIn(await authApi.register(name, email, password))),
+    loginWithGoogle: (idToken: string) => run(async () => signIn(await authApi.loginWithGoogle(idToken))),
     requestPasswordReset: (email: string) => run(async () => void (await authApi.requestPasswordReset(email))),
     completePasswordReset: (token: string, newPassword: string) =>
       run(async () => void (await authApi.completePasswordReset(token, newPassword))),

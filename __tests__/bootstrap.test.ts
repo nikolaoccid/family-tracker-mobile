@@ -54,6 +54,30 @@ describe('startApp', () => {
     unsubscribe();
   });
 
+  it('a 401 refreshes the token once, retries every request with it, and keeps the session', async () => {
+    const seen: string[] = [];
+    fetchMock.mockImplementation(async (url: string, init: RequestInit) => {
+      const auth = (init.headers as Record<string, string>).Authorization;
+      seen.push(`${new URL(url).pathname} ${auth}`);
+      if (new URL(url).pathname === '/auth/refresh') return json({ token: 'tok-2', expiresAt: '2027-01-01T00:00:00.000Z' });
+      return auth === 'Bearer tok-2' ? json({ ok: true }) : json({}, 401);
+    });
+
+    const results = await Promise.all([http.get('/family/x'), http.get('/privacy-settings'), http.get('/subscription')]);
+
+    expect(results).toEqual([{ ok: true }, { ok: true }, { ok: true }]);
+    expect(seen.filter((s) => s.startsWith('/auth/refresh'))).toEqual(['/auth/refresh Bearer tok-1']);
+    expect(useAuthStore.getState()).toMatchObject({ isAuthenticated: true, accessToken: 'tok-2' });
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith(expect.stringContaining('access-token'), 'tok-2');
+  });
+
+  it('signs out only when the refresh itself is refused', async () => {
+    fetchMock.mockImplementation(async () => json({ message: 'Unauthorized' }, 401));
+    await expect(http.get('/family/x')).rejects.toMatchObject({ kind: 'unauthorized' });
+    expect(fetchMock.mock.calls.filter(([u]) => String(u).endsWith('/auth/refresh'))).toHaveLength(1);
+    expect(useAuthStore.getState().isAuthenticated).toBe(false);
+  });
+
   it('sends the stored token on authenticated calls', async () => {
     fetchMock.mockResolvedValue(json({}));
     await http.get('/privacy-settings');

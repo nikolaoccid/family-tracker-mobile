@@ -18,6 +18,8 @@ interface AuthStore extends Persisted {
   hydrated: boolean;
   signIn: (session: Session) => Promise<void>;
   signOut: () => void;
+  /** Stores a refreshed token in secure storage and in memory. */
+  setToken: (token: string) => Promise<void>;
   patchUser: (changes: Partial<User>) => void;
 }
 
@@ -47,6 +49,10 @@ export const useAuthStore = create<AuthStore>()(
       signIn: async ({ user, token }) => {
         await writeAccessToken(token);
         set({ user, accessToken: token, isAuthenticated: true });
+      },
+      setToken: async (token) => {
+        await writeAccessToken(token);
+        set({ accessToken: token });
       },
       signOut: () => {
         void clearAccessToken();
