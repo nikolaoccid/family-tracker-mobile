@@ -12,7 +12,7 @@ export const createQueryClient = () =>
     defaultOptions: {
       queries: {
         staleTime: MINUTE,
-        gcTime: 10 * MINUTE,
+        gcTime: 24 * 60 * MINUTE, // must cover the persisted cache's max age or restored data is collected at once
         retry: shouldRetry,
         refetchOnReconnect: true,
         refetchOnWindowFocus: false,
