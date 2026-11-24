@@ -1,5 +1,5 @@
 // Regenerates __tests__/request-keys.json from the backend's OpenAPI document:
-//   node scripts/sync-request-keys.mjs ../family-tracker-archive/docs/openapi.json
+//   node scripts/sync-request-keys.mjs ../family-tracker/docs/openapi.json
 // The backend validates with forbidNonWhitelisted, so every key the app sends must appear there.
 import fs from 'node:fs';
 
