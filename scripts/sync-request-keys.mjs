@@ -31,4 +31,4 @@ for (const [key, body] of Object.entries(undocumented)) {
 }
 
 fs.writeFileSync(new URL('../__tests__/request-keys.json', import.meta.url), JSON.stringify(routes, null, 2) + '\n');
-console.log(`wrote ${Object.keys(routes).length} routes`);
+process.stdout.write(`wrote ${Object.keys(routes).length} routes\n`);
