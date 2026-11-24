@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main, senior]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      EXPO_PUBLIC_API_BASE_URL: https://api.example.test
+      EXPO_NO_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint (includes boundary rules)
+        run: npm run lint
+      - name: Test
+        run: npm run test:ci
+      - name: Expo doctor
+        run: npx expo-doctor
+      - name: Bundle (Android) and check the size budget
+        run: |
+          npx expo export --platform android --clear
+          size=$(du -k dist/_expo/static/js/android/*.hbc | cut -f1)
+          echo "bundle: ${size} kB (budget 16000 kB)"
+          test "$size" -le 16000
+      - name: Production bundle must not contain the demo layer
+        run: |
+          if grep -aq "No demo route" dist/_expo/static/js/android/*.hbc; then echo "demo layer leaked into production"; exit 1; fi

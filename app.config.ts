@@ -82,7 +82,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         isAndroidBackgroundLocationEnabled: true,
       },
     ],
-    ['react-native-maps', { androidGoogleMapsApiKey: mapsKey, iosGoogleMapsApiKey: mapsKey }],
     ['expo-router', { origin: 'https://familytracker.app/' }],
     'expo-secure-store',
     'expo-web-browser',
