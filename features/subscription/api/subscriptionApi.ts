@@ -6,6 +6,7 @@ export const subscriptionApi = {
   plans: (signal?: AbortSignal) => http.get('/subscription/plans', { schema: z.array(planSchema), signal }),
   subscribe: (planId: string) => http.post('/subscription', { planId }),
   cancel: () => http.delete('/subscription'),
-  createPaymentIntent: (amount: number, currency: string, email: string) =>
-    http.post('/payments/create-payment-intent', { amount, currency, email }, { schema: paymentIntentSchema }),
+  // The server takes the customer email from the signed-in user; sending it is rejected.
+  createPaymentIntent: (amount: number, currency: string) =>
+    http.post('/payments/create-payment-intent', { amount, currency }, { schema: paymentIntentSchema }),
 };

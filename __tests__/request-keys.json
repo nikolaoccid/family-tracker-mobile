@@ -1,0 +1,564 @@
+{
+  "POST /auth/login": {
+    "body": {
+      "allowed": [
+        "email",
+        "password"
+      ],
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "query": []
+  },
+  "POST /auth/logout": {
+    "body": null,
+    "query": []
+  },
+  "POST /auth/login/jwt": {
+    "body": {
+      "allowed": [
+        "email",
+        "password"
+      ],
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "query": []
+  },
+  "GET /users": {
+    "body": null,
+    "query": [
+      "cursor",
+      "limit"
+    ]
+  },
+  "POST /users": {
+    "body": {
+      "allowed": [
+        "avatar",
+        "email",
+        "name",
+        "password",
+        "phone"
+      ],
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "query": []
+  },
+  "GET /users/me": {
+    "body": null,
+    "query": []
+  },
+  "POST /users/reset-password": {
+    "body": {
+      "allowed": [
+        "email"
+      ],
+      "required": [
+        "email"
+      ]
+    },
+    "query": []
+  },
+  "POST /users/complete-reset": {
+    "body": {
+      "allowed": [
+        "newPassword",
+        "token"
+      ],
+      "required": [
+        "newPassword",
+        "token"
+      ]
+    },
+    "query": []
+  },
+  "PUT /users/user/stripe-subscription": {
+    "body": {
+      "allowed": [
+        "stripeCustomerId",
+        "stripeSubscriptionId",
+        "subscriptionValidUntil"
+      ],
+      "required": [
+        "stripeCustomerId",
+        "stripeSubscriptionId",
+        "subscriptionValidUntil"
+      ]
+    },
+    "query": []
+  },
+  "PUT /users/profile": {
+    "body": {
+      "allowed": [
+        "avatar",
+        "createdAt",
+        "email",
+        "hasLocationEnabled",
+        "hasNotificationsEnabled",
+        "id",
+        "isPremium",
+        "isVerified",
+        "name",
+        "phone",
+        "updatedAt",
+        "userRole"
+      ],
+      "required": []
+    },
+    "query": []
+  },
+  "POST /mail/send": {
+    "body": {
+      "allowed": [
+        "userId"
+      ],
+      "required": [
+        "userId"
+      ]
+    },
+    "query": []
+  },
+  "GET /privacy-settings": {
+    "body": null,
+    "query": []
+  },
+  "PUT /privacy-settings": {
+    "body": {
+      "allowed": [
+        "locationSharingEnabled",
+        "notificationsEnabled",
+        "notifyLowBattery",
+        "notifyZoneEntry",
+        "notifyZoneExit",
+        "schedules",
+        "selectedMembers",
+        "visibleTo"
+      ],
+      "required": [
+        "locationSharingEnabled",
+        "notificationsEnabled",
+        "notifyLowBattery",
+        "notifyZoneEntry",
+        "notifyZoneExit",
+        "schedules",
+        "selectedMembers",
+        "visibleTo"
+      ]
+    },
+    "query": []
+  },
+  "POST /sharing-schedules": {
+    "body": {
+      "allowed": [
+        "createdAt",
+        "days",
+        "enabled",
+        "endTime",
+        "id",
+        "name",
+        "startTime",
+        "updatedAt"
+      ],
+      "required": [
+        "days",
+        "enabled",
+        "endTime",
+        "name",
+        "startTime"
+      ]
+    },
+    "query": []
+  },
+  "GET /sharing-schedules": {
+    "body": null,
+    "query": [
+      "cursor",
+      "limit"
+    ]
+  },
+  "GET /sharing-schedules/{id}": {
+    "body": null,
+    "query": []
+  },
+  "PATCH /sharing-schedules/{id}": {
+    "body": {
+      "allowed": [
+        "days",
+        "enabled",
+        "endTime",
+        "name",
+        "startTime"
+      ],
+      "required": []
+    },
+    "query": []
+  },
+  "DELETE /sharing-schedules/{id}": {
+    "body": null,
+    "query": []
+  },
+  "POST /family": {
+    "body": {
+      "allowed": [
+        "name"
+      ],
+      "required": [
+        "name"
+      ]
+    },
+    "query": []
+  },
+  "POST /family/verify": {
+    "body": {
+      "allowed": [
+        "inviteToken"
+      ],
+      "required": [
+        "inviteToken"
+      ]
+    },
+    "query": []
+  },
+  "POST /family/accept": {
+    "body": {
+      "allowed": [
+        "inviteToken"
+      ],
+      "required": [
+        "inviteToken"
+      ]
+    },
+    "query": []
+  },
+  "POST /family/reject": {
+    "body": {
+      "allowed": [
+        "inviteToken"
+      ],
+      "required": [
+        "inviteToken"
+      ]
+    },
+    "query": []
+  },
+  "GET /family/{familyId}": {
+    "body": null,
+    "query": []
+  },
+  "PUT /family/{familyId}": {
+    "body": {
+      "allowed": [
+        "name"
+      ],
+      "required": []
+    },
+    "query": []
+  },
+  "DELETE /family/{familyId}": {
+    "body": null,
+    "query": []
+  },
+  "POST /family/{familyId}/members": {
+    "body": {
+      "allowed": [
+        "email"
+      ],
+      "required": [
+        "email"
+      ]
+    },
+    "query": []
+  },
+  "DELETE /family/{familyId}/members/{memberId}": {
+    "body": null,
+    "query": []
+  },
+  "PUT /family/{familyId}/members/{memberId}/role": {
+    "body": {
+      "allowed": [
+        "role"
+      ],
+      "required": [
+        "role"
+      ]
+    },
+    "query": []
+  },
+  "PUT /family/{familyId}/location-sharing": {
+    "body": {
+      "allowed": [
+        "isSharing"
+      ],
+      "required": [
+        "isSharing"
+      ]
+    },
+    "query": []
+  },
+  "POST /location": {
+    "body": {
+      "allowed": [
+        "accuracy",
+        "heading",
+        "latitude",
+        "longitude",
+        "speed",
+        "timestamp",
+        "whoCanSeeLocation"
+      ],
+      "required": [
+        "latitude",
+        "longitude",
+        "timestamp"
+      ]
+    },
+    "query": []
+  },
+  "GET /family/{familyId}/locations": {
+    "body": null,
+    "query": []
+  },
+  "GET /location/history/{userId}": {
+    "body": null,
+    "query": [
+      "cursor",
+      "endDate",
+      "limit",
+      "startDate"
+    ]
+  },
+  "GET /user/{userId}/location-history": {
+    "body": null,
+    "query": [
+      "cursor",
+      "endDate",
+      "limit",
+      "startDate"
+    ]
+  },
+  "POST /user/battery": {
+    "body": {
+      "allowed": [
+        "level"
+      ],
+      "required": [
+        "level"
+      ]
+    },
+    "query": []
+  },
+  "GET /family/{familyId}/alerts": {
+    "body": null,
+    "query": [
+      "cursor",
+      "limit"
+    ]
+  },
+  "POST /alert/emergency": {
+    "body": {
+      "allowed": [
+        "accuracy",
+        "familyId",
+        "heading",
+        "latitude",
+        "locationTimestamp",
+        "longitude",
+        "message",
+        "speed",
+        "timestamp",
+        "type",
+        "userId"
+      ],
+      "required": [
+        "familyId"
+      ]
+    },
+    "query": []
+  },
+  "POST /alert/heading-home": {
+    "body": {
+      "allowed": [
+        "accuracy",
+        "familyId",
+        "heading",
+        "latitude",
+        "locationTimestamp",
+        "longitude",
+        "message",
+        "speed",
+        "timestamp",
+        "type",
+        "userId"
+      ],
+      "required": [
+        "familyId"
+      ]
+    },
+    "query": []
+  },
+  "DELETE /alert/{alertId}": {
+    "body": null,
+    "query": []
+  },
+  "POST /notifications/register": {
+    "body": {
+      "allowed": [
+        "token"
+      ],
+      "required": [
+        "token"
+      ]
+    },
+    "query": []
+  },
+  "GET /family/{familyId}/safe-zones": {
+    "body": null,
+    "query": [
+      "cursor",
+      "limit"
+    ]
+  },
+  "GET /safe-zone/{id}": {
+    "body": null,
+    "query": []
+  },
+  "PUT /safe-zone/{id}": {
+    "body": {
+      "allowed": [
+        "centerLatitude",
+        "centerLongitude",
+        "color",
+        "createdAt",
+        "familyId",
+        "id",
+        "isActive",
+        "membersToTrack",
+        "name",
+        "radius"
+      ],
+      "required": []
+    },
+    "query": []
+  },
+  "DELETE /safe-zone/{id}": {
+    "body": null,
+    "query": []
+  },
+  "POST /safe-zone": {
+    "body": {
+      "allowed": [
+        "centerLatitude",
+        "centerLongitude",
+        "color",
+        "familyId",
+        "isActive",
+        "membersToTrack",
+        "name",
+        "radius"
+      ],
+      "required": [
+        "centerLatitude",
+        "centerLongitude",
+        "color",
+        "familyId",
+        "isActive",
+        "membersToTrack",
+        "name",
+        "radius"
+      ]
+    },
+    "query": []
+  },
+  "PUT /safe-zone/{id}/status": {
+    "body": {
+      "allowed": [
+        "isActive"
+      ],
+      "required": [
+        "isActive"
+      ]
+    },
+    "query": []
+  },
+  "GET /zone-analytics/user/{userId}/summary": {
+    "body": null,
+    "query": [
+      "endDate",
+      "startDate"
+    ]
+  },
+  "GET /zone-analytics/user/{userId}/visits": {
+    "body": null,
+    "query": [
+      "cursor",
+      "limit"
+    ]
+  },
+  "GET /zone-analytics/{zoneId}/{userId}": {
+    "body": null,
+    "query": [
+      "endDate",
+      "startDate"
+    ]
+  },
+  "GET /chat/token": {
+    "body": null,
+    "query": []
+  },
+  "POST /payments/create-payment-intent": {
+    "body": {
+      "allowed": [
+        "amount",
+        "currency"
+      ],
+      "required": [
+        "amount",
+        "currency"
+      ]
+    },
+    "query": []
+  },
+  "GET /subscription/plans": {
+    "body": null,
+    "query": []
+  },
+  "GET /subscription": {
+    "body": null,
+    "query": []
+  },
+  "POST /subscription": {
+    "body": {
+      "allowed": [
+        "planId"
+      ],
+      "required": [
+        "planId"
+      ]
+    },
+    "query": []
+  },
+  "DELETE /subscription": {
+    "body": null,
+    "query": []
+  },
+  "GET /health": {
+    "body": null,
+    "query": []
+  },
+  "GET /health/live": {
+    "body": null,
+    "query": []
+  },
+  "GET /health/ready": {
+    "body": null,
+    "query": []
+  }
+}

@@ -34,7 +34,7 @@ export function useSubscriptionActions() {
     subscribePremium: () =>
       run(async () => {
         if (!user?.email) throw new Error('User email is required for payment processing');
-        const { clientSecret } = await subscriptionApi.createPaymentIntent(PREMIUM_PRICE_CENTS, 'usd', user.email);
+        const { clientSecret } = await subscriptionApi.createPaymentIntent(PREMIUM_PRICE_CENTS, 'usd');
         const init = await initPaymentSheet({ paymentIntentClientSecret: clientSecret, merchantDisplayName: 'Family Tracker' });
         if (init.error) throw init.error;
         const paid = await presentPaymentSheet();

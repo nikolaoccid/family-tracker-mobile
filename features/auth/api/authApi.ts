@@ -15,5 +15,5 @@ export const authApi = {
 
   updateProfile: (changes: Partial<User>) => http.put('/users/profile', changes, { schema: userSchema.partial() }),
 
-  registerPushToken: (token: string) => http.post('/user/push-token', { token }),
+  registerPushToken: (token: string) => http.post('/notifications/register', { token }),
 };

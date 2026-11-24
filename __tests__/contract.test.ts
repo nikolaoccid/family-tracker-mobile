@@ -42,7 +42,7 @@ describe('wire contract: routes, methods and bodies are unchanged', () => {
       'POST /users/reset-password': {},
       'POST /users/complete-reset': {},
       'PUT /users/profile': {},
-      'POST /user/push-token': {},
+      'POST /notifications/register': {},
     });
     await authApi.login('a@example.com', 'pw');
     await authApi.register('A', 'a@example.com', 'pw');
@@ -51,7 +51,7 @@ describe('wire contract: routes, methods and bodies are unchanged', () => {
     await authApi.updateProfile({ name: 'B' });
     await authApi.registerPushToken('ExponentPushToken[x]');
     expect(requests.map((r) => `${r.method} ${r.path}`)).toEqual([
-      'POST /auth/login/jwt', 'POST /users', 'POST /users/reset-password', 'POST /users/complete-reset', 'PUT /users/profile', 'POST /user/push-token',
+      'POST /auth/login/jwt', 'POST /users', 'POST /users/reset-password', 'POST /users/complete-reset', 'PUT /users/profile', 'POST /notifications/register',
     ]);
     expect(requests[0]?.body).toEqual({ email: 'a@example.com', password: 'pw' });
     expect(requests[3]?.body).toEqual({ token: 'tok', newPassword: 'new' });
@@ -126,7 +126,7 @@ describe('wire contract: routes, methods and bodies are unchanged', () => {
     await subscriptionApi.plans();
     await subscriptionApi.subscribe('premium');
     await subscriptionApi.cancel();
-    await subscriptionApi.createPaymentIntent(999, 'usd', 'a@example.com');
+    await subscriptionApi.createPaymentIntent(999, 'usd');
     await chatApi.token();
 
     const find = (m: string, p: string) => requests.find((r) => r.method === m && r.path.startsWith(p));
@@ -134,7 +134,7 @@ describe('wire contract: routes, methods and bodies are unchanged', () => {
     expect(find('PUT', `/family/${ids.family}/members/m1/role`)?.body).toEqual({ role: 'admin' });
     expect(find('POST', '/safe-zone')?.body).toMatchObject({ familyId: ids.family, centerLatitude: 1 });
     expect(find('GET', `/location/history/${ids.ana}`)?.path).toBe(`/location/history/${ids.ana}?startDate=2026-05-01&endDate=2026-06-01&limit=1000`);
-    expect(find('POST', '/payments/create-payment-intent')?.body).toEqual({ amount: 999, currency: 'usd', email: 'a@example.com' });
+    expect(find('POST', '/payments/create-payment-intent')?.body).toEqual({ amount: 999, currency: 'usd' });
   });
 });
 
