@@ -20,6 +20,6 @@ const route = { emergency: '/alert/emergency', heading_home: '/alert/heading-hom
 export const alertsApi = {
   list: (familyId: string, signal?: AbortSignal) =>
     http.get(`/family/${familyId}/alerts`, { schema: z.array(alertSchema), signal }),
-  create: (alert: AlertDraft) => http.post(route[alert.type], alert),
+  create: (alert: AlertDraft, idempotencyKey?: string) => http.post(route[alert.type], alert, { idempotencyKey }),
   remove: (alertId: string) => http.delete(`/alert/${alertId}`),
 };

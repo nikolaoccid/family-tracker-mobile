@@ -2,8 +2,8 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Clock, CreditCard, Lock, LogOut, User } from 'lucide-react-native';
-import { useAuthStore } from '@/features/auth';
+import { Clock, CreditCard, Lock, LogOut, Trash2, User } from 'lucide-react-native';
+import { useAuthStore, useDeleteAccount } from '@/features/auth';
 import { config } from '@/shared/api';
 import Colors from '@/shared/ui/colors';
 import MenuItem from '@/shared/ui/MenuItem';
@@ -14,6 +14,7 @@ export function SettingsScreen() {
   const user = useAuthStore((s) => s.user);
   const signOut = useAuthStore((s) => s.signOut);
 
+  const { deleteAccount } = useDeleteAccount(() => router.replace('/(auth)'));
   const openProfile = () => user && router.push(`/profile/view/${user.id}`);
   const logout = () => {
     signOut();
@@ -42,6 +43,7 @@ export function SettingsScreen() {
 
         <View style={styles.section}>
           <MenuItem label="Log Out" Icon={LogOut} variant="danger" onPress={logout} />
+          <MenuItem label="Delete Account" Icon={Trash2} variant="danger" onPress={() => void deleteAccount()} />
         </View>
 
         <Text style={styles.version}>Version {config.appVersion}</Text>

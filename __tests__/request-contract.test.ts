@@ -60,6 +60,7 @@ beforeAll(async () => {
       authApi.updateProfile({ hasNotificationsEnabled: false }),
       authApi.registerPushToken('ExponentPushToken[x]'),
       authApi.refresh(),
+      authApi.deleteAccount(),
       authApi.loginWithGoogle('google-id-token'),
       familyApi.current(),
       familyApi.create('The Examples'),

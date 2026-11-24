@@ -279,3 +279,11 @@ describe('idempotency keys', () => {
     expect(calls).toHaveLength(1);
   });
 });
+
+describe('newIdempotencyKey', () => {
+  it('is on by default and yields a UUID', () => {
+     
+    const { newIdempotencyKey } = require('../idempotency');
+    expect(newIdempotencyKey()).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+  });
+});

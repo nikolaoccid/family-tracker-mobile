@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { newIdempotencyKey } from '@/shared/api';
 import { alertsApi, type AlertDraft } from '../api/alertsApi';
 import { alertKeys } from '../model/keys';
 import { useReadAlertsStore } from '../model/readAlertsStore';
@@ -20,7 +21,7 @@ export function useAlertMutations() {
   const queryClient = useQueryClient();
   const invalidate = () => queryClient.invalidateQueries({ queryKey: alertKeys.all });
   return {
-    create: useMutation({ mutationFn: (draft: AlertDraft) => alertsApi.create(draft), onSuccess: invalidate }),
+    create: useMutation({ mutationFn: (draft: AlertDraft) => alertsApi.create(draft, newIdempotencyKey()), onSuccess: invalidate }),
     remove: useMutation({
       mutationFn: (alertId: string) => alertsApi.remove(alertId),
       onSuccess: invalidate,

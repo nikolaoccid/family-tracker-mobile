@@ -9,4 +9,5 @@ export { OAuthRedirectScreen } from './screens/OAuthRedirectScreen';
 export { useProtectedRoute } from './hooks/useProtectedRoute';
 export { decideRoute, type GuardDecision } from './model/routeGuard';
 export { useAuthFlow } from './hooks/useAuthFlow';
+export { useDeleteAccount } from './hooks/useDeleteAccount';
 export { useUpdateProfile } from './hooks/useUpdateProfile';

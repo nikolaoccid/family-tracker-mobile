@@ -31,6 +31,7 @@ export function createDemoFetch(clock: () => Date = () => new Date(), latencyMs 
     ['POST', /^\/auth\/login\/jwt$/, () => ok({ user: state.user, token: DEMO_TOKEN })],
     ['POST', /^\/users$/, ({ body }) => ok({ user: { ...state.user, name: body.name ?? state.user.name, email: body.email ?? state.user.email }, token: DEMO_TOKEN })],
     ['POST', /^\/users\/(reset-password|complete-reset)$/, () => ok({})],
+    ['DELETE', /^\/users\/me$/, () => ok(null)],
     ['PUT', /^\/users\/profile$/, ({ body }) => ok((state.user = { ...state.user, ...body }))],
     ['POST', /^\/(user\/push-token|user\/battery|location)$/, () => ok({})],
 

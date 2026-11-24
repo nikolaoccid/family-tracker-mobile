@@ -14,6 +14,9 @@ export const authApi = {
   /** The server verifies the Google ID token itself; first use creates the account. */
   loginWithGoogle: (idToken: string) => http.post('/auth/google', { idToken }, { auth: false, schema: sessionSchema }),
 
+  /** Deletes the account and all personal data on the server. */
+  deleteAccount: () => http.delete('/users/me'),
+
   requestPasswordReset: (email: string) => http.post('/users/reset-password', { email }, { auth: false }),
 
   completePasswordReset: (token: string, newPassword: string) =>

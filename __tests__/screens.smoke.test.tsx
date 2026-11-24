@@ -127,3 +127,36 @@ describe('query-driven screens show loading and error through shared components'
     await waitFor(() => expect(getByText('Home')).toBeTruthy());
   });
 });
+
+describe('settings: delete account', () => {
+  it('confirms, calls DELETE /users/me, then leaves for the sign-in screen', async () => {
+    const { Alert } = require('react-native');
+    const { fireEvent } = require('@testing-library/react-native');
+    const { configureHttp } = require('@/shared/api');
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation((...args: unknown[]) => {
+      const buttons = args[2] as { text: string; onPress?: () => void }[] | undefined;
+      buttons?.find((b) => b.text === 'Delete')?.onPress?.();
+    });
+    const calls: string[] = [];
+
+    const Screen = require('../app/(tabs)/settings').default;
+    const { getByText } = renderScreen(<Screen />, 'data');
+    // replace the demo backend with a recorder after the screen is up
+    configureHttp({
+      baseUrl: 'https://api.example.test',
+      getToken: () => 't',
+      fetchImpl: (async (url: string, init: RequestInit) => {
+        calls.push(`${init.method} ${new URL(url).pathname}`);
+        return new Response('', { status: 200 });
+      }) as typeof fetch,
+    });
+    await act(async () => {
+      fireEvent.press(getByText('Delete Account'));
+    });
+
+    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith('/(auth)'));
+    expect(calls).toEqual(['DELETE /users/me']);
+    expect(require('@/features/auth').useAuthStore.getState().isAuthenticated).toBe(false);
+    alertSpy.mockRestore();
+  });
+});

@@ -16,6 +16,21 @@
     "body": null,
     "query": []
   },
+  "POST /auth/refresh": {
+    "body": null,
+    "query": []
+  },
+  "POST /auth/google": {
+    "body": {
+      "allowed": [
+        "idToken"
+      ],
+      "required": [
+        "idToken"
+      ]
+    },
+    "query": []
+  },
   "POST /auth/login/jwt": {
     "body": {
       "allowed": [
@@ -50,6 +65,10 @@
         "password"
       ]
     },
+    "query": []
+  },
+  "DELETE /users/me": {
+    "body": null,
     "query": []
   },
   "GET /users/me": {
@@ -203,6 +222,19 @@
   },
   "DELETE /sharing-schedules/{id}": {
     "body": null,
+    "query": []
+  },
+  "POST /payments/create-payment-intent": {
+    "body": {
+      "allowed": [
+        "amount",
+        "currency"
+      ],
+      "required": [
+        "amount",
+        "currency"
+      ]
+    },
     "query": []
   },
   "POST /family": {
@@ -513,19 +545,6 @@
     "body": null,
     "query": []
   },
-  "POST /payments/create-payment-intent": {
-    "body": {
-      "allowed": [
-        "amount",
-        "currency"
-      ],
-      "required": [
-        "amount",
-        "currency"
-      ]
-    },
-    "query": []
-  },
   "GET /subscription/plans": {
     "body": null,
     "query": []
@@ -559,21 +578,6 @@
   },
   "GET /health/ready": {
     "body": null,
-    "query": []
-  },
-  "POST /auth/refresh": {
-    "body": null,
-    "query": []
-  },
-  "POST /auth/google": {
-    "body": {
-      "allowed": [
-        "idToken"
-      ],
-      "required": [
-        "idToken"
-      ]
-    },
     "query": []
   }
 }
