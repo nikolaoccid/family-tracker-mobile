@@ -1,82 +1,65 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MapView, { Circle, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import Colors from '@/constants/colors';
+import Colors from '@/shared/ui/colors';
 import { Plus, Minus } from 'lucide-react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
 
-function Map({ familyLocations = [], safeZones = [] }: { familyLocations: any[]; safeZones?: any[] }) {
+import type { MapMember, MapZone } from './types';
+
+interface Props {
+  familyLocations?: readonly MapMember[];
+  safeZones?: readonly MapZone[];
+}
+
+const DEFAULT_CENTER = { latitude: 48.8584, longitude: 2.2945 }; // Eiffel Tower: neutral until positions arrive
+const MIN_DELTA = 0.001;
+
+function Map({ familyLocations = [], safeZones = [] }: Props) {
   const mapRef = useRef<MapView>(null);
-  const [famLocations, setFamLocations] = useState(familyLocations);
   const [mapKey, setMapKey] = useState(0);
+  const [delta, setDelta] = useState(0.05);
 
+  // Remount the native map when the tab regains focus; Android can lose its tiles otherwise.
   useFocusEffect(
     useCallback(() => {
-      setMapKey(prev => prev + 1);
-    }, [])
+      setMapKey((prev) => prev + 1);
+    }, []),
   );
 
-  const defaultLat = 37.78825;
-  const defaultLng = -122.4324;
-
-  const [zoomRegion, setZoomRegion] = useState<Region>({
-    latitude: familyLocations[0]?.latitude ?? defaultLat,
-    longitude: familyLocations[0]?.longitude ?? defaultLng,
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05,
-  });
-
-  useEffect(() => {
-    setFamLocations(familyLocations);
-    if (familyLocations.length > 0) {
-      const lat = familyLocations[0].latitude;
-      const lng = familyLocations[0].longitude;
-      if (typeof lat === 'number' && typeof lng === 'number') {
-        const updatedRegion = {
-          ...zoomRegion,
-          latitude: lat,
-          longitude: lng,
-        };
-        setZoomRegion(updatedRegion);
-        mapRef.current?.animateToRegion(updatedRegion, 300);
-      }
-    }
-  }, [familyLocations]);
+  const first = familyLocations.find((m) => typeof m.latitude === 'number' && typeof m.longitude === 'number');
+  const center = first ? { latitude: first.latitude as number, longitude: first.longitude as number } : DEFAULT_CENTER;
+  const region: Region = { ...center, latitudeDelta: delta, longitudeDelta: delta };
 
   const zoom = (factor: number) => {
-    const newRegion = {
-      ...zoomRegion,
-      latitudeDelta: Math.max(0.001, zoomRegion.latitudeDelta * factor),
-      longitudeDelta: Math.max(0.001, zoomRegion.longitudeDelta * factor),
-    };
-    setZoomRegion(newRegion);
-    mapRef.current?.animateToRegion(newRegion, 200);
+    const next = Math.max(MIN_DELTA, delta * factor);
+    setDelta(next);
+    mapRef.current?.animateToRegion({ ...center, latitudeDelta: next, longitudeDelta: next }, 200);
   };
 
   return (
     <View style={styles.container}>
-      {famLocations.length > 0 ? (
+      {familyLocations.length > 0 ? (
         <>
           <MapView
             key={mapKey}
             ref={mapRef}
             style={styles.map}
             provider={PROVIDER_GOOGLE}
-            region={zoomRegion}
+            region={region}
           >
-            {famLocations.map((location, index) => (
+            {familyLocations.map((location, index) => (
               <Marker
                 key={index + location.id}
                 coordinate={{
                   latitude: location.latitude || 0,
                   longitude: location.longitude || 0,
                 }}
-                title={location?.user?.name || 'Unknown'}
+                title={location.user?.name || 'Unknown'}
               />
             ))}
 
-            {safeZones?.filter(zone => zone.isActive).map(zone => (
+            {safeZones.filter(zone => zone.isActive).map(zone => (
               <React.Fragment key={zone.id}>
                 <Circle
                   center={{

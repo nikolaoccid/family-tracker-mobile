@@ -1,47 +1,30 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import MapView, { Marker, Circle, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import Colors from '@/constants/colors';
+import Colors from '@/shared/ui/colors';
 import { Minus, Plus, ZoomIn, ZoomOut } from 'lucide-react-native';
 
-export default function EditableMap({
-                                      center,
-                                      setCenter,
-                                      radius,
-                                      setRadius,
-                                      color,
-                                    }: {
+const MIN_RADIUS_M = 50;
+const MAX_RADIUS_M = 5000;
+const MIN_DELTA = 0.001;
+
+interface Props {
   center: { latitude: number; longitude: number };
   setCenter: (c: { latitude: number; longitude: number }) => void;
   radius: number;
   setRadius: (r: number) => void;
   color: string;
-}) {
+}
+
+export default function EditableMap({ center, setCenter, radius, setRadius, color }: Props) {
   const mapRef = useRef<MapView>(null);
-
-  const [zoomRegion, setZoomRegion] = useState<Region>({
-    latitude: center.latitude,
-    longitude: center.longitude,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  });
-
-  useEffect(() => {
-    setZoomRegion((prev) => ({
-      ...prev,
-      latitude: center.latitude,
-      longitude: center.longitude,
-    }));
-  }, [center]);
+  const [delta, setDelta] = useState(0.01);
+  const region: Region = { ...center, latitudeDelta: delta, longitudeDelta: delta };
 
   const zoom = (factor: number) => {
-    const newRegion = {
-      ...zoomRegion,
-      latitudeDelta: Math.max(0.001, zoomRegion.latitudeDelta * factor),
-      longitudeDelta: Math.max(0.001, zoomRegion.longitudeDelta * factor),
-    };
-    setZoomRegion(newRegion);
-    mapRef.current?.animateToRegion(newRegion, 200);
+    const next = Math.max(MIN_DELTA, delta * factor);
+    setDelta(next);
+    mapRef.current?.animateToRegion({ ...center, latitudeDelta: next, longitudeDelta: next }, 200);
   };
 
   return (
@@ -50,7 +33,7 @@ export default function EditableMap({
         ref={mapRef}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
-        region={zoomRegion}
+        region={region}
         onPress={(e) => setCenter(e.nativeEvent.coordinate)}
       >
         <Marker
@@ -84,13 +67,13 @@ export default function EditableMap({
       <View style={styles.radiusControls}>
         <TouchableOpacity
           style={styles.controlButton}
-          onPress={() => setRadius(Math.min(5000, radius + 50))}
+          onPress={() => setRadius(Math.min(MAX_RADIUS_M, radius + 50))}
         >
           <Plus size={18} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.controlButton}
-          onPress={() => setRadius(Math.max(50, radius - 50))}
+          onPress={() => setRadius(Math.max(MIN_RADIUS_M, radius - 50))}
         >
           <Minus size={18} color="#fff" />
         </TouchableOpacity>
