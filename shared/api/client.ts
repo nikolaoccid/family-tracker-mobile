@@ -47,7 +47,9 @@ export function buildUrl(baseUrl: string, path: string, query?: RequestOptions<u
     if (value !== undefined && value !== null && value !== '') params.append(key, String(value));
   }
   const qs = params.toString();
-  return `${baseUrl.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}${qs ? `?${qs}` : ''}`;
+  const suffix = qs ? `?${qs}` : '';
+  if (/^https?:\/\//.test(path)) return `${path}${suffix}`; // absolute URL for third-party calls
+  return `${baseUrl.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}${suffix}`;
 }
 
 export function createHttpClient(config: HttpClientConfig): HttpClient {

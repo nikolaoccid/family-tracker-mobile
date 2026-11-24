@@ -8,7 +8,8 @@ import Button from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { useAuthStore } from '../model/authStore';
-import { config } from '@/shared/api';
+import { config, createHttpClient } from '@/shared/api';
+import { googleProfileSchema } from '../model/googleProfile';
 import { logger } from '@/shared/logger';
 import * as Google from 'expo-auth-session/providers/google';
 
@@ -35,12 +36,8 @@ export function LoginScreen() {
         if (!accessToken) return;
 
         try {
-          const res = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          const userInfo = await res.json();
+          const google = createHttpClient({ baseUrl: '', getToken: () => accessToken });
+          const userInfo = await google.get('https://www.googleapis.com/userinfo/v2/me', { schema: googleProfileSchema });
           await loginWithGoogle(userInfo.name, userInfo.email, '');
         } catch (err) {
           logger.warn('could not read Google profile', err);

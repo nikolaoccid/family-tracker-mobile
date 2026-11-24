@@ -55,6 +55,10 @@ describe('http client: requests', () => {
     await expect(http.delete('/alert/1')).resolves.toBeUndefined();
   });
 
+  it('buildUrl passes absolute urls through for third-party calls', () => {
+    expect(buildUrl('https://x.test', 'https://other.test/a', { q: 1 })).toBe('https://other.test/a?q=1');
+  });
+
   it('buildUrl joins slashes cleanly', () => {
     expect(buildUrl('https://x.test///', '///a/b')).toBe('https://x.test/a/b');
   });
