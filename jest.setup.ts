@@ -45,6 +45,8 @@ jest.mock('expo-notifications', () => ({
   AndroidImportance: { MAX: 5 },
 }));
 
+jest.mock('expo-crypto', () => ({ randomUUID: () => '11111111-2222-4333-8444-555555555555' }));
+
 jest.mock('expo-battery', () => ({ getBatteryLevelAsync: jest.fn(async () => 0.8) }));
 
 jest.mock('@react-native-community/netinfo', () => ({
@@ -77,4 +79,5 @@ jest.mock('stream-chat-react-native', () => ({
 
 jest.mock('expo-auth-session/providers/google', () => ({
   useAuthRequest: () => [null, null, jest.fn()],
+  useIdTokenAuthRequest: () => [null, null, jest.fn()],
 }));

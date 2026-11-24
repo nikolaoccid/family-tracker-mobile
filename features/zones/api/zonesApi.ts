@@ -12,8 +12,8 @@ export const zonesApi = {
   list: (familyId: string, signal?: AbortSignal) =>
     http.get(`/family/${familyId}/safe-zones`, { schema: z.array(zoneSchema), signal }),
 
-  create: (zone: NewSafeZone, familyId: string) =>
-    http.post('/safe-zone', { ...zone, familyId }, { schema: zoneSchema }),
+  create: (zone: NewSafeZone, familyId: string, idempotencyKey?: string) =>
+    http.post('/safe-zone', { ...zone, familyId }, { schema: zoneSchema, idempotencyKey }),
 
   update: (zoneId: string, zone: Partial<SafeZone>, familyId: string) =>
     http.put(`/safe-zone/${zoneId}`, { ...zone, familyId }, { schema: zoneSchema }),

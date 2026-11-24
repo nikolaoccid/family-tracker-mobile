@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { newIdempotencyKey } from '@/shared/api';
 import { familyApi } from '../api/familyApi';
 import type { Family, MemberRole } from '../model/family';
 import { familyKeys } from '../model/keys';
@@ -17,7 +18,7 @@ function useFamilyMutation<V>(call: (variables: V) => Promise<Family>) {
   });
 }
 
-export const useCreateFamily = () => useFamilyMutation((name: string) => familyApi.create(name));
+export const useCreateFamily = () => useFamilyMutation((name: string) => familyApi.create(name, newIdempotencyKey()));
 
 export const useRenameFamily = (familyId: string | undefined) =>
   useFamilyMutation((name: string) => familyApi.rename(need(familyId), name));

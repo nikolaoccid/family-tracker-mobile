@@ -3,6 +3,8 @@ import Constants from 'expo-constants';
 /** Public, build-time configuration. Everything here ships in the bundle. */
 export const config = {
   apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? '',
+  /** Send Idempotency-Key on creates. Off until the deployed backend supports the header. */
+  idempotencyKeys: process.env.EXPO_PUBLIC_IDEMPOTENCY_KEYS === '1',
   demoMode: process.env.EXPO_PUBLIC_DEMO_MODE === '1',
   stripePublishableKey: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '',
   streamApiKey: process.env.EXPO_PUBLIC_STREAM_API_KEY ?? '',

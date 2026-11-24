@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { newIdempotencyKey } from '@/shared/api';
 import { zonesApi, type AnalyticsRange } from '../api/zonesApi';
 import { zoneKeys } from '../model/keys';
 import type { NewSafeZone, SafeZone } from '../model/zone';
@@ -32,7 +33,7 @@ export function useZoneMutations(familyId: string) {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: zoneKeys.all });
   return {
     create: useMutation({
-      mutationFn: (zone: NewSafeZone) => zonesApi.create(zone, familyId),
+      mutationFn: (zone: NewSafeZone) => zonesApi.create(zone, familyId, newIdempotencyKey()),
       onSuccess: invalidate,
     }),
     update: useMutation({

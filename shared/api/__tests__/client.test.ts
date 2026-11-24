@@ -263,3 +263,19 @@ describe('errors and retry helpers', () => {
     expect(backoffDelay(10, defaultRetryPolicy, () => 0.999)).toBeLessThan(defaultRetryPolicy.maxDelayMs);
   });
 });
+
+describe('idempotency keys', () => {
+  it('sends the key as a header and retries a keyed create with the same key', async () => {
+    const { http, calls } = client([json({}, 503), json({ id: 1 })]);
+    await expect(http.post('/safe-zone', { name: 'x' }, { idempotencyKey: 'key-1' })).resolves.toEqual({ id: 1 });
+    expect(calls).toHaveLength(2);
+    for (const call of calls) expect((call.init.headers as Record<string, string>)['Idempotency-Key']).toBe('key-1');
+  });
+
+  it('omits the header and does not retry a create without a key', async () => {
+    const { http, calls } = client([json({}, 503), json({ id: 1 })]);
+    await expect(http.post('/safe-zone', {})).rejects.toMatchObject({ status: 503 });
+    expect((calls[0]?.init.headers as Record<string, string>)['Idempotency-Key']).toBeUndefined();
+    expect(calls).toHaveLength(1);
+  });
+});

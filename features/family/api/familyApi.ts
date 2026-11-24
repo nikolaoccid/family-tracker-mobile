@@ -16,7 +16,7 @@ const body = { schema: familySchema };
 
 export const familyApi = {
   current: (signal?: AbortSignal) => http.get(`/family/${CURRENT_FAMILY_ID}`, { schema: familyOrNull, signal }),
-  create: (name: string) => http.post('/family', { name }, body),
+  create: (name: string, idempotencyKey?: string) => http.post('/family', { name }, { ...body, idempotencyKey }),
   rename: (familyId: string, name: string) => http.put(`/family/${familyId}`, { name }, body),
   remove: (familyId: string) => http.delete(`/family/${familyId}`),
   addMember: (familyId: string, email: string) => http.post(`/family/${familyId}/members`, { email }, body),
