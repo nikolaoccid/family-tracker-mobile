@@ -127,6 +127,7 @@ Everything here ships in the app bundle, so only public values belong in these v
 
 - **Model logic** (no React): geofence maths, schedule windows, zone form validation, analytics formatting, privacy edits, invite-link validation, route guard, chat channel ids.
 - **API client** against a scripted fake server: 500s and retry, hung request, dropped connection, malformed JSON, tolerant parsing, concurrent 401s sharing one refresh.
+- **Request keys**: `__tests__/request-keys.json` comes from the API's OpenAPI document; regenerate it with `node scripts/sync-request-keys.mjs <openapi.json>`, then `npm run format`.
 - **Contract tests** (`__tests__/contract.test.ts`): every feature API against responses shaped like the backend DTOs, including nulls, missing optionals, unknown fields and unknown enum values.
 - **Persistence**: fixtures from each old schema version must migrate into the current one.
 - **Background tracking**: task registration, permission flow, headless session rebuild.

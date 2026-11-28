@@ -24,7 +24,6 @@ export default tseslint.config(
     languageOptions: { globals: { ...globals.node, __DEV__: 'readonly' } },
     plugins: { 'react-hooks': reactHooks, boundaries },
     settings: {
-      'import/resolver': { typescript: { alwaysTryTypes: true, project: './tsconfig.json' } },
       'boundaries/elements': [
         { type: 'app', pattern: 'app/**', partialMatch: false },
         { type: 'bootstrap', pattern: 'bootstrap/**', partialMatch: false },

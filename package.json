@@ -68,13 +68,10 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@eslint/js": "^10.0.1",
-    "@expo/ngrok": "^4.1.0",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^30.0.0",
     "@types/react": "~19.0.10",
-    "@types/react-test-renderer": "^19.3.1",
     "eslint": "^9.39.5",
-    "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-boundaries": "^7.4.4",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",
