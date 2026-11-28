@@ -16,6 +16,8 @@
     "test:ci": "jest --ci --coverage",
     "doctor": "expo-doctor",
     "bundle": "expo export --platform android --clear",
+    "format": "prettier --write '{app,bootstrap,demo,features,fixtures,shared,__tests__,test-utils,scripts}/**/*.{ts,tsx,js,mjs,json}' '*.{ts,js,mjs,json,cjs}'",
+    "format:check": "prettier --check '{app,bootstrap,demo,features,fixtures,shared,__tests__,test-utils,scripts}/**/*.{ts,tsx,js,mjs,json}' '*.{ts,js,mjs,json,cjs}'",
     "dupes": "jscpd",
     "check": "npm run typecheck && npm run lint && npm test && npm run dupes"
   },
@@ -79,6 +81,7 @@
     "jest": "^29.7.0",
     "jest-expo": "~53.0.14",
     "jscpd": "^5.4.3",
+    "prettier": "^3.10.1",
     "react-test-renderer": "^19.0.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.74.0"
