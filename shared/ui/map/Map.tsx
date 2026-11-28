@@ -1,11 +1,13 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { useMapZoom } from './useMapZoom';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors } from '@/shared/ui/theme';
 import { Plus, Minus } from 'lucide-react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
+import { ZoneOverlay } from './ZoneOverlay';
+import { EmptyMapState } from './EmptyMapState';
 import type { MapMember, MapZone } from './types';
 
 interface Props {
@@ -52,42 +54,8 @@ export function Map({ familyLocations = [], safeZones = [] }: Props) {
               />
             ))}
 
-            {safeZones.filter(zone => zone.isActive).map(zone => (
-              <React.Fragment key={zone.id}>
-                <Circle
-                  center={{
-                    latitude: zone.centerLatitude,
-                    longitude: zone.centerLongitude,
-                  }}
-                  radius={zone.radius}
-                  strokeColor={zone.color}
-                  fillColor={`${zone.color}33`}
-                  zIndex={1}
-                />
-                <Marker
-                  coordinate={{
-                    latitude: zone.centerLatitude,
-                    longitude: zone.centerLongitude,
-                  }}
-                  anchor={{ x: 0.5, y: 1 }}
-                  tracksViewChanges={false}
-                >
-                  <View style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                    paddingHorizontal: 8,
-                    paddingVertical: 4,
-                    borderRadius: 10,
-                  }}>
-                    <Text style={{
-                      color: 'rgba(255, 255, 255, 0.85)',
-                      fontWeight: 'normal',
-                      fontSize: 12,
-                    }}>
-                      {zone.name}
-                    </Text>
-                  </View>
-                </Marker>
-              </React.Fragment>
+            {safeZones.filter((zone) => zone.isActive).map((zone) => (
+              <ZoneOverlay key={zone.id} zone={zone} />
             ))}
           </MapView>
 
@@ -101,12 +69,7 @@ export function Map({ familyLocations = [], safeZones = [] }: Props) {
           </View>
         </>
       ) : (
-        <View style={styles.emptyState}>
-          <Text style={styles.mockMapText}>Map View</Text>
-          <Text style={styles.mockMapSubtext}>
-            Family members' locations would be displayed here
-          </Text>
-        </View>
+        <EmptyMapState />
       )}
     </View>
   );
@@ -132,25 +95,6 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  emptyState: {
-    flex: 1,
-    backgroundColor: Colors.mapBackground,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mockMapText: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginBottom: 8,
-  },
-  mockMapSubtext: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-    textAlign: 'center',
-    paddingHorizontal: 40,
-    marginBottom: 16,
   },
 });
 

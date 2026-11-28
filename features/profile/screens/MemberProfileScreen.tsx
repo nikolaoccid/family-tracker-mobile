@@ -10,6 +10,7 @@ import { useFamily } from '@/features/family';
 import { Avatar } from '@/shared/ui/Avatar';
 import { Button } from '@/shared/ui/Button';
 import { formatDate, formatDistanceToNow } from '@/shared/utils/date';
+import { InfoRow } from '../components/InfoRow';
 import { styles } from './MemberProfileScreen.styles';
 import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
@@ -87,69 +88,35 @@ export function MemberProfileScreen() {
         </View>
 
         <View style={styles.infoSection}>
-          <View style={styles.infoItem}>
-            <Mail size={20} color={Colors.primary} />
-            <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Email</Text>
-              <Text style={styles.infoValue}>{member.email}</Text>
-            </View>
-          </View>
-
-          {member.phone ? (
-            <View style={styles.infoItem}>
-              <Phone size={20} color={Colors.primary} />
-              <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Phone</Text>
-                <Text style={styles.infoValue}>{member.phone}</Text>
-              </View>
-            </View>
-          ) : null}
-
-          <View style={styles.infoItem}>
-            <Calendar size={20} color={Colors.primary} />
-            <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Member Since</Text>
-              <Text style={styles.infoValue}>{formatDate(new Date(member.createdAt))}</Text>
-            </View>
-          </View>
-
+          <InfoRow icon={<Mail size={20} color={Colors.primary} />} label="Email" value={member.email} />
+          {member.phone ? <InfoRow icon={<Phone size={20} color={Colors.primary} />} label="Phone" value={member.phone} /> : null}
+          <InfoRow
+            icon={<Calendar size={20} color={Colors.primary} />}
+            label="Member Since"
+            value={formatDate(new Date(member.createdAt))}
+          />
           {member.isSharing && member.location ? (
-            <View style={styles.infoItem}>
-              <MapPin size={20} color={Colors.primary} />
-              <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Location</Text>
-                <Text style={styles.infoValue}>
-                  {member.location.latitude.toFixed(6)}, {member.location.longitude.toFixed(6)}
+            <InfoRow
+              icon={<MapPin size={20} color={Colors.primary} />}
+              label="Location"
+              value={`${member.location.latitude.toFixed(6)}, ${member.location.longitude.toFixed(6)}`}
+            >
+              {member.lastSeen && (
+                <Text style={styles.lastSeen}>
+                  {online ? 'Online now' : `Last seen ${formatDistanceToNow(new Date(member.lastSeen))} ago`}
                 </Text>
-                {member.lastSeen && (
-                  <Text style={styles.lastSeen}>
-                    {online
-                      ? 'Online now'
-                      : `Last seen ${formatDistanceToNow(new Date(member.lastSeen))} ago`}
-                  </Text>
-                )}
-              </View>
-            </View>
+              )}
+            </InfoRow>
           ) : (
-            <View style={styles.infoItem}>
-              <MapPin size={20} color={Colors.light.icon} />
-              <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Location</Text>
-                <Text style={styles.infoValue}>Location sharing disabled</Text>
-              </View>
-            </View>
+            <InfoRow icon={<MapPin size={20} color={Colors.light.icon} />} label="Location" value="Location sharing disabled" />
           )}
-
           {member.batteryLevel !== undefined ? (
-            <View style={styles.infoItem}>
-              <BatteryMedium size={20} color={batteryColor(member.batteryLevel)} />
-              <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Battery</Text>
-                <Text style={[styles.infoValue, { color: batteryColor(member.batteryLevel) }]}>
-                  {member.batteryLevel}%
-                </Text>
-              </View>
-            </View>
+            <InfoRow
+              icon={<BatteryMedium size={20} color={batteryColor(member.batteryLevel)} />}
+              label="Battery"
+              value={`${member.batteryLevel}%`}
+              valueStyle={{ color: batteryColor(member.batteryLevel) }}
+            />
           ) : null}
         </View>
       </ScrollView>

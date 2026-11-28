@@ -16,12 +16,6 @@ export const styles = StyleSheet.create({
   premiumBadge: commonStyles.premiumBadge,
   premiumText: commonStyles.premiumText,
   infoSection: commonStyles.infoSection,
-  infoItem: commonStyles.infoItem,
-  infoContent: {
-    marginLeft: 16,
-  },
-  infoLabel: commonStyles.infoLabel,
-  infoValue: commonStyles.infoValue,
   upgradeSection: {
     backgroundColor: Colors.light.card,
     borderRadius: 16,

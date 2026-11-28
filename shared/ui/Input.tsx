@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
-  TextInputProps,
-  ViewStyle,
-  NativeSyntheticEvent,
-  TextInputFocusEventData
-} from 'react-native';
+import { Text, TextInput, View, TouchableOpacity, TextInputProps, ViewStyle, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
-import { Colors } from '@/shared/ui/theme';
+import { Colors } from './theme';
+import { styles } from './Input.styles';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -36,22 +27,14 @@ export function Input({
   const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
-
   const handleFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     setIsFocused(true);
-    if (onFocus) {
-      onFocus(e);
-    }
+    onFocus?.(e);
   };
 
   const handleBlur = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     setIsFocused(false);
-    if (onBlur) {
-      onBlur(e);
-    }
+    onBlur?.(e);
   };
 
   const getBorderColor = () => {
@@ -89,7 +72,7 @@ export function Input({
         {secureTextEntry ? (
           <TouchableOpacity
             style={styles.rightIcon}
-            onPress={togglePasswordVisibility}
+            onPress={() => setIsPasswordVisible((visible) => !visible)}
           >
             {isPasswordVisible ? (
               <EyeOff size={20} color={Colors.light.icon} />
@@ -108,50 +91,3 @@ export function Input({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: Colors.light.text,
-    marginBottom: 6,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 12,
-    backgroundColor: Colors.light.card,
-    minHeight: 48,
-  },
-  inputContainerFocused: {
-    borderWidth: 2,
-  },
-  input: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    color: Colors.light.text,
-  },
-  inputWithLeftIcon: {
-    paddingLeft: 8,
-  },
-  inputWithRightIcon: {
-    paddingRight: 8,
-  },
-  leftIcon: {
-    paddingLeft: 16,
-  },
-  rightIcon: {
-    paddingRight: 16,
-  },
-  error: {
-    fontSize: 12,
-    color: Colors.danger,
-    marginTop: 4,
-  },
-});

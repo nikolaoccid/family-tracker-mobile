@@ -8,6 +8,7 @@ import { useAuthStore } from '@/features/auth';
 import { Avatar } from '@/shared/ui/Avatar';
 import { Button } from '@/shared/ui/Button';
 import { formatDate } from '@/shared/utils/date';
+import { InfoRow } from '../components/InfoRow';
 import { styles } from './ProfileViewScreen.styles';
 import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
@@ -60,31 +61,13 @@ export function ProfileViewScreen() {
         </View>
         
         <View style={styles.infoSection}>
-          <View style={styles.infoItem}>
-            <Mail size={20} color={Colors.primary} />
-            <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Email</Text>
-              <Text style={styles.infoValue}>{user.email}</Text>
-            </View>
-          </View>
-          
-          {user.phone ? (
-            <View style={styles.infoItem}>
-              <Phone size={20} color={Colors.primary} />
-              <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Phone</Text>
-                <Text style={styles.infoValue}>{user.phone}</Text>
-              </View>
-            </View>
-          ) : null}
-          
-          <View style={styles.infoItem}>
-            <Calendar size={20} color={Colors.primary} />
-            <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Member Since</Text>
-              <Text style={styles.infoValue}>{formatDate(new Date(user.createdAt))}</Text>
-            </View>
-          </View>
+          <InfoRow icon={<Mail size={20} color={Colors.primary} />} label="Email" value={user.email} />
+          {user.phone ? <InfoRow icon={<Phone size={20} color={Colors.primary} />} label="Phone" value={user.phone} /> : null}
+          <InfoRow
+            icon={<Calendar size={20} color={Colors.primary} />}
+            label="Member Since"
+            value={formatDate(new Date(user.createdAt))}
+          />
         </View>
         
         {!user.isPremium ? (

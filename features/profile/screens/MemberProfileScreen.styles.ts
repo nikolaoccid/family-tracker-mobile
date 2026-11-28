@@ -56,13 +56,6 @@ export const styles = StyleSheet.create({
   premiumBadge: commonStyles.premiumBadge,
   premiumText: commonStyles.premiumText,
   infoSection: commonStyles.infoSection,
-  infoItem: commonStyles.infoItem,
-  infoContent: {
-    marginLeft: 16,
-    flex: 1,
-  },
-  infoLabel: commonStyles.infoLabel,
-  infoValue: commonStyles.infoValue,
   lastSeen: {
     fontSize: 12,
     color: Colors.light.subtext,
