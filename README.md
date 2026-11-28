@@ -4,13 +4,9 @@ A React Native app for families to share locations, get alerts when someone arri
 
 Built with Expo (SDK 53), expo-router, TypeScript in strict mode, TanStack Query and zod.
 
-## Screenshots
+## See it
 
-| Map | Family | Safe zones | Zone analytics |
-| --- | --- | --- | --- |
-| ![Map](docs/screenshots/map.png) | ![Family](docs/screenshots/family.png) | ![Safe zones](docs/screenshots/zones.png) | ![Zone analytics](docs/screenshots/analytics.png) |
-
-Placeholders: run `npm run demo`, capture the screens, and drop the files into `docs/screenshots/`.
+No backend needed: `npm run demo` starts the app on an in-memory API with fictional data, so every screen can be opened.
 
 ## Features
 
@@ -123,8 +119,9 @@ Everything here ships in the app bundle, so only public values belong in these v
 | `npm test` | Jest (jest-expo, React Native Testing Library) |
 | `npm run bundle` | Metro production bundle for Android |
 | `npm run doctor` | `expo-doctor` |
+| `npm run format` / `npm run format:check` | Prettier write / check (120 columns, single quotes) |
 | `npm run dupes` | `jscpd`, fails above 1 percent duplicated code |
-| `npm run check` | typecheck, lint, tests and dupes |
+| `npm run check` | typecheck, lint, format check, tests and dupes |
 
 ## Tests
 

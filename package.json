@@ -14,12 +14,12 @@
     "lint": "eslint .",
     "test": "jest",
     "test:ci": "jest --ci --coverage",
-    "doctor": "expo-doctor",
+    "doctor": "npx expo-doctor",
     "bundle": "expo export --platform android --clear",
     "format": "prettier --write '{app,bootstrap,demo,features,fixtures,shared,__tests__,test-utils,scripts}/**/*.{ts,tsx,js,mjs,json}' '*.{ts,js,mjs,json,cjs}'",
     "format:check": "prettier --check '{app,bootstrap,demo,features,fixtures,shared,__tests__,test-utils,scripts}/**/*.{ts,tsx,js,mjs,json}' '*.{ts,js,mjs,json,cjs}'",
     "dupes": "jscpd",
-    "check": "npm run typecheck && npm run lint && npm test && npm run dupes"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run dupes"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",

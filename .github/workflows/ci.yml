@@ -25,6 +25,8 @@ jobs:
       # installed Expo SDK cannot take. See README, Known limitations.
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=critical
+      - name: Formatting
+        run: npm run format:check
       - name: Lint (includes boundary rules)
         run: npm run lint
       - name: Duplicate code (1 percent gate)
