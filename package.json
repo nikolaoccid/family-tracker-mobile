@@ -88,5 +88,8 @@
     "postcss": "^8.5.23",
     "lodash-es": "^4.18.0",
     "decode-uri-component": "^0.5.1"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
