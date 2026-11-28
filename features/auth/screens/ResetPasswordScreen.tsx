@@ -8,6 +8,7 @@ import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { styles } from './ResetPasswordScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
+import { ErrorBanner } from '@/shared/ui/ErrorBanner';
 
 export function ResetPasswordScreen() {
   const router = useRouter();
@@ -99,11 +100,7 @@ export function ResetPasswordScreen() {
               Enter your new password below to reset your account password.
             </Text>
 
-            {error && (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>
-            )}
+            {error && <ErrorBanner message={error} />}
 
             <Input
               label="New Password"

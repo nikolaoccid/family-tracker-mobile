@@ -10,6 +10,8 @@ import { useFamily } from '../hooks/useFamily';
 import { useAddMember } from '../hooks/useFamilyMutations';
 import { styles } from './AddMemberScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
+import { ErrorBanner } from '@/shared/ui/ErrorBanner';
+import { emailError } from '@/shared/utils/validation';
 
 export function AddMemberScreen() {
   const router = useRouter();
@@ -20,26 +22,14 @@ export function AddMemberScreen() {
   const clearError = add.reset;
 
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [emailErrorText, setEmailError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const validateForm = () => {
-    let isValid = true;
-
-    // Reset errors
-    setEmailError('');
+    const message = emailError(email) ?? '';
+    setEmailError(message);
     clearError();
-
-    // Validate email
-    if (!email) {
-      setEmailError('Email is required');
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError('Email is invalid');
-      isValid = false;
-    }
-
-    return isValid;
+    return !message;
   };
 
   const handleAddMember = async () => {
@@ -88,11 +78,7 @@ export function AddMemberScreen() {
             Invite a family member to join your group. They'll receive an email with instructions.
           </Text>
 
-          {error && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
-          )}
+          {error && <ErrorBanner message={error} />}
 
           <Input
             label="Email Address"
@@ -102,7 +88,7 @@ export function AddMemberScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             leftIcon={<Mail size={20} color={Colors.light.icon} />}
-            error={emailError}
+            error={emailErrorText}
           />
 
           <Button

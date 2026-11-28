@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter, useNavigation } from 'expo-router';
-import { Mail, ArrowLeft, CheckCircle } from 'lucide-react-native';
+import { ArrowLeft, CheckCircle } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
-import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { styles } from './ForgotPasswordScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
+import { ErrorBanner } from '@/shared/ui/ErrorBanner';
+import { EmailInput } from '@/shared/ui/EmailInput';
+import { emailError } from '@/shared/utils/validation';
 
 export function ForgotPasswordScreen() {
   const router = useRouter();
@@ -15,7 +17,7 @@ export function ForgotPasswordScreen() {
   const { requestPasswordReset: resetPassword, isLoading, error, clearError } = useAuthFlow();
 
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [emailErrorText, setEmailError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
@@ -30,22 +32,10 @@ export function ForgotPasswordScreen() {
   }, [navigation, clearError]);
 
   const validateForm = () => {
-    let isValid = true;
-
-    // Reset errors
-    setEmailError('');
+    const message = emailError(email) ?? '';
+    setEmailError(message);
     clearError();
-
-    // Validate email
-    if (!email) {
-      setEmailError('Email is required');
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError('Email is invalid');
-      isValid = false;
-    }
-
-    return isValid;
+    return !message;
   };
 
   const handleResetPassword = async () => {
@@ -95,22 +85,9 @@ export function ForgotPasswordScreen() {
             Enter your email address and we'll send you a link to reset your password.
           </Text>
 
-          {error && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
-          )}
+          {error && <ErrorBanner message={error} />}
 
-          <Input
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            leftIcon={<Mail size={20} color={Colors.light.icon} />}
-            error={emailError}
-          />
+          <EmailInput value={email} onChangeText={setEmail} error={emailErrorText} />
 
           <Button
             title="Send Reset Link"

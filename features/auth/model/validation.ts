@@ -1,12 +1,7 @@
 export type FieldErrors<K extends string> = Partial<Record<K, string>>;
 
-const EMAIL = /\S+@\S+\.\S+/;
+import { emailError } from '@/shared/utils/validation';
 export const MIN_PASSWORD_LENGTH = 6;
-
-export function emailError(email: string): string | undefined {
-  if (!email) return 'Email is required';
-  return EMAIL.test(email) ? undefined : 'Email is invalid';
-}
 
 export function passwordError(password: string): string | undefined {
   if (!password) return 'Password is required';

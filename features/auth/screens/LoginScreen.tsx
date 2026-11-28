@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { Mail, Lock, LogIn } from 'lucide-react-native';
+import { Lock, LogIn } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
@@ -11,6 +11,7 @@ import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
 import { validateLogin, type FieldErrors } from '../model/validation';
 import { styles } from './LoginScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
+import { EmailInput } from '@/shared/ui/EmailInput';
 
 
 export function LoginScreen() {
@@ -62,16 +63,7 @@ export function LoginScreen() {
             </View>
           ) : null}
 
-          <Input
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            leftIcon={<Mail size={20} color={Colors.light.icon} />}
-            error={emailError}
-          />
+          <EmailInput value={email} onChangeText={setEmail} error={emailError} />
 
           <Input
             label="Password"

@@ -1,4 +1,5 @@
-import { emailError, passwordError, validateLogin, validateRegistration } from '../model/validation';
+import { emailError } from '@/shared/utils/validation';
+import { passwordError, validateLogin, validateRegistration } from '../model/validation';
 
 describe('auth form validation', () => {
   it('checks e-mail', () => {

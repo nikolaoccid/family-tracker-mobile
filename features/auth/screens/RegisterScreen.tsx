@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { Mail, Lock, User, ArrowLeft } from 'lucide-react-native';
+import { Lock, User, ArrowLeft } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
@@ -9,6 +9,8 @@ import { useAuthFlow } from '../hooks/useAuthFlow';
 import { validateRegistration, type FieldErrors } from '../model/validation';
 import { styles } from './RegisterScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
+import { ErrorBanner } from '@/shared/ui/ErrorBanner';
+import { EmailInput } from '@/shared/ui/EmailInput';
 
 export function RegisterScreen() {
   const router = useRouter();
@@ -62,11 +64,7 @@ export function RegisterScreen() {
         </View>
 
         <View style={styles.formContainer}>
-          {error && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
-          )}
+          {error && <ErrorBanner message={error} />}
 
           <Input
             label="Full Name"
@@ -77,16 +75,7 @@ export function RegisterScreen() {
             error={nameError}
           />
 
-          <Input
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            leftIcon={<Mail size={20} color={Colors.light.icon} />}
-            error={emailError}
-          />
+          <EmailInput value={email} onChangeText={setEmail} error={emailError} />
 
           <Input
             label="Password"
