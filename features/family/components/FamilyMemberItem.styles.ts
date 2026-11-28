@@ -1,15 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: Colors.light.card,
-    marginBottom: 12,
-    alignItems: 'center',
-  },
+  container: screenStyles.containerAlt,
   content: {
     flex: 1,
     marginLeft: 12,

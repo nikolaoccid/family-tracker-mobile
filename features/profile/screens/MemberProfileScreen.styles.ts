@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
+import { commonStyles } from './common.styles';
 
 export const styles = StyleSheet.create({
   container: {
@@ -24,22 +26,11 @@ export const styles = StyleSheet.create({
     color: Colors.light.text,
     marginBottom: 20,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 24,
-  },
+  header: screenStyles.header,
   backButton: {
     padding: 8,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.light.text,
-  },
+  title: screenStyles.title,
   editButton: {
     padding: 8,
   },
@@ -55,13 +46,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 24,
   },
-  name: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginTop: 16,
-    marginBottom: 8,
-  },
+  name: commonStyles.name,
   adminBadge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -76,46 +61,19 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
   },
-  premiumBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.secondary,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
-  premiumText: {
-    color: Colors.light.text,
-    fontWeight: '600',
-    fontSize: 14,
-    marginLeft: 6,
-  },
+  premiumBadge: commonStyles.premiumBadge,
+  premiumText: commonStyles.premiumText,
   infoSection: {
     paddingHorizontal: 24,
     marginBottom: 32,
   },
-  infoItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-  },
+  infoItem: commonStyles.infoItem,
   infoContent: {
     marginLeft: 16,
     flex: 1,
   },
-  infoLabel: {
-    fontSize: 12,
-    color: Colors.light.subtext,
-    marginBottom: 4,
-  },
-  infoValue: {
-    fontSize: 16,
-    color: Colors.light.text,
-    fontWeight: '500',
-  },
+  infoLabel: commonStyles.infoLabel,
+  infoValue: commonStyles.infoValue,
   lastSeen: {
     fontSize: 12,
     color: Colors.light.subtext,

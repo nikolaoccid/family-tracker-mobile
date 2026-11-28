@@ -1,27 +1,17 @@
 import { StyleSheet, Platform } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 24,
-  },
+  header: screenStyles.header,
   backButton: {
     padding: 8,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.light.text,
-  },
+  title: screenStyles.title,
   placeholder: {
     width: 40,
   },

@@ -1,43 +1,24 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 24,
-  },
+  header: screenStyles.header,
   backButton: {
     padding: 8,
     marginTop: 8,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.light.text,
-  },
+  title: screenStyles.title,
   scrollContent: {
     paddingHorizontal: 24,
     paddingBottom: 100,
   },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-    marginBottom: 24,
-  },
-  errorContainer: {
-    backgroundColor: `${Colors.danger}20`,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
+  subtitle: screenStyles.subtitle,
+  errorContainer: screenStyles.errorContainer,
   errorText: {
     color: Colors.danger,
     fontSize: 14,

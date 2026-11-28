@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 interface Props {
   title: string;
@@ -37,14 +38,7 @@ export function ZoneScreenFrame({ title, headerRight, children }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.light.background },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 24,
-  },
+  header: screenStyles.header,
   back: { padding: 8 },
   title: { fontSize: 20, fontWeight: '700', color: Colors.light.text },
   spacer: { width: 40 },

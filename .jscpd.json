@@ -1,0 +1,10 @@
+{
+  "path": ["app", "bootstrap", "demo", "features", "shared"],
+  "minLines": 5,
+  "minTokens": 50,
+  "threshold": 1,
+  "ignore": ["**/__tests__/**", "**/*.test.*", "**/locale/**", "**/locales/**"],
+  "reporters": ["console"],
+  "gitignore": true,
+  "silent": true
+}

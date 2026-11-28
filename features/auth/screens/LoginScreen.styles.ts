@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
   container: {
@@ -21,12 +22,7 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 16,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginBottom: 8,
-  },
+  title: screenStyles.titleAlt,
   subtitle: {
     fontSize: 16,
     color: Colors.light.subtext,
@@ -42,12 +38,7 @@ export const styles = StyleSheet.create({
     color: Colors.light.text,
     marginBottom: 24,
   },
-  errorContainer: {
-    backgroundColor: `${Colors.danger}20`,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
+  errorContainer: screenStyles.errorContainer,
   errorText: {
     color: Colors.danger,
     fontSize: 14,

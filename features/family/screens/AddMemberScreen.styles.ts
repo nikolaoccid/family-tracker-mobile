@@ -1,12 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-    paddingHorizontal: 24,
-  },
+  container: screenStyles.container,
   header: {
     paddingTop: 60,
     paddingBottom: 24,
@@ -14,26 +11,12 @@ export const styles = StyleSheet.create({
   backButton: {
     marginBottom: 16,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-    marginBottom: 24,
-  },
+  title: screenStyles.titleAlt,
+  subtitle: screenStyles.subtitle,
   formContainer: {
     flex: 1,
   },
-  errorContainer: {
-    backgroundColor: `${Colors.danger}20`,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
+  errorContainer: screenStyles.errorContainer,
   errorText: {
     color: Colors.danger,
     fontSize: 14,
@@ -41,12 +24,7 @@ export const styles = StyleSheet.create({
   sendButton: {
     marginTop: 8,
   },
-  successContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
+  successContainer: screenStyles.successContainer,
   successIconContainer: {
     width: 120,
     height: 120,
@@ -62,12 +40,7 @@ export const styles = StyleSheet.create({
     color: Colors.light.text,
     marginBottom: 12,
   },
-  successMessage: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-    textAlign: 'center',
-    marginBottom: 32,
-  },
+  successMessage: screenStyles.successMessage,
   shareButton: {
     marginBottom: 16,
   },

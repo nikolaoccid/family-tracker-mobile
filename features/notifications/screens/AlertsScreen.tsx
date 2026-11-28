@@ -8,6 +8,7 @@ import { QueryBoundary } from '@/shared/ui';
 import { useAlerts } from '../hooks/useAlerts';
 import { useReadAlertsStore } from '../model/readAlertsStore';
 import { AlertItem } from '../components/AlertItem';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 export function AlertsScreen() {
   const family = useFamily().data;
@@ -61,11 +62,7 @@ export function AlertsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-    paddingHorizontal: 16,
-  },
+  container: screenStyles.containerAlt2,
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -76,11 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.light.text,
-  },
+  title: screenStyles.title,
   countBadge: {
     backgroundColor: Colors.danger,
     borderRadius: 12,
@@ -96,19 +89,8 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 100,
   },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
-  },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginTop: 16,
-    marginBottom: 8,
-  },
+  emptyContainer: screenStyles.emptyContainer,
+  emptyTitle: screenStyles.emptyTitle,
   emptyText: {
     fontSize: 16,
     color: Colors.light.subtext,

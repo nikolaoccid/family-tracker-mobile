@@ -1,12 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
+import { commonStyles } from './common.styles';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-    paddingHorizontal: 24,
-  },
+  container: screenStyles.container,
   header: {
     paddingTop: 60,
     paddingBottom: 24,
@@ -14,26 +12,12 @@ export const styles = StyleSheet.create({
   backButton: {
     marginBottom: 16,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-    marginBottom: 24,
-  },
+  title: screenStyles.titleAlt,
+  subtitle: screenStyles.subtitle,
   formContainer: {
     flex: 1,
   },
-  errorContainer: {
-    backgroundColor: `${Colors.danger}20`,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
+  errorContainer: screenStyles.errorContainer,
   errorText: {
     color: Colors.danger,
     fontSize: 14,
@@ -41,25 +25,9 @@ export const styles = StyleSheet.create({
   resetButton: {
     marginTop: 8,
   },
-  successContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  successTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginTop: 24,
-    marginBottom: 12,
-  },
-  successMessage: {
-    fontSize: 16,
-    color: Colors.light.subtext,
-    textAlign: 'center',
-    marginBottom: 32,
-  },
+  successContainer: screenStyles.successContainer,
+  successTitle: commonStyles.successTitle,
+  successMessage: screenStyles.successMessage,
   backToLoginButton: {
     marginTop: 8,
   },

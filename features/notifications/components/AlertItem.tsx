@@ -4,6 +4,7 @@ import { formatDistanceToNow } from '@/shared/utils/date';
 import type { Alert } from '../model/alert';
 import { Colors } from '@/shared/ui/theme';
 import { AlertCircle, Battery, MapPin, Home, LogOut } from 'lucide-react-native';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 interface AlertItemProps {
   alert: Alert;
@@ -60,14 +61,7 @@ export function AlertItem({ alert, onPress, onMarkAsRead }: AlertItemProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: Colors.light.card,
-    marginBottom: 12,
-    alignItems: 'center',
-  },
+  container: screenStyles.containerAlt,
   unread: {
     backgroundColor: `${Colors.primary}10`,
     borderLeftWidth: 3,

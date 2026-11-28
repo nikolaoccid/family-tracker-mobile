@@ -9,6 +9,7 @@ import { Button } from '@/shared/ui/Button';
 import { Colors } from '@/shared/ui/theme';
 import { SafeZoneItem } from '../components/SafeZoneItem';
 import { useZones } from '../hooks/useZones';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 export function ZonesScreen() {
   const router = useRouter();
@@ -66,11 +67,7 @@ export function ZonesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-    paddingHorizontal: 16,
-  },
+  container: screenStyles.containerAlt2,
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -86,11 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.light.text,
-  },
+  title: screenStyles.title,
   addButton: {
     padding: 8,
   },
@@ -102,19 +95,8 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 100,
   },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
-  },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginTop: 16,
-    marginBottom: 8,
-  },
+  emptyContainer: screenStyles.emptyContainer,
+  emptyTitle: screenStyles.emptyTitle,
   emptyText: {
     fontSize: 16,
     color: Colors.light.subtext,
