@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Mail, Phone, Calendar, Crown, MapPin, BatteryMedium } from 'lucide-react-native';
+import { Mail, Phone, Calendar, MapPin, BatteryMedium } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { batteryColor, isOnline } from '@/features/family';
 import { useAuthStore } from '@/features/auth';
 import { useFamily } from '@/features/family';
-import { Avatar } from '@/shared/ui/Avatar';
 import { Button } from '@/shared/ui/Button';
 import { formatDate, formatDistanceToNow } from '@/shared/utils/date';
+import { ProfileHero } from '../components/ProfileHero';
 import { InfoRow } from '../components/InfoRow';
 import { styles } from './MemberProfileScreen.styles';
 import { ScreenHeader } from '@/shared/ui/ScreenHeader';
@@ -65,27 +65,13 @@ export function MemberProfileScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.profileHeader}>
-          <Avatar
-            source={member.avatar}
-            name={member.name}
-            size={100}
-            showBadge={online}
-            badgeColor={Colors.success}
-          />
-          <Text style={styles.name}>{member.name?.length > 23 ? `${member.name.substring(0, 23)}...` : member.name}</Text>
-          {member.role === 'admin' && (
-            <View style={styles.adminBadge}>
-              <Text style={styles.adminText}>Family Admin</Text>
-            </View>
-          )}
-          {member.isPremium ? (
-            <View style={styles.premiumBadge}>
-              <Crown size={14} color={Colors.light.text} />
-              <Text style={styles.premiumText}>Premium Member</Text>
-            </View>
-          ) : null}
-        </View>
+        <ProfileHero
+          name={member.name?.length > 23 ? `${member.name.substring(0, 23)}...` : member.name}
+          avatar={member.avatar}
+          isPremium={member.isPremium}
+          isAdmin={member.role === 'admin'}
+          online={online}
+        />
 
         <View style={styles.infoSection}>
           <InfoRow icon={<Mail size={20} color={Colors.primary} />} label="Email" value={member.email} />

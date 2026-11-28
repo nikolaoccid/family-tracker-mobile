@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { AlertCircle, RefreshCw } from 'lucide-react-native';
 import { useAuthStore } from '@/features/auth';
 import { QueryBoundary } from '@/shared/ui';
 import { Button } from '@/shared/ui/Button';
-import { Colors } from '@/shared/ui/theme';
 import { confirm } from '@/shared/utils/confirm';
+import { TransactionError } from '../components/TransactionError';
 import { SubscriptionCard } from '../components/SubscriptionCard';
 import { usePlans } from '../hooks/usePlans';
 import { useSubscriptionActions } from '../hooks/useSubscriptionActions';
@@ -48,7 +47,6 @@ export function SubscriptionScreen() {
     else setFailure(outcome.message);
   };
 
-  const transactionFailed = failure !== null;
   const isLoading = actions.busy;
 
   return (
@@ -65,22 +63,7 @@ export function SubscriptionScreen() {
           Choose the plan that best fits your family's needs
         </Text>
 
-        {transactionFailed ? (
-          <View style={styles.transactionErrorContainer}>
-            <AlertCircle size={24} color={Colors.danger} />
-            <Text style={styles.transactionErrorTitle}>Transaction Failed</Text>
-            <Text style={styles.transactionErrorText}>
-              {failure || 'There was a problem processing your payment. Please try again.'}
-            </Text>
-            <TouchableOpacity
-              style={styles.retryButton}
-              onPress={() => void handleContinue()}
-            >
-              <RefreshCw size={16} color={Colors.primary} />
-              <Text style={styles.retryText}>Retry Payment</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
+        {failure !== null ? <TransactionError message={failure} onRetry={() => void handleContinue()} /> : null}
 
         <QueryBoundary query={plans}>
           {(subscriptions) => subscriptions.map((plan) => (
@@ -111,7 +94,7 @@ export function SubscriptionScreen() {
           <Button
             title={user?.isPremium ? "Update Subscription" : "Continue"}
             onPress={() => void handleContinue()}
-            disabled={!selectedPlanId || isLoading || (user?.isPremium && selectedPlanId === 'premium') || transactionFailed}
+            disabled={!selectedPlanId || isLoading || (user?.isPremium && selectedPlanId === 'premium') || failure !== null}
             loading={isLoading}
             fullWidth
           />

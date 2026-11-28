@@ -11,10 +11,6 @@ export const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 40,
   },
-  profileHeader: commonStyles.profileHeader,
-  name: commonStyles.name,
-  premiumBadge: commonStyles.premiumBadge,
-  premiumText: commonStyles.premiumText,
   infoSection: commonStyles.infoSection,
   upgradeSection: {
     backgroundColor: Colors.light.card,

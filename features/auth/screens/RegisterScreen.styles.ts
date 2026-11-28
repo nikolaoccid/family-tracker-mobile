@@ -7,14 +7,8 @@ export const styles = StyleSheet.create({
   container: screenStyles.containerAlt3,
   scrollContent: commonStyles.scrollContent,
   header: {
-    paddingTop: 60,
-    paddingBottom: 24,
     paddingHorizontal: 24,
   },
-  backButton: {
-    marginBottom: 16,
-  },
-  title: screenStyles.titleAlt,
   subtitle: {
     fontSize: 16,
     color: Colors.light.subtext,

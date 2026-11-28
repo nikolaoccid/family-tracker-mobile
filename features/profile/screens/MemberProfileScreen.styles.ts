@@ -37,24 +37,6 @@ export const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 40,
   },
-  profileHeader: commonStyles.profileHeader,
-  name: commonStyles.name,
-  adminBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    marginBottom: 8,
-  },
-  adminText: {
-    color: Colors.white,
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  premiumBadge: commonStyles.premiumBadge,
-  premiumText: commonStyles.premiumText,
   infoSection: commonStyles.infoSection,
   lastSeen: {
     fontSize: 12,

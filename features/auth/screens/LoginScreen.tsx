@@ -8,7 +8,8 @@ import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { useAuthStore } from '../model/authStore';
 import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
-import { validateLogin, type FieldErrors } from '../model/validation';
+import { validateLogin } from '../model/validation';
+import { useValidatedSubmit } from '../hooks/useValidatedSubmit';
 import { styles } from './LoginScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 import { EmailInput } from '@/shared/ui/EmailInput';
@@ -21,20 +22,18 @@ export function LoginScreen() {
   const handleGoogleLogin = useGoogleSignIn(loginWithGoogle);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<FieldErrors<'email' | 'password'>>({});
-  const emailError = errors.email ?? '';
-  const passwordError = errors.password ?? '';
+  const { errorFor, onSubmit: handleLogin } = useValidatedSubmit(
+    { email, password },
+    validateLogin,
+    login,
+    clearError,
+  );
+  const emailError = errorFor('email');
+  const passwordError = errorFor('password');
 
   useEffect(() => {
     if (isAuthenticated) router.replace('/(tabs)');
   }, [isAuthenticated, router]);
-
-  const handleLogin = async () => {
-    clearError();
-    const found = validateLogin({ email, password });
-    setErrors(found);
-    if (Object.keys(found).length === 0) await login({ email, password });
-  };
 
   return (
     <KeyboardScreen style={styles.container}>

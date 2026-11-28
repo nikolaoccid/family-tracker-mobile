@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { Colors } from './theme';
 import { screenStyles } from './screenStyles';
@@ -29,13 +29,22 @@ const styles = StyleSheet.create({
 });
 
 /** Back arrow above a large title, for form screens whose content flows below. */
-export function BackTitleHeader({ title, onBack }: { title: string; onBack: () => void }) {
+interface StackedProps {
+  title: string;
+  onBack: () => void;
+  /** Extra container style, for example horizontal padding when the screen has none. */
+  style?: StyleProp<ViewStyle>;
+  children?: React.ReactNode;
+}
+
+export function BackTitleHeader({ title, onBack, style, children }: StackedProps) {
   return (
-    <View style={stacked.header}>
+    <View style={[stacked.header, style]}>
       <TouchableOpacity style={stacked.back} onPress={onBack} accessibilityLabel="Go back">
         <ArrowLeft size={24} color={Colors.light.text} />
       </TouchableOpacity>
       <Text style={screenStyles.titleAlt}>{title}</Text>
+      {children}
     </View>
   );
 }

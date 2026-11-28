@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { Lock, User, ArrowLeft } from 'lucide-react-native';
+import { Lock, User } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
+import { BackTitleHeader } from '@/shared/ui/ScreenHeader';
 import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
-import { validateRegistration, type FieldErrors } from '../model/validation';
+import { validateRegistration } from '../model/validation';
+import { useValidatedSubmit } from '../hooks/useValidatedSubmit';
 import { styles } from './RegisterScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 import { ErrorBanner } from '@/shared/ui/ErrorBanner';
@@ -21,27 +23,18 @@ export function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [errors, setErrors] = useState<FieldErrors<'name' | 'email' | 'password' | 'confirmPassword'>>({});
-  const nameError = errors.name ?? '';
-  const emailError = errors.email ?? '';
-  const passwordError = errors.password ?? '';
-  const confirmPasswordError = errors.confirmPassword ?? '';
-
-  const validateForm = () => {
-    clearError();
-    const found = validateRegistration({ name, email, password, confirmPassword });
-    setErrors(found);
-    return Object.keys(found).length === 0;
-  };
-
-  const handleRegister = async () => {
-    if (validateForm()) {
-      const isRegisterOk = await register(name, email, password);
-      if (isRegisterOk){
-        router.push('/subscription');
-      }
-    }
-  };
+  const { errorFor, onSubmit: handleRegister } = useValidatedSubmit(
+    { name, email, password, confirmPassword },
+    validateRegistration,
+    async (values) => {
+      if (await register(values.name, values.email, values.password)) router.push('/subscription');
+    },
+    clearError,
+  );
+  const nameError = errorFor('name');
+  const emailError = errorFor('email');
+  const passwordError = errorFor('password');
+  const confirmPasswordError = errorFor('confirmPassword');
 
   return (
     <KeyboardScreen style={styles.container}>
@@ -50,18 +43,11 @@ export function RegisterScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <ArrowLeft size={24} color={Colors.light.text} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Create Account</Text>
+        <BackTitleHeader title="Create Account" onBack={() => router.back()} style={styles.header}>
           <Text style={styles.subtitle}>
             Join Family Tracker to stay connected with your loved ones
           </Text>
-        </View>
+        </BackTitleHeader>
 
         <View style={styles.formContainer}>
           {error && <ErrorBanner message={error} />}

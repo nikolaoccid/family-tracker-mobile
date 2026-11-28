@@ -5,9 +5,9 @@ import { StatusBar } from 'expo-status-bar';
 import { Edit2, Mail, Phone, Calendar, Crown } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { useAuthStore } from '@/features/auth';
-import { Avatar } from '@/shared/ui/Avatar';
 import { Button } from '@/shared/ui/Button';
 import { formatDate } from '@/shared/utils/date';
+import { ProfileHero } from '../components/ProfileHero';
 import { InfoRow } from '../components/InfoRow';
 import { styles } from './ProfileViewScreen.styles';
 import { ScreenHeader } from '@/shared/ui/ScreenHeader';
@@ -45,21 +45,8 @@ export function ProfileViewScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.profileHeader}>
-          <Avatar 
-            source={user.avatar} 
-            name={user.name} 
-            size={100} 
-          />
-          <Text style={styles.name}>{user.name}</Text>
-          {user.isPremium ? (
-            <View style={styles.premiumBadge}>
-              <Crown size={14} color={Colors.light.text} />
-              <Text style={styles.premiumText}>Premium Member</Text>
-            </View>
-          ) : null}
-        </View>
-        
+        <ProfileHero name={user.name} avatar={user.avatar} isPremium={user.isPremium} />
+
         <View style={styles.infoSection}>
           <InfoRow icon={<Mail size={20} color={Colors.primary} />} label="Email" value={user.email} />
           {user.phone ? <InfoRow icon={<Phone size={20} color={Colors.primary} />} label="Phone" value={user.phone} /> : null}
