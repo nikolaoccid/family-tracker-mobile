@@ -1,57 +1,31 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, Image, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Bell, ArrowRight, CheckCircle } from 'lucide-react-native';
+import { Bell, CheckCircle } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
 import { usePushNotifications } from '@/features/notifications';
 import { useUpdateProfile } from '@/features/auth';
 import { logger } from '@/shared/logger';
+import { usePermissionRequest } from '../hooks/usePermissionRequest';
+import { SkipButton } from '../components/SkipButton';
 import { styles } from './NotificationPermissionScreen.styles';
+
+const CONTINUE_DELAY_MS = 1000;
 
 export function NotificationPermissionScreen() {
   const router = useRouter();
   const { registerForPushNotifications } = usePushNotifications();
   const { mutate: updateUser } = useUpdateProfile();
   
-  const [permissionStatus, setPermissionStatus] = useState<'pending' | 'granted' | 'denied'>('pending');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleRequestPermission = async () => {
-    setIsLoading(true);
-    
-    try {
-      if (Platform.OS === 'web') {
-        // Web doesn't support push notifications in the same way
-        setPermissionStatus('granted');
-        updateUser({ hasNotificationsEnabled: true });
-        setTimeout(() => {
-          router.push('/permissions/location');
-        }, 1000);
-        return;
-      }
-      
-      const token = await registerForPushNotifications();
-      
-      if (token) {
-        setPermissionStatus('granted');
-        updateUser({ hasNotificationsEnabled: true });
-        
-        // Navigate to location permission screen after a short delay
-        setTimeout(() => {
-          router.push('/permissions/location');
-        }, 1000);
-      } else {
-        setPermissionStatus('denied');
-      }
-    } catch (error) {
-      logger.warn('notification permission request failed', error);
-      setPermissionStatus('denied');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { status: permissionStatus, isLoading, request: handleRequestPermission } = usePermissionRequest(async () => {
+    // Web has no push registration of the same kind: treat the prompt as granted.
+    if (Platform.OS !== 'web' && !(await registerForPushNotifications())) return 'denied';
+    updateUser({ hasNotificationsEnabled: true });
+    setTimeout(() => router.push('/permissions/location'), CONTINUE_DELAY_MS);
+    return 'granted';
+  }, (error) => logger.warn('notification permission request failed', error));
 
   const handleSkip = () => {
     updateUser({ hasNotificationsEnabled: false });
@@ -121,13 +95,7 @@ export function NotificationPermissionScreen() {
         />
         
         {permissionStatus !== 'granted' && (
-          <TouchableOpacity 
-            style={styles.skipButton}
-            onPress={handleSkip}
-          >
-            <Text style={styles.skipText}>Skip for now</Text>
-            <ArrowRight size={16} color={Colors.light.subtext} />
-          </TouchableOpacity>
+          <SkipButton onPress={handleSkip} />
         )}
       </View>
     </View>
