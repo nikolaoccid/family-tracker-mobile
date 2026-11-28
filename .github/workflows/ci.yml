@@ -21,6 +21,10 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - name: Typecheck
         run: npm run typecheck
+      # Gate on critical only: the one remaining high (image-size, inside Metro) needs a major bump the
+      # installed Expo SDK cannot take. See README, Known limitations.
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=critical
       - name: Lint (includes boundary rules)
         run: npm run lint
       - name: Duplicate code (1 percent gate)

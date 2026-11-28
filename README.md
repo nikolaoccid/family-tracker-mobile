@@ -123,7 +123,8 @@ Everything here ships in the app bundle, so only public values belong in these v
 | `npm test` | Jest (jest-expo, React Native Testing Library) |
 | `npm run bundle` | Metro production bundle for Android |
 | `npm run doctor` | `expo-doctor` |
-| `npm run check` | typecheck, lint and tests |
+| `npm run dupes` | `jscpd`, fails above 1 percent duplicated code |
+| `npm run check` | typecheck, lint, tests and dupes |
 
 ## Tests
 
@@ -133,7 +134,7 @@ Everything here ships in the app bundle, so only public values belong in these v
 - **Persistence**: fixtures from each old schema version must migrate into the current one.
 - **Background tracking**: task registration, permission flow, headless session rebuild.
 - **Smoke renders**: every route rendered through its real route module with the router mocked, in loading, error and data states, plus the real router over `app/` for the session guard.
-- **Architecture checks**: route inventory and deep links unchanged, dependency rules, no secrets tracked.
+- **Architecture checks**: route inventory and deep links unchanged, dependency rules, no secrets tracked, no raw hex colors outside `shared/ui/theme.ts`.
 
 ## Deep links
 
@@ -143,6 +144,12 @@ Everything here ships in the app bundle, so only public values belong in these v
 | `app.familytracker://reset-password?token=...` | password reset |
 | `app.familytracker://oauthredirect` | Google sign-in redirect |
 | `https://familytracker.app/...` | Android app link |
+
+## Known limitations
+
+- `npm audit --omit=dev` reports no critical and one high finding: `image-size` inside Metro (the bundler Expo SDK 53 ships). Its fixed major breaks Metro's asset handling (`getImageSize is not a function`), so it waits for the next SDK. Only the build machine parses images with it; nothing ships in the app. CI gates on critical findings for that reason. Moderate findings are all in the same build-time chains.
+- Transitive fixes are pinned through `overrides` in `package.json` (`postcss`, `lodash-es`, `decode-uri-component`). Drop them when the parent packages catch up.
+- CI installs with `--legacy-peer-deps` because Expo and a few native modules declare conflicting peer ranges.
 
 ## License
 

@@ -5,7 +5,7 @@ module.exports = {
   moduleNameMapper: { '^@/(.*)$': '<rootDir>/$1' },
   testPathIgnorePatterns: ['/node_modules/', '/android/', '/ios/'],
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|lucide-react-native|stream-chat-react-native|@stripe/stripe-react-native))',
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|lucide-react-native|stream-chat-react-native|@stripe/stripe-react-native|decode-uri-component))',
   ],
   collectCoverageFrom: ['features/**/{model,api,hooks}/**/*.ts', 'shared/**/*.ts', '!**/*.d.ts', '!**/index.ts'],
 };
