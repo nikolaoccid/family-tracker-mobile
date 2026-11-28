@@ -19,19 +19,39 @@ function routeFiles(dir: string, prefix = ''): string[] {
 // `app/` inventory before the refactor (layouts included), minus two unreachable template leftovers:
 // `modal` (Expo starter example) and `error-boundary` (a component misfiled as a route, nothing linked to it).
 const ROUTES_BEFORE = [
-  '(auth)/_layout', '(auth)/forgot-password', '(auth)/index', '(auth)/register', '(auth)/reset-password',
-  '(tabs)/_layout', '(tabs)/alerts', '(tabs)/chat', '(tabs)/family', '(tabs)/index', '(tabs)/settings',
-  '+not-found', '_layout',
+  '(auth)/_layout',
+  '(auth)/forgot-password',
+  '(auth)/index',
+  '(auth)/register',
+  '(auth)/reset-password',
+  '(tabs)/_layout',
+  '(tabs)/alerts',
+  '(tabs)/chat',
+  '(tabs)/family',
+  '(tabs)/index',
+  '(tabs)/settings',
+  '+not-found',
+  '_layout',
   'chat/private',
-  'family/accept-invite', 'family/add-member', 'family/create',
+  'family/accept-invite',
+  'family/add-member',
+  'family/create',
   'location/history',
   'oauthredirect',
-  'permissions/location', 'permissions/notifications',
-  'profile/edit', 'profile/view', 'profile/view/[id]',
-  'schedule/_layout', 'schedule/create', 'schedule/edit',
+  'permissions/location',
+  'permissions/notifications',
+  'profile/edit',
+  'profile/view',
+  'profile/view/[id]',
+  'schedule/_layout',
+  'schedule/create',
+  'schedule/edit',
   'settings/privacy',
   'subscription',
-  'zones/analytics', 'zones/create', 'zones/edit', 'zones/index',
+  'zones/analytics',
+  'zones/create',
+  'zones/edit',
+  'zones/index',
 ];
 
 describe('route inventory', () => {
@@ -74,7 +94,9 @@ describe('deep links and app identity (app.config.ts)', () => {
   });
 
   it('keeps both Android intent filters', () => {
-    const data = (config.android.intentFilters as { data: unknown }[]).map((f) => (Array.isArray(f.data) ? f.data : [f.data]).flat());
+    const data = (config.android.intentFilters as { data: unknown }[]).map((f) =>
+      (Array.isArray(f.data) ? f.data : [f.data]).flat(),
+    );
     expect(data).toEqual([
       [{ scheme: 'https', host: 'familytracker.app', pathPrefix: '/' }],
       [{ scheme: 'app.familytracker', host: 'oauthredirect' }],
@@ -105,7 +127,9 @@ describe('app.config.ts environment handling', () => {
   };
 
   it('fails with a clear message when the API url is missing', () => {
-    expect(() => load({ EXPO_PUBLIC_API_BASE_URL: undefined, EXPO_PUBLIC_DEMO_MODE: undefined })).toThrow(/EXPO_PUBLIC_API_BASE_URL is not set/);
+    expect(() => load({ EXPO_PUBLIC_API_BASE_URL: undefined, EXPO_PUBLIC_DEMO_MODE: undefined })).toThrow(
+      /EXPO_PUBLIC_API_BASE_URL is not set/,
+    );
   });
 
   it('starts without any optional variable', () => {
@@ -125,6 +149,9 @@ describe('app.config.ts environment handling', () => {
   });
 
   it('wires the Firebase file only when the build supplies one', () => {
-    expect(load({ EXPO_PUBLIC_API_BASE_URL: 'x', GOOGLE_SERVICES_FILE: './google-services.json' }).android.googleServicesFile).toBe('./google-services.json');
+    expect(
+      load({ EXPO_PUBLIC_API_BASE_URL: 'x', GOOGLE_SERVICES_FILE: './google-services.json' }).android
+        .googleServicesFile,
+    ).toBe('./google-services.json');
   });
 });

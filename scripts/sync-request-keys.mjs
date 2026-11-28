@@ -13,9 +13,14 @@ const routes = {};
 for (const [path, methods] of Object.entries(doc.paths)) {
   for (const [method, op] of Object.entries(methods)) {
     const body = resolve(op.requestBody?.content?.['application/json']?.schema);
-    const query = (op.parameters ?? []).filter((p) => p.in === 'query').map((p) => p.name).sort();
+    const query = (op.parameters ?? [])
+      .filter((p) => p.in === 'query')
+      .map((p) => p.name)
+      .sort();
     routes[`${method.toUpperCase()} ${path}`] = {
-      body: body ? { allowed: Object.keys(body.properties ?? {}).sort(), required: [...(body.required ?? [])].sort() } : null,
+      body: body
+        ? { allowed: Object.keys(body.properties ?? {}).sort(), required: [...(body.required ?? [])].sort() }
+        : null,
       query,
     };
   }
@@ -31,7 +36,8 @@ const undocumented = {
 };
 for (const [key, body] of Object.entries(undocumented)) {
   if (body.bodyless) routes[key] ??= { body: null, query: [] };
-  else if (!routes[key] || (routes[key].body && routes[key].body.allowed.length === 0)) routes[key] = { body, query: [] };
+  else if (!routes[key] || (routes[key].body && routes[key].body.allowed.length === 0))
+    routes[key] = { body, query: [] };
 }
 
 fs.writeFileSync(new URL('../__tests__/request-keys.json', import.meta.url), JSON.stringify(routes, null, 2) + '\n');

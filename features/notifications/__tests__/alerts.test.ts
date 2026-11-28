@@ -19,11 +19,21 @@ describe('alert wire mapping', () => {
   });
 
   it('maps an alert type added by a newer server to "unknown" instead of failing', () => {
-    expect(alertSchema.parse({ id: 'x', type: 'geofence_breach_v2', timestamp: NOW.toISOString() }).type).toBe('unknown');
+    expect(alertSchema.parse({ id: 'x', type: 'geofence_breach_v2', timestamp: NOW.toISOString() }).type).toBe(
+      'unknown',
+    );
   });
 
   it('tolerates null fields and unknown extra fields', () => {
-    const alert = alertSchema.parse({ id: 'x', type: 'emergency', message: null, latitude: null, longitude: null, extra: 1, read: null });
+    const alert = alertSchema.parse({
+      id: 'x',
+      type: 'emergency',
+      message: null,
+      latitude: null,
+      longitude: null,
+      extra: 1,
+      read: null,
+    });
     expect(alert).toMatchObject({ message: '', location: undefined, read: false });
   });
 
@@ -65,7 +75,9 @@ describe('read alerts store', () => {
   });
 
   it('migrates the v0 shape that lived inside the family store', async () => {
-    const options = (useReadAlertsStore.persist as unknown as { getOptions: () => ReturnType<typeof persistOptions> }).getOptions();
+    const options = (
+      useReadAlertsStore.persist as unknown as { getOptions: () => ReturnType<typeof persistOptions> }
+    ).getOptions();
     const migrate = options.migrate as (s: unknown, v: number) => unknown;
     expect(migrate({ family: null, readAlertIds: ['a', 'b', 7] }, 0)).toEqual({ readIds: ['a', 'b'] });
     expect(migrate({ readAlertIds: 'garbage' }, 0)).toEqual({ readIds: [] });

@@ -44,7 +44,14 @@ const swallow = (call: Promise<unknown>) => call.catch(() => undefined); // resp
 
 const fx = createFixtures(new Date('2026-06-01T12:00:00.000Z'));
 const zone = fx.zones[0] as never as Parameters<typeof formFromZone>[0];
-const position = { latitude: 48.85, longitude: 2.29, timestamp: '2026-06-01T12:00:00.000Z', accuracy: 5, speed: 1, heading: 90 };
+const position = {
+  latitude: 48.85,
+  longitude: 2.29,
+  timestamp: '2026-06-01T12:00:00.000Z',
+  accuracy: 5,
+  speed: 1,
+  heading: 90,
+};
 
 beforeAll(async () => {
   const privacy = privacySettingsSchema.parse(fx.privacy);
@@ -112,12 +119,14 @@ describe('every request the app sends matches a backend route and its DTO', () =
         problems.push(`${label}: no such route in the backend`);
         continue;
       }
-      for (const q of request.query) if (!route.query.includes(q)) problems.push(`${label}: unknown query parameter "${q}"`);
+      for (const q of request.query)
+        if (!route.query.includes(q)) problems.push(`${label}: unknown query parameter "${q}"`);
       if (request.body && !route.body) problems.push(`${label}: sends a body, the route takes none`);
       if (route.body) {
         const given = Object.keys(request.body ?? {});
         for (const k of given) if (!route.body.allowed.includes(k)) problems.push(`${label}: extra key "${k}"`);
-        for (const k of route.body.required) if (!given.includes(k)) problems.push(`${label}: missing required key "${k}"`);
+        for (const k of route.body.required)
+          if (!given.includes(k)) problems.push(`${label}: missing required key "${k}"`);
       }
     }
     expect(problems).toEqual([]);
@@ -125,7 +134,9 @@ describe('every request the app sends matches a backend route and its DTO', () =
 
   it('privacy schedules carry only keys the schedule DTO knows', () => {
     const allowed = table['POST /sharing-schedules']?.body?.allowed ?? [];
-    const body = sent.find((r) => r.method === 'PUT' && r.path === '/privacy-settings')?.body as { schedules: object[] };
+    const body = sent.find((r) => r.method === 'PUT' && r.path === '/privacy-settings')?.body as {
+      schedules: object[];
+    };
     for (const schedule of body.schedules) for (const k of Object.keys(schedule)) expect(allowed).toContain(k);
   });
 });

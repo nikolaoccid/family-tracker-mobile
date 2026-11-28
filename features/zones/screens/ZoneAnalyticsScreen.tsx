@@ -89,7 +89,14 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.light.background },
   content: { paddingBottom: 40 },
   body: { paddingHorizontal: 24 },
-  empty: { height: 300, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.light.card, borderRadius: 16, padding: 24 },
+  empty: {
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.light.card,
+    borderRadius: 16,
+    padding: 24,
+  },
   emptyTitle: { fontSize: 18, fontWeight: '600', color: Colors.light.text, marginTop: 16, marginBottom: 8 },
   emptyText: { fontSize: 14, color: Colors.light.subtext, textAlign: 'center' },
 });

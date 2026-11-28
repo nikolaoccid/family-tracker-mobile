@@ -19,29 +19,19 @@ interface FamilyMemberItemProps {
 }
 
 export function FamilyMemberItem({
-                                           member,
-                                           onPress,
-                                           isCurrentUser = false,
-                                           isAdmin = false,
-                                           onDelete,
-                                           onPromote,
-                                           onDemote,
-                                         }: FamilyMemberItemProps) {
+  member,
+  onPress,
+  isCurrentUser = false,
+  isAdmin = false,
+  onDelete,
+  onPromote,
+  onDemote,
+}: FamilyMemberItemProps) {
   const online = isOnline(member);
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      <Avatar
-        source={member.avatar}
-        name={member.name}
-        size={50}
-        showBadge={online}
-        badgeColor={Colors.success}
-      />
+    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
+      <Avatar source={member.avatar} name={member.name} size={50} showBadge={online} badgeColor={Colors.success} />
 
       <View style={styles.content}>
         <View style={styles.nameRow}>
@@ -111,4 +101,3 @@ export function FamilyMemberItem({
     </TouchableOpacity>
   );
 }
-

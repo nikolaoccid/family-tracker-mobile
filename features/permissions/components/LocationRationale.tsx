@@ -7,9 +7,7 @@ export function LocationRationale() {
   return (
     <View style={styles.permissionCard}>
       <Text style={styles.permissionTitle}>Why we need your location</Text>
-      <Text style={styles.permissionDescription}>
-        Family Tracker uses your location to:
-      </Text>
+      <Text style={styles.permissionDescription}>Family Tracker uses your location to:</Text>
       <View style={styles.bulletPoints}>
         <View style={styles.bulletPoint}>
           <View style={styles.bullet} />

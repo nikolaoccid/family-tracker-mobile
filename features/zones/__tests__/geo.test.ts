@@ -23,14 +23,16 @@ describe('distanceMeters', () => {
   });
 
   it('handles the antimeridian and the poles without NaN', () => {
-    expect(distanceMeters({ latitude: 0, longitude: 179.9999 }, { latitude: 0, longitude: -179.9999 })).toBeLessThan(30);
+    expect(distanceMeters({ latitude: 0, longitude: 179.9999 }, { latitude: 0, longitude: -179.9999 })).toBeLessThan(
+      30,
+    );
     expect(Number.isNaN(distanceMeters({ latitude: 90, longitude: 0 }, { latitude: -90, longitude: 0 }))).toBe(false);
   });
 });
 
 describe('isInsideZone', () => {
   it('contains points within the radius and excludes points outside', () => {
-    expect(isInsideZone({ latitude: 48.8590, longitude: 2.2945 }, zone())).toBe(true); // ~67 m north
+    expect(isInsideZone({ latitude: 48.859, longitude: 2.2945 }, zone())).toBe(true); // ~67 m north
     expect(isInsideZone(arc, zone())).toBe(false);
   });
 
@@ -46,7 +48,11 @@ describe('isInsideZone', () => {
   });
 
   it('zonesContaining returns every matching zone', () => {
-    const zones = [{ id: 'a', ...zone() }, { id: 'b', ...zone({ radius: 5000 }) }, { id: 'c', ...zone({ centerLatitude: 0, centerLongitude: 0 }) }];
+    const zones = [
+      { id: 'a', ...zone() },
+      { id: 'b', ...zone({ radius: 5000 }) },
+      { id: 'c', ...zone({ centerLatitude: 0, centerLongitude: 0 }) },
+    ];
     expect(zonesContaining(eiffel, zones).map((z) => z.id)).toEqual(['a', 'b']);
   });
 });

@@ -33,9 +33,11 @@ let legacyTokenMove: Promise<void> = Promise.resolve();
 function moveLegacyToken(state: unknown): unknown {
   const token = (state as { accessToken?: unknown } | null)?.accessToken;
   if (typeof token === 'string' && token.length > 0) {
-    legacyTokenMove = readAccessToken().then(async (existing) => {
-      if (!existing) await writeAccessToken(token);
-    }).catch((error) => logger.warn('could not move the legacy token to secure storage', error));
+    legacyTokenMove = readAccessToken()
+      .then(async (existing) => {
+        if (!existing) await writeAccessToken(token);
+      })
+      .catch((error) => logger.warn('could not move the legacy token to secure storage', error));
   }
   return state;
 }

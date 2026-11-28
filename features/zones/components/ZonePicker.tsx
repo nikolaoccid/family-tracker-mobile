@@ -41,6 +41,13 @@ const styles = StyleSheet.create({
   section: screenStyles.pickerSection,
   title: screenStyles.pickerTitle,
   list: screenStyles.pickerList,
-  item: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20, marginRight: 12 },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    marginRight: 12,
+  },
   name: { fontSize: 14, marginLeft: 6 },
 });

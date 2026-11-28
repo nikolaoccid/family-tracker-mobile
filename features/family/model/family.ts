@@ -8,16 +8,31 @@ export const memberSchema = userSchema.extend({
   location: opt(locationSchema),
   batteryLevel: opt(z.number()),
   lastSeen: opt(z.string()),
-  isSharing: z.boolean().nullish().transform((v) => v ?? false),
+  isSharing: z
+    .boolean()
+    .nullish()
+    .transform((v) => v ?? false),
   isInvited: opt(z.boolean()),
 });
 
 export const familySchema = z.object({
   id: z.string(),
-  name: z.string().nullish().transform((v) => v ?? ''),
-  members: z.array(memberSchema).nullish().transform((v) => v ?? []),
-  createdAt: z.string().nullish().transform((v) => v ?? ''),
-  ownerId: z.string().nullish().transform((v) => v ?? ''),
+  name: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
+  members: z
+    .array(memberSchema)
+    .nullish()
+    .transform((v) => v ?? []),
+  createdAt: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
+  ownerId: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
 });
 
 export type FamilyMember = z.infer<typeof memberSchema>;

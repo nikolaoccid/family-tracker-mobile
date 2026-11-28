@@ -29,45 +29,24 @@ export function EditableMap({ center, setCenter, radius, setRadius, color }: Pro
         region={region}
         onPress={(e) => setCenter(e.nativeEvent.coordinate)}
       >
-        <Marker
-          coordinate={center}
-          draggable
-          onDragEnd={(e) => setCenter(e.nativeEvent.coordinate)}
-        />
-        <Circle
-          center={center}
-          radius={radius}
-          strokeColor={color}
-          fillColor={`${color}33`}
-        />
+        <Marker coordinate={center} draggable onDragEnd={(e) => setCenter(e.nativeEvent.coordinate)} />
+        <Circle center={center} radius={radius} strokeColor={color} fillColor={`${color}33`} />
       </MapView>
 
       <View style={styles.zoomControls}>
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={() => zoom(0.5)}
-        >
+        <TouchableOpacity style={styles.controlButton} onPress={() => zoom(0.5)}>
           <ZoomIn size={18} color={Colors.white} />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={() => zoom(2)}
-        >
+        <TouchableOpacity style={styles.controlButton} onPress={() => zoom(2)}>
           <ZoomOut size={18} color={Colors.white} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.radiusControls}>
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={() => setRadius(Math.min(MAX_RADIUS_M, radius + 50))}
-        >
+        <TouchableOpacity style={styles.controlButton} onPress={() => setRadius(Math.min(MAX_RADIUS_M, radius + 50))}>
           <Plus size={18} color={Colors.white} />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={() => setRadius(Math.max(MIN_RADIUS_M, radius - 50))}
-        >
+        <TouchableOpacity style={styles.controlButton} onPress={() => setRadius(Math.max(MIN_RADIUS_M, radius - 50))}>
           <Minus size={18} color={Colors.white} />
         </TouchableOpacity>
       </View>

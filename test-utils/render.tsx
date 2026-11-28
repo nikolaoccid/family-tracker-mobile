@@ -14,15 +14,24 @@ export function fetchFor(mode: FetchMode): typeof fetch {
   if (mode === 'loading') {
     // Never answers, but gives up when the client aborts, like a real socket would.
     return ((_url: unknown, init?: RequestInit) =>
-      new Promise<Response>((_resolve, reject) => init?.signal?.addEventListener('abort', () => reject(new Error('aborted'))))) as typeof fetch;
+      new Promise<Response>((_resolve, reject) =>
+        init?.signal?.addEventListener('abort', () => reject(new Error('aborted'))),
+      )) as typeof fetch;
   }
-  if (mode === 'error') return (async () => new Response(JSON.stringify({ message: 'Server exploded' }), { status: 500 })) as typeof fetch;
+  if (mode === 'error')
+    return (async () => new Response(JSON.stringify({ message: 'Server exploded' }), { status: 500 })) as typeof fetch;
   return createDemoFetch(() => new Date(), 0);
 }
 
 export async function signInDemoUser(overrides: Record<string, unknown> = {}) {
   await useAuthStore.getState().signIn({
-    user: makeUser({ id: demoUser.id, name: demoUser.name ?? '', email: demoUser.email, isPremium: true, ...overrides }),
+    user: makeUser({
+      id: demoUser.id,
+      name: demoUser.name ?? '',
+      email: demoUser.email,
+      isPremium: true,
+      ...overrides,
+    }),
     token: DEMO_TOKEN,
   });
 }

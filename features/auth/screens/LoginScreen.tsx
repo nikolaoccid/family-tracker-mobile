@@ -14,7 +14,6 @@ import { styles } from './LoginScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 import { EmailInput } from '@/shared/ui/EmailInput';
 
-
 export function LoginScreen() {
   const router = useRouter();
   const { login, loginWithGoogle, isLoading, error, clearError } = useAuthFlow();
@@ -22,12 +21,7 @@ export function LoginScreen() {
   const handleGoogleLogin = useGoogleSignIn(loginWithGoogle);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { errorFor, onSubmit: handleLogin } = useValidatedSubmit(
-    { email, password },
-    validateLogin,
-    login,
-    clearError,
-  );
+  const { errorFor, onSubmit: handleLogin } = useValidatedSubmit({ email, password }, validateLogin, login, clearError);
   const emailError = errorFor('email');
   const passwordError = errorFor('password');
 
@@ -37,20 +31,16 @@ export function LoginScreen() {
 
   return (
     <KeyboardScreen style={styles.container}>
-
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1581579438747-104c53d7fbc4?q=80&w=1470&auto=format&fit=crop' }}
+            source={{
+              uri: 'https://images.unsplash.com/photo-1581579438747-104c53d7fbc4?q=80&w=1470&auto=format&fit=crop',
+            }}
             style={styles.logo}
           />
           <Text style={styles.title}>Family Tracker</Text>
-          <Text style={styles.subtitle}>
-            Stay connected with your loved ones
-          </Text>
+          <Text style={styles.subtitle}>Stay connected with your loved ones</Text>
         </View>
 
         <View style={styles.formContainer}>
@@ -116,4 +106,3 @@ export function LoginScreen() {
     </KeyboardScreen>
   );
 }
-

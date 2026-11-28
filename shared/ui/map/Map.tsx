@@ -36,13 +36,7 @@ export function Map({ familyLocations = [], safeZones = [] }: Props) {
     <View style={styles.container}>
       {familyLocations.length > 0 ? (
         <>
-          <MapView
-            key={mapKey}
-            ref={mapRef}
-            style={styles.map}
-            provider={PROVIDER_GOOGLE}
-            region={region}
-          >
+          <MapView key={mapKey} ref={mapRef} style={styles.map} provider={PROVIDER_GOOGLE} region={region}>
             {familyLocations.map((location, index) => (
               <Marker
                 key={index + location.id}
@@ -54,9 +48,11 @@ export function Map({ familyLocations = [], safeZones = [] }: Props) {
               />
             ))}
 
-            {safeZones.filter((zone) => zone.isActive).map((zone) => (
-              <ZoneOverlay key={zone.id} zone={zone} />
-            ))}
+            {safeZones
+              .filter((zone) => zone.isActive)
+              .map((zone) => (
+                <ZoneOverlay key={zone.id} zone={zone} />
+              ))}
           </MapView>
 
           <View style={styles.zoomControls}>
@@ -97,4 +93,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-

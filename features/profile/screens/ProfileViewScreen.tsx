@@ -31,32 +31,32 @@ export function ProfileViewScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
-      <ScreenHeader title="Profile" onBack={() => router.back()} right={
-<TouchableOpacity 
-          style={styles.editButton}
-          onPress={handleEditProfile}
-        >
-          <Edit2 size={20} color={Colors.primary} />
-        </TouchableOpacity>
-} />
-      
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+
+      <ScreenHeader
+        title="Profile"
+        onBack={() => router.back()}
+        right={
+          <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+            <Edit2 size={20} color={Colors.primary} />
+          </TouchableOpacity>
+        }
+      />
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <ProfileHero name={user.name} avatar={user.avatar} isPremium={user.isPremium} />
 
         <View style={styles.infoSection}>
           <InfoRow icon={<Mail size={20} color={Colors.primary} />} label="Email" value={user.email} />
-          {user.phone ? <InfoRow icon={<Phone size={20} color={Colors.primary} />} label="Phone" value={user.phone} /> : null}
+          {user.phone ? (
+            <InfoRow icon={<Phone size={20} color={Colors.primary} />} label="Phone" value={user.phone} />
+          ) : null}
           <InfoRow
             icon={<Calendar size={20} color={Colors.primary} />}
             label="Member Since"
             value={formatDate(new Date(user.createdAt))}
           />
         </View>
-        
+
         {!user.isPremium ? (
           <View style={styles.upgradeSection}>
             <Text style={styles.upgradeTitle}>Upgrade to Premium</Text>
@@ -103,4 +103,3 @@ export function ProfileViewScreen() {
     </View>
   );
 }
-

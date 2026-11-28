@@ -19,7 +19,8 @@ export function useDeleteAccount(onDeleted: () => void) {
         confirm: () =>
           confirm({
             title: 'Delete account',
-            message: 'This permanently deletes your account, your location history and your data. This cannot be undone.',
+            message:
+              'This permanently deletes your account, your location history and your data. This cannot be undone.',
             confirmLabel: 'Delete',
             destructive: true,
           }),

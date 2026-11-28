@@ -38,15 +38,9 @@ export function RegisterScreen() {
 
   return (
     <KeyboardScreen style={styles.container}>
-
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <BackTitleHeader title="Create Account" onBack={() => router.back()} style={styles.header}>
-          <Text style={styles.subtitle}>
-            Join Family Tracker to stay connected with your loved ones
-          </Text>
+          <Text style={styles.subtitle}>Join Family Tracker to stay connected with your loved ones</Text>
         </BackTitleHeader>
 
         <View style={styles.formContainer}>
@@ -108,4 +102,3 @@ export function RegisterScreen() {
     </KeyboardScreen>
   );
 }
-

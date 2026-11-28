@@ -6,14 +6,20 @@ export type Weekday = (typeof WEEKDAYS)[number];
 
 export const sharingScheduleSchema = z.object({
   id: z.string(),
-  name: z.string().nullish().transform((v) => v ?? ''),
+  name: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
   days: z
     .array(z.string())
     .nullish()
     .transform((days) => (days ?? []).filter((d): d is Weekday => (WEEKDAYS as readonly string[]).includes(d))),
   startTime: z.string(),
   endTime: z.string(),
-  enabled: z.boolean().nullish().transform((v) => v ?? true),
+  enabled: z
+    .boolean()
+    .nullish()
+    .transform((v) => v ?? true),
 });
 export type SharingSchedule = z.infer<typeof sharingScheduleSchema>;
 
@@ -37,36 +43,44 @@ export const defaultPrivacySettings: PrivacySettings = {
   notificationSettings: { enabled: true, lowBattery: true, zoneEntry: true, zoneExit: true },
 };
 
-const flag = (fallback: boolean) => z.boolean().nullish().transform((v) => v ?? fallback);
+const flag = (fallback: boolean) =>
+  z
+    .boolean()
+    .nullish()
+    .transform((v) => v ?? fallback);
 
 /** Wire shape of `GET /privacy-settings`, mapped to the nested app model. */
 export const privacySettingsSchema = z
   .object({
     locationSharingEnabled: flag(true),
     visibleTo: openEnum(['all', 'selected', 'none'] as const, 'all'),
-    selectedMembers: z.array(z.string()).nullish().transform((v) => v ?? []),
-    schedules: z.array(sharingScheduleSchema).nullish().transform((v) => v ?? []),
+    selectedMembers: z
+      .array(z.string())
+      .nullish()
+      .transform((v) => v ?? []),
+    schedules: z
+      .array(sharingScheduleSchema)
+      .nullish()
+      .transform((v) => v ?? []),
     notificationsEnabled: flag(true),
     notifyLowBattery: flag(true),
     notifyZoneEntry: flag(true),
     notifyZoneExit: flag(true),
   })
-  .transform(
-    (dto): PrivacySettings => ({
-      locationSharing: {
-        enabled: dto.locationSharingEnabled,
-        visibleTo: dto.visibleTo,
-        selectedMembers: dto.selectedMembers,
-        schedules: dto.schedules,
-      },
-      notificationSettings: {
-        enabled: dto.notificationsEnabled,
-        lowBattery: dto.notifyLowBattery,
-        zoneEntry: dto.notifyZoneEntry,
-        zoneExit: dto.notifyZoneExit,
-      },
-    }),
-  );
+  .transform((dto): PrivacySettings => ({
+    locationSharing: {
+      enabled: dto.locationSharingEnabled,
+      visibleTo: dto.visibleTo,
+      selectedMembers: dto.selectedMembers,
+      schedules: dto.schedules,
+    },
+    notificationSettings: {
+      enabled: dto.notificationsEnabled,
+      lowBattery: dto.notifyLowBattery,
+      zoneEntry: dto.notifyZoneEntry,
+      zoneExit: dto.notifyZoneExit,
+    },
+  }));
 
 export function toPrivacyDto(settings: PrivacySettings) {
   return {

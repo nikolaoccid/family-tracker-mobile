@@ -13,9 +13,30 @@ export function createFamily(now: Date): WireFamily {
     ownerId: ids.ana,
     createdAt: '2026-01-05T09:00:00.000Z',
     members: [
-      { ...users.ana, role: 'admin', isSharing: true, batteryLevel: 82, lastSeen: minutesAgo(1), location: { ...landmarks.eiffelTower, timestamp: minutesAgo(1) } },
-      { ...users.marko, role: 'member', isSharing: true, batteryLevel: 47, lastSeen: minutesAgo(3), location: { ...landmarks.louvre, timestamp: minutesAgo(3) } },
-      { ...users.iva, role: 'member', isSharing: true, batteryLevel: 15, lastSeen: minutesAgo(40), location: { ...landmarks.sacreCoeur, timestamp: minutesAgo(40) } },
+      {
+        ...users.ana,
+        role: 'admin',
+        isSharing: true,
+        batteryLevel: 82,
+        lastSeen: minutesAgo(1),
+        location: { ...landmarks.eiffelTower, timestamp: minutesAgo(1) },
+      },
+      {
+        ...users.marko,
+        role: 'member',
+        isSharing: true,
+        batteryLevel: 47,
+        lastSeen: minutesAgo(3),
+        location: { ...landmarks.louvre, timestamp: minutesAgo(3) },
+      },
+      {
+        ...users.iva,
+        role: 'member',
+        isSharing: true,
+        batteryLevel: 15,
+        lastSeen: minutesAgo(40),
+        location: { ...landmarks.sacreCoeur, timestamp: minutesAgo(40) },
+      },
       { ...users.tomas, role: 'member', isSharing: false, isInvited: true },
     ],
   };

@@ -55,7 +55,6 @@ export function ForgotPasswordScreen() {
 
   return (
     <KeyboardScreen style={styles.container}>
-
       <BackTitleHeader title="Reset Password" onBack={handleBackToLogin} />
 
       {isSubmitted ? (
@@ -65,12 +64,7 @@ export function ForgotPasswordScreen() {
           <Text style={styles.successMessage}>
             We've sent a password reset link to {email}. Please check your inbox and follow the instructions.
           </Text>
-          <Button
-            title="Back to Login"
-            onPress={handleBackToLogin}
-            fullWidth
-            style={styles.backToLoginButton}
-          />
+          <Button title="Back to Login" onPress={handleBackToLogin} fullWidth style={styles.backToLoginButton} />
         </View>
       ) : (
         <View style={styles.formContainer}>
@@ -94,4 +88,3 @@ export function ForgotPasswordScreen() {
     </KeyboardScreen>
   );
 }
-

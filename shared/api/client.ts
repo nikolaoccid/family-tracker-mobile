@@ -24,7 +24,14 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
 
     for (let attempt = 0; ; attempt++) {
       try {
-        const { response, text } = await sendRequest(fetchImpl, options.timeoutMs ?? timeoutMs, method, url, token, options);
+        const { response, text } = await sendRequest(
+          fetchImpl,
+          options.timeoutMs ?? timeoutMs,
+          method,
+          url,
+          token,
+          options,
+        );
 
         if (response.status === 401 && useAuth && options.refresh === false) {
           throw new ApiError({ kind: 'unauthorized', status: 401, message: 'Your session has expired' });

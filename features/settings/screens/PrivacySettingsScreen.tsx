@@ -40,7 +40,12 @@ export function PrivacySettingsScreen() {
           {user?.isPremium && <SchedulesSection settings={draft} onChange={setDraft} />}
           <NotificationsSection settings={draft} onChange={setDraft} />
           {save.error ? <Text style={styles.error}>{errorMessage(save.error)}</Text> : null}
-          <Button title={save.isPending ? 'Saving...' : 'Save Settings'} onPress={() => save.mutate(draft)} disabled={save.isPending} fullWidth />
+          <Button
+            title={save.isPending ? 'Saving...' : 'Save Settings'}
+            onPress={() => save.mutate(draft)}
+            disabled={save.isPending}
+            fullWidth
+          />
         </ScrollView>
       )}
     </View>

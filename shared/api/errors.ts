@@ -1,11 +1,4 @@
-export type ApiErrorKind =
-  | 'network'
-  | 'timeout'
-  | 'aborted'
-  | 'unauthorized'
-  | 'http'
-  | 'parse'
-  | 'validation';
+export type ApiErrorKind = 'network' | 'timeout' | 'aborted' | 'unauthorized' | 'http' | 'parse' | 'validation';
 
 interface ApiErrorInit {
   kind: ApiErrorKind;

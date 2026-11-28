@@ -58,7 +58,10 @@ function FamilyMap({ familyId }: { familyId: string }) {
     <View style={styles.container}>
       <StatusBar style="dark" />
       <Map familyLocations={locations} safeZones={zones} />
-      <SafetyActions onEmergency={() => void sendAlert('emergency')} onHeadingHome={() => void sendAlert('heading_home')} />
+      <SafetyActions
+        onEmergency={() => void sendAlert('emergency')}
+        onHeadingHome={() => void sendAlert('heading_home')}
+      />
       <StatusPanel batteryPercent={battery} sharingActive={tracking.backgroundActive} insideZones={insideZones} />
       <View style={styles.footer}>
         <Button title="View Safe Zones" onPress={() => router.push('/zones')} variant="outline" fullWidth />

@@ -18,15 +18,28 @@ describe('validateZoneForm', () => {
 
 describe('zone form mapping', () => {
   const zone = {
-    id: 'z1', name: 'Home', color: '#fff', radius: 150, centerLatitude: 1, centerLongitude: 2,
-    membersToTrack: ['a'], isActive: false, createdAt: '',
+    id: 'z1',
+    name: 'Home',
+    color: '#fff',
+    radius: 150,
+    centerLatitude: 1,
+    centerLongitude: 2,
+    membersToTrack: ['a'],
+    isActive: false,
+    createdAt: '',
   };
 
   it('round-trips a zone through the form', () => {
     const values = formFromZone(zone);
     expect(values.radius).toBe('150');
     expect(toNewZone(values)).toEqual({
-      name: 'Home', color: '#fff', radius: 150, centerLatitude: 1, centerLongitude: 2, membersToTrack: ['a'], isActive: false,
+      name: 'Home',
+      color: '#fff',
+      radius: 150,
+      centerLatitude: 1,
+      centerLongitude: 2,
+      membersToTrack: ['a'],
+      isActive: false,
     });
   });
 

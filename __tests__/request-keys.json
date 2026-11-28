@@ -1,14 +1,8 @@
 {
   "POST /auth/login": {
     "body": {
-      "allowed": [
-        "email",
-        "password"
-      ],
-      "required": [
-        "email",
-        "password"
-      ]
+      "allowed": ["email", "password"],
+      "required": ["email", "password"]
     },
     "query": []
   },
@@ -22,48 +16,26 @@
   },
   "POST /auth/google": {
     "body": {
-      "allowed": [
-        "idToken"
-      ],
-      "required": [
-        "idToken"
-      ]
+      "allowed": ["idToken"],
+      "required": ["idToken"]
     },
     "query": []
   },
   "POST /auth/login/jwt": {
     "body": {
-      "allowed": [
-        "email",
-        "password"
-      ],
-      "required": [
-        "email",
-        "password"
-      ]
+      "allowed": ["email", "password"],
+      "required": ["email", "password"]
     },
     "query": []
   },
   "GET /users": {
     "body": null,
-    "query": [
-      "cursor",
-      "limit"
-    ]
+    "query": ["cursor", "limit"]
   },
   "POST /users": {
     "body": {
-      "allowed": [
-        "avatar",
-        "email",
-        "name",
-        "password",
-        "phone"
-      ],
-      "required": [
-        "email",
-        "password"
-      ]
+      "allowed": ["avatar", "email", "name", "password", "phone"],
+      "required": ["email", "password"]
     },
     "query": []
   },
@@ -77,40 +49,22 @@
   },
   "POST /users/reset-password": {
     "body": {
-      "allowed": [
-        "email"
-      ],
-      "required": [
-        "email"
-      ]
+      "allowed": ["email"],
+      "required": ["email"]
     },
     "query": []
   },
   "POST /users/complete-reset": {
     "body": {
-      "allowed": [
-        "newPassword",
-        "token"
-      ],
-      "required": [
-        "newPassword",
-        "token"
-      ]
+      "allowed": ["newPassword", "token"],
+      "required": ["newPassword", "token"]
     },
     "query": []
   },
   "PUT /users/user/stripe-subscription": {
     "body": {
-      "allowed": [
-        "stripeCustomerId",
-        "stripeSubscriptionId",
-        "subscriptionValidUntil"
-      ],
-      "required": [
-        "stripeCustomerId",
-        "stripeSubscriptionId",
-        "subscriptionValidUntil"
-      ]
+      "allowed": ["stripeCustomerId", "stripeSubscriptionId", "subscriptionValidUntil"],
+      "required": ["stripeCustomerId", "stripeSubscriptionId", "subscriptionValidUntil"]
     },
     "query": []
   },
@@ -136,12 +90,8 @@
   },
   "POST /mail/send": {
     "body": {
-      "allowed": [
-        "userId"
-      ],
-      "required": [
-        "userId"
-      ]
+      "allowed": ["userId"],
+      "required": ["userId"]
     },
     "query": []
   },
@@ -176,32 +126,14 @@
   },
   "POST /sharing-schedules": {
     "body": {
-      "allowed": [
-        "createdAt",
-        "days",
-        "enabled",
-        "endTime",
-        "id",
-        "name",
-        "startTime",
-        "updatedAt"
-      ],
-      "required": [
-        "days",
-        "enabled",
-        "endTime",
-        "name",
-        "startTime"
-      ]
+      "allowed": ["createdAt", "days", "enabled", "endTime", "id", "name", "startTime", "updatedAt"],
+      "required": ["days", "enabled", "endTime", "name", "startTime"]
     },
     "query": []
   },
   "GET /sharing-schedules": {
     "body": null,
-    "query": [
-      "cursor",
-      "limit"
-    ]
+    "query": ["cursor", "limit"]
   },
   "GET /sharing-schedules/{id}": {
     "body": null,
@@ -209,13 +141,7 @@
   },
   "PATCH /sharing-schedules/{id}": {
     "body": {
-      "allowed": [
-        "days",
-        "enabled",
-        "endTime",
-        "name",
-        "startTime"
-      ],
+      "allowed": ["days", "enabled", "endTime", "name", "startTime"],
       "required": []
     },
     "query": []
@@ -226,58 +152,36 @@
   },
   "POST /payments/create-payment-intent": {
     "body": {
-      "allowed": [
-        "amount",
-        "currency"
-      ],
-      "required": [
-        "amount",
-        "currency"
-      ]
+      "allowed": ["amount", "currency"],
+      "required": ["amount", "currency"]
     },
     "query": []
   },
   "POST /family": {
     "body": {
-      "allowed": [
-        "name"
-      ],
-      "required": [
-        "name"
-      ]
+      "allowed": ["name"],
+      "required": ["name"]
     },
     "query": []
   },
   "POST /family/verify": {
     "body": {
-      "allowed": [
-        "inviteToken"
-      ],
-      "required": [
-        "inviteToken"
-      ]
+      "allowed": ["inviteToken"],
+      "required": ["inviteToken"]
     },
     "query": []
   },
   "POST /family/accept": {
     "body": {
-      "allowed": [
-        "inviteToken"
-      ],
-      "required": [
-        "inviteToken"
-      ]
+      "allowed": ["inviteToken"],
+      "required": ["inviteToken"]
     },
     "query": []
   },
   "POST /family/reject": {
     "body": {
-      "allowed": [
-        "inviteToken"
-      ],
-      "required": [
-        "inviteToken"
-      ]
+      "allowed": ["inviteToken"],
+      "required": ["inviteToken"]
     },
     "query": []
   },
@@ -287,9 +191,7 @@
   },
   "PUT /family/{familyId}": {
     "body": {
-      "allowed": [
-        "name"
-      ],
+      "allowed": ["name"],
       "required": []
     },
     "query": []
@@ -300,12 +202,8 @@
   },
   "POST /family/{familyId}/members": {
     "body": {
-      "allowed": [
-        "email"
-      ],
-      "required": [
-        "email"
-      ]
+      "allowed": ["email"],
+      "required": ["email"]
     },
     "query": []
   },
@@ -315,42 +213,22 @@
   },
   "PUT /family/{familyId}/members/{memberId}/role": {
     "body": {
-      "allowed": [
-        "role"
-      ],
-      "required": [
-        "role"
-      ]
+      "allowed": ["role"],
+      "required": ["role"]
     },
     "query": []
   },
   "PUT /family/{familyId}/location-sharing": {
     "body": {
-      "allowed": [
-        "isSharing"
-      ],
-      "required": [
-        "isSharing"
-      ]
+      "allowed": ["isSharing"],
+      "required": ["isSharing"]
     },
     "query": []
   },
   "POST /location": {
     "body": {
-      "allowed": [
-        "accuracy",
-        "heading",
-        "latitude",
-        "longitude",
-        "speed",
-        "timestamp",
-        "whoCanSeeLocation"
-      ],
-      "required": [
-        "latitude",
-        "longitude",
-        "timestamp"
-      ]
+      "allowed": ["accuracy", "heading", "latitude", "longitude", "speed", "timestamp", "whoCanSeeLocation"],
+      "required": ["latitude", "longitude", "timestamp"]
     },
     "query": []
   },
@@ -360,39 +238,22 @@
   },
   "GET /location/history/{userId}": {
     "body": null,
-    "query": [
-      "cursor",
-      "endDate",
-      "limit",
-      "startDate"
-    ]
+    "query": ["cursor", "endDate", "limit", "startDate"]
   },
   "GET /user/{userId}/location-history": {
     "body": null,
-    "query": [
-      "cursor",
-      "endDate",
-      "limit",
-      "startDate"
-    ]
+    "query": ["cursor", "endDate", "limit", "startDate"]
   },
   "POST /user/battery": {
     "body": {
-      "allowed": [
-        "level"
-      ],
-      "required": [
-        "level"
-      ]
+      "allowed": ["level"],
+      "required": ["level"]
     },
     "query": []
   },
   "GET /family/{familyId}/alerts": {
     "body": null,
-    "query": [
-      "cursor",
-      "limit"
-    ]
+    "query": ["cursor", "limit"]
   },
   "POST /alert/emergency": {
     "body": {
@@ -409,9 +270,7 @@
         "type",
         "userId"
       ],
-      "required": [
-        "familyId"
-      ]
+      "required": ["familyId"]
     },
     "query": []
   },
@@ -430,9 +289,7 @@
         "type",
         "userId"
       ],
-      "required": [
-        "familyId"
-      ]
+      "required": ["familyId"]
     },
     "query": []
   },
@@ -442,21 +299,14 @@
   },
   "POST /notifications/register": {
     "body": {
-      "allowed": [
-        "token"
-      ],
-      "required": [
-        "token"
-      ]
+      "allowed": ["token"],
+      "required": ["token"]
     },
     "query": []
   },
   "GET /family/{familyId}/safe-zones": {
     "body": null,
-    "query": [
-      "cursor",
-      "limit"
-    ]
+    "query": ["cursor", "limit"]
   },
   "GET /safe-zone/{id}": {
     "body": null,
@@ -511,35 +361,22 @@
   },
   "PUT /safe-zone/{id}/status": {
     "body": {
-      "allowed": [
-        "isActive"
-      ],
-      "required": [
-        "isActive"
-      ]
+      "allowed": ["isActive"],
+      "required": ["isActive"]
     },
     "query": []
   },
   "GET /zone-analytics/user/{userId}/summary": {
     "body": null,
-    "query": [
-      "endDate",
-      "startDate"
-    ]
+    "query": ["endDate", "startDate"]
   },
   "GET /zone-analytics/user/{userId}/visits": {
     "body": null,
-    "query": [
-      "cursor",
-      "limit"
-    ]
+    "query": ["cursor", "limit"]
   },
   "GET /zone-analytics/{zoneId}/{userId}": {
     "body": null,
-    "query": [
-      "endDate",
-      "startDate"
-    ]
+    "query": ["endDate", "startDate"]
   },
   "GET /chat/token": {
     "body": null,
@@ -555,12 +392,8 @@
   },
   "POST /subscription": {
     "body": {
-      "allowed": [
-        "planId"
-      ],
-      "required": [
-        "planId"
-      ]
+      "allowed": ["planId"],
+      "required": ["planId"]
     },
     "query": []
   },

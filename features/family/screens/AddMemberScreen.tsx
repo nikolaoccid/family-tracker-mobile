@@ -46,7 +46,6 @@ export function AddMemberScreen() {
 
   return (
     <KeyboardScreen style={styles.container}>
-
       <BackTitleHeader title="Add Family Member" onBack={() => router.back()} />
 
       {isSubmitted ? (
@@ -58,12 +57,7 @@ export function AddMemberScreen() {
           <Text style={styles.successMessage}>
             We've sent an invitation to {email}. They'll be added to your family group once they accept.
           </Text>
-          <Button
-            title="Done"
-            onPress={() => router.back()}
-            fullWidth
-            style={styles.doneButton}
-          />
+          <Button title="Done" onPress={() => router.back()} fullWidth style={styles.doneButton} />
         </View>
       ) : (
         <View style={styles.formContainer}>
@@ -96,4 +90,3 @@ export function AddMemberScreen() {
     </KeyboardScreen>
   );
 }
-

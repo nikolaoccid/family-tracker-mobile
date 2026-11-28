@@ -61,7 +61,9 @@ function EditForm({ id, initial }: { id: string; initial: ScheduleDraft }) {
   };
 
   return (
-    <FormFrame padded={false} keyboardAware={false}
+    <FormFrame
+      padded={false}
+      keyboardAware={false}
       title="Edit Schedule"
       headerRight={
         <TouchableOpacity onPress={() => void destroy()} style={styles.delete} accessibilityLabel="Delete schedule">
@@ -70,7 +72,13 @@ function EditForm({ id, initial }: { id: string; initial: ScheduleDraft }) {
       }
     >
       <ScheduleForm draft={draft} errors={errors} onChange={(c) => setDraft((d) => ({ ...d, ...c }))} />
-      <Button title={isSaving ? 'Saving...' : 'Save Changes'} onPress={() => void submit()} disabled={isSaving} fullWidth style={styles.button} />
+      <Button
+        title={isSaving ? 'Saving...' : 'Save Changes'}
+        onPress={() => void submit()}
+        disabled={isSaving}
+        fullWidth
+        style={styles.button}
+      />
     </FormFrame>
   );
 }

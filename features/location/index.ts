@@ -1,4 +1,10 @@
-export { locationSchema, historyPointSchema, type Location, type LocationHistory, type FamilyLocation } from './model/location';
+export {
+  locationSchema,
+  historyPointSchema,
+  type Location,
+  type LocationHistory,
+  type FamilyLocation,
+} from './model/location';
 export { locationApi } from './api/locationApi';
 export { toLocation } from './model/fix';
 export { locationKeys } from './model/keys';

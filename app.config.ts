@@ -5,9 +5,7 @@ const demoMode = env.EXPO_PUBLIC_DEMO_MODE === '1';
 
 // The API URL is the only value the app cannot start without.
 if (!env.EXPO_PUBLIC_API_BASE_URL && !demoMode) {
-  throw new Error(
-    'EXPO_PUBLIC_API_BASE_URL is not set. Copy .env.example to .env, or set EXPO_PUBLIC_DEMO_MODE=1.',
-  );
+  throw new Error('EXPO_PUBLIC_API_BASE_URL is not set. Copy .env.example to .env, or set EXPO_PUBLIC_DEMO_MODE=1.');
 }
 
 // Optional: maps render a blank tile layer without a key, everything else keeps working.
@@ -37,8 +35,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     infoPlist: {
       NSLocationAlwaysAndWhenInUseUsageDescription:
         'This app needs location access to track your family members even in the background.',
-      NSLocationWhenInUseUsageDescription:
-        'This app needs location access to show your location on the map.',
+      NSLocationWhenInUseUsageDescription: 'This app needs location access to show your location on the map.',
       UIBackgroundModes: ['location', 'fetch'],
     },
   },
@@ -51,12 +48,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
-    permissions: [
-      'FOREGROUND_SERVICE',
-      'ACCESS_FINE_LOCATION',
-      'ACCESS_COARSE_LOCATION',
-      'ACCESS_BACKGROUND_LOCATION',
-    ],
+    permissions: ['FOREGROUND_SERVICE', 'ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION', 'ACCESS_BACKGROUND_LOCATION'],
     intentFilters: [
       {
         action: 'VIEW',
@@ -76,8 +68,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-location',
       {
-        locationAlwaysAndWhenInUsePermission:
-          'Allow FamilyTracker to use your location to connect with your family.',
+        locationAlwaysAndWhenInUsePermission: 'Allow FamilyTracker to use your location to connect with your family.',
         isIosBackgroundLocationEnabled: true,
         isAndroidForegroundServiceEnabled: true,
         isAndroidBackgroundLocationEnabled: true,

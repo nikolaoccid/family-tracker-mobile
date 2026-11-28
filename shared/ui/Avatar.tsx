@@ -22,16 +22,13 @@ export function Avatar({
 }: AvatarProps) {
   const getInitials = () => {
     if (!name) return '';
-    
+
     const nameParts = name.split(' ');
     if (nameParts.length === 1) {
       return nameParts[0].charAt(0).toUpperCase();
     }
-    
-    return (
-      nameParts[0].charAt(0).toUpperCase() + 
-      nameParts[nameParts.length - 1].charAt(0).toUpperCase()
-    );
+
+    return nameParts[0].charAt(0).toUpperCase() + nameParts[nameParts.length - 1].charAt(0).toUpperCase();
   };
 
   const fontSize = size * 0.4;
@@ -42,43 +39,38 @@ export function Avatar({
       {source ? (
         <Image
           source={{ uri: source }}
-          style={[
-            styles.avatar,
-            { width: size, height: size, borderRadius: size / 2 }
-          ]}
+          style={[styles.avatar, { width: size, height: size, borderRadius: size / 2 }]}
           contentFit="cover"
           transition={200}
         />
       ) : (
-        <View 
+        <View
           style={[
             styles.placeholder,
-            { 
-              width: size, 
-              height: size, 
+            {
+              width: size,
+              height: size,
               borderRadius: size / 2,
-              backgroundColor: Colors.primary 
-            }
+              backgroundColor: Colors.primary,
+            },
           ]}
         >
-          <Text style={[styles.initials, { fontSize }]}>
-            {getInitials()}
-          </Text>
+          <Text style={[styles.initials, { fontSize }]}>{getInitials()}</Text>
         </View>
       )}
-      
+
       {showBadge && (
-        <View 
+        <View
           style={[
             styles.badge,
-            { 
-              width: badgeSize, 
-              height: badgeSize, 
+            {
+              width: badgeSize,
+              height: badgeSize,
               borderRadius: badgeSize / 2,
               backgroundColor: badgeColor,
               right: 0,
               bottom: 0,
-            }
+            },
           ]}
         />
       )}

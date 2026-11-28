@@ -62,6 +62,13 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
   title: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 4 },
   text: { fontSize: 12, color: Colors.light.subtext },
-  tag: { backgroundColor: Colors.secondary, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, alignSelf: 'flex-start', marginTop: 6 },
+  tag: {
+    backgroundColor: Colors.secondary,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+    marginTop: 6,
+  },
   tagText: { color: Colors.light.text, fontSize: 10, fontWeight: '600' },
 });

@@ -37,9 +37,16 @@ describe('invite deep links', () => {
 });
 
 describe('isFamilyAdmin', () => {
-  const family = { id: 'f', name: '', createdAt: '', ownerId: '', members: [
-    { id: 'a', role: 'admin' }, { id: 'b', role: 'member' },
-  ] } as never;
+  const family = {
+    id: 'f',
+    name: '',
+    createdAt: '',
+    ownerId: '',
+    members: [
+      { id: 'a', role: 'admin' },
+      { id: 'b', role: 'member' },
+    ],
+  } as never;
 
   it('is true only for an admin member', () => {
     expect(isFamilyAdmin(family, 'a')).toBe(true);

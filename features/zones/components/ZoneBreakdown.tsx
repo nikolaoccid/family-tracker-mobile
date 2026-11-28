@@ -37,7 +37,13 @@ export function ZoneBreakdown({ analytics, zones, onSelectZone }: Props) {
 const styles = StyleSheet.create({
   section: { backgroundColor: Colors.light.card, borderRadius: 16, padding: 20, marginBottom: 24 },
   title: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 16 },
-  item: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: Colors.light.border },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
+  },
   dot: { width: 16, height: 16, borderRadius: 8, marginRight: 12 },
   info: { flex: 1 },
   name: { fontSize: 16, fontWeight: '500', color: Colors.light.text, marginBottom: 4 },

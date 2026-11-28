@@ -82,7 +82,11 @@ describe('http client: failures', () => {
   });
 
   it('gives up after the attempt budget and reports the last error', async () => {
-    const { http, calls } = client([json({ message: 'a' }, 500), json({ message: 'b' }, 500), json({ message: 'c' }, 500)]);
+    const { http, calls } = client([
+      json({ message: 'a' }, 500),
+      json({ message: 'b' }, 500),
+      json({ message: 'c' }, 500),
+    ]);
     await expect(http.get('/x')).rejects.toMatchObject({ status: 500, message: 'c' });
     expect(calls).toHaveLength(3);
   });
@@ -116,7 +120,9 @@ describe('http client: failures', () => {
     jest.useFakeTimers();
     try {
       const hang = (init: RequestInit) =>
-        new Promise<Response>((_, reject) => init.signal?.addEventListener('abort', () => reject(new Error('aborted'))));
+        new Promise<Response>((_, reject) =>
+          init.signal?.addEventListener('abort', () => reject(new Error('aborted'))),
+        );
       const { http } = client([hang, hang, hang], { timeoutMs: 1000 });
       const pending = http.post('/x', {}, { timeoutMs: 1000 }).catch((e) => e);
       await jest.advanceTimersByTimeAsync(1001);
@@ -192,7 +198,12 @@ describe('http client: token refresh', () => {
       }
       return json({ ok: true });
     }) as unknown as typeof fetch;
-    const http = createHttpClient({ baseUrl: 'https://api.example.test', fetchImpl: impl, getToken: () => token, refreshToken });
+    const http = createHttpClient({
+      baseUrl: 'https://api.example.test',
+      fetchImpl: impl,
+      getToken: () => token,
+      refreshToken,
+    });
     await expect(http.get('/a')).resolves.toEqual({ ok: true });
     expect(refreshToken).not.toHaveBeenCalled();
   });
@@ -232,7 +243,10 @@ describe('http client: token refresh', () => {
 
   it('retries only once after a refresh: a second 401 ends the session', async () => {
     const onUnauthorized = jest.fn();
-    const { http, calls } = client([json({}, 401), json({}, 401)], { refreshToken: async () => 'fresh', onUnauthorized });
+    const { http, calls } = client([json({}, 401), json({}, 401)], {
+      refreshToken: async () => 'fresh',
+      onUnauthorized,
+    });
     await expect(http.get('/a')).rejects.toMatchObject({ kind: 'unauthorized' });
     expect(calls).toHaveLength(2);
     expect(onUnauthorized).toHaveBeenCalledTimes(1);
@@ -284,7 +298,6 @@ describe('idempotency keys', () => {
 
 describe('newIdempotencyKey', () => {
   it('is on by default and yields a UUID', () => {
-     
     const { newIdempotencyKey } = require('../idempotency');
     expect(newIdempotencyKey()).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
   });

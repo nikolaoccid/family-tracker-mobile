@@ -1,4 +1,11 @@
-export { zoneSchema, analyticsSchema, type SafeZone, type NewSafeZone, type ZoneAnalytics, type ZoneVisit } from './model/zone';
+export {
+  zoneSchema,
+  analyticsSchema,
+  type SafeZone,
+  type NewSafeZone,
+  type ZoneAnalytics,
+  type ZoneVisit,
+} from './model/zone';
 export { zonesContaining, distanceMeters, isInsideZone } from './model/geo';
 export { useZones, useZoneAnalytics, useZonesSummary, useZoneMutations } from './hooks/useZones';
 export { ZonesScreen } from './screens/ZonesScreen';

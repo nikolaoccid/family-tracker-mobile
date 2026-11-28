@@ -55,30 +55,25 @@ export function SubscriptionScreen() {
 
       <ScreenHeader title="Subscription" onBack={() => router.back()} />
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.subtitle}>
-          Choose the plan that best fits your family's needs
-        </Text>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <Text style={styles.subtitle}>Choose the plan that best fits your family's needs</Text>
 
         {failure !== null ? <TransactionError message={failure} onRetry={() => void handleContinue()} /> : null}
 
         <QueryBoundary query={plans}>
-          {(subscriptions) => subscriptions.map((plan) => (
-          <SubscriptionCard
-            key={plan.id}
-            plan={plan}
-            isSelected={selectedPlanId === plan.id}
-            onSelect={() => handleSelectPlan(plan.id)}
-          />
-        ))}
+          {(subscriptions) =>
+            subscriptions.map((plan) => (
+              <SubscriptionCard
+                key={plan.id}
+                plan={plan}
+                isSelected={selectedPlanId === plan.id}
+                onSelect={() => handleSelectPlan(plan.id)}
+              />
+            ))
+          }
         </QueryBoundary>
 
-        <Text style={styles.disclaimer}>
-          You can change or cancel your subscription at any time from the settings.
-        </Text>
+        <Text style={styles.disclaimer}>You can change or cancel your subscription at any time from the settings.</Text>
       </ScrollView>
 
       <View style={styles.footer}>
@@ -92,23 +87,18 @@ export function SubscriptionScreen() {
           />
         ) : (
           <Button
-            title={user?.isPremium ? "Update Subscription" : "Continue"}
+            title={user?.isPremium ? 'Update Subscription' : 'Continue'}
             onPress={() => void handleContinue()}
-            disabled={!selectedPlanId || isLoading || (user?.isPremium && selectedPlanId === 'premium') || failure !== null}
+            disabled={
+              !selectedPlanId || isLoading || (user?.isPremium && selectedPlanId === 'premium') || failure !== null
+            }
             loading={isLoading}
             fullWidth
           />
         )}
 
-        <Button
-          title="Back"
-          onPress={() => router.back()}
-          variant="text"
-          fullWidth
-          style={styles.backButton}
-        />
+        <Button title="Back" onPress={() => router.back()} variant="text" fullWidth style={styles.backButton} />
       </View>
     </View>
   );
 }
-

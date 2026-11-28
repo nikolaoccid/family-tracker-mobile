@@ -15,16 +15,10 @@ export function ColorPicker({ colors, selectedColor, onSelectColor }: ColorPicke
       {colors.map((color) => (
         <TouchableOpacity
           key={color}
-          style={[
-            styles.colorOption,
-            { backgroundColor: color },
-            selectedColor === color && styles.selectedOption
-          ]}
+          style={[styles.colorOption, { backgroundColor: color }, selectedColor === color && styles.selectedOption]}
           onPress={() => onSelectColor(color)}
         >
-          {selectedColor === color && (
-            <Check size={20} color={Colors.white} />
-          )}
+          {selectedColor === color && <Check size={20} color={Colors.white} />}
         </TouchableOpacity>
       ))}
     </View>

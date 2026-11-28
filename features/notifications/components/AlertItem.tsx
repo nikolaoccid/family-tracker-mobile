@@ -31,18 +31,12 @@ export function AlertItem({ alert, onPress, onMarkAsRead }: AlertItemProps) {
   };
 
   return (
-    <TouchableOpacity
-      style={[styles.container, !alert.read && styles.unread]}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
+    <TouchableOpacity style={[styles.container, !alert.read && styles.unread]} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.iconContainer}>{getAlertIcon()}</View>
 
       <View style={styles.content}>
         <Text style={styles.message}>{alert.message}</Text>
-        <Text style={styles.timestamp}>
-          {formatDistanceToNow(new Date(alert?.timestamp))}
-        </Text>
+        <Text style={styles.timestamp}>{formatDistanceToNow(new Date(alert?.timestamp))}</Text>
       </View>
 
       {!alert.read && onMarkAsRead && (

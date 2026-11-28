@@ -40,9 +40,7 @@ export function CreateZoneScreen() {
 
   return (
     <FormFrame title="Create Safe Zone">
-      <Text style={styles.subtitle}>
-        Safe zones alert you when family members enter or leave important locations.
-      </Text>
+      <Text style={styles.subtitle}>Safe zones alert you when family members enter or leave important locations.</Text>
       <ZoneForm
         values={form.values}
         errors={form.errors}

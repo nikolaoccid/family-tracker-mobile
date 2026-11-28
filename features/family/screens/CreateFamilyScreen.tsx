@@ -40,20 +40,14 @@ export function CreateFamilyScreen() {
 
   return (
     <KeyboardScreen style={styles.container} iosOffset={100} androidOffset={0}>
-
       <ScreenHeader title="Create Family" onBack={() => router.back()} />
 
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.iconContainer}>
           <Users size={64} color={Colors.primary} />
         </View>
 
-        <Text style={styles.subtitle}>
-          Create a family group to start tracking your loved ones
-        </Text>
+        <Text style={styles.subtitle}>Create a family group to start tracking your loved ones</Text>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Family Name</Text>
@@ -92,14 +86,8 @@ export function CreateFamilyScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button
-          title="Create Family"
-          onPress={handleCreateFamily}
-          isLoading={isLoading}
-          fullWidth
-        />
+        <Button title="Create Family" onPress={handleCreateFamily} isLoading={isLoading} fullWidth />
       </View>
     </KeyboardScreen>
   );
 }
-

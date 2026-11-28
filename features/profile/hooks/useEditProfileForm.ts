@@ -14,7 +14,7 @@ export function useEditProfileForm(user: AppUser) {
   const [email, setEmail] = useState(user.email);
   const [phone, setPhone] = useState(user.phone || '');
   const [avatar, setAvatar] = useState(user.avatar);
-  
+
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const nameError = errors.name ?? '';
@@ -30,7 +30,7 @@ export function useEditProfileForm(user: AppUser) {
   const handleSave = async () => {
     if (validateForm()) {
       setIsLoading(true);
-      
+
       try {
         await updateProfile.mutateAsync({ name, email, phone: phone || undefined, avatar });
         router.back();
@@ -50,7 +50,7 @@ export function useEditProfileForm(user: AppUser) {
         aspect: [1, 1],
         quality: 0.8,
       });
-      
+
       const picked = result.canceled ? undefined : result.assets[0];
       if (picked) setAvatar(picked.uri);
     } catch (error) {
@@ -59,8 +59,19 @@ export function useEditProfileForm(user: AppUser) {
   };
 
   return {
-    name, setName, email, setEmail, phone, setPhone, avatar,
-    nameError, emailError, phoneError, isLoading,
-    save: handleSave, pickImage: handlePickImage, goBack: () => router.back(),
+    name,
+    setName,
+    email,
+    setEmail,
+    phone,
+    setPhone,
+    avatar,
+    nameError,
+    emailError,
+    phoneError,
+    isLoading,
+    save: handleSave,
+    pickImage: handlePickImage,
+    goBack: () => router.back(),
   };
 }

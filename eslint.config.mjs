@@ -5,7 +5,19 @@ import boundaries from 'eslint-plugin-boundaries';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
-  { ignores: ['node_modules/**', '.expo/**', 'dist/**', 'coverage/**', 'android/**', 'ios/**', '*.config.js', 'babel.config.js', 'withLargeHeap.js'] },
+  {
+    ignores: [
+      'node_modules/**',
+      '.expo/**',
+      'dist/**',
+      'coverage/**',
+      'android/**',
+      'ios/**',
+      '*.config.js',
+      'babel.config.js',
+      'withLargeHeap.js',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -27,7 +39,10 @@ export default tseslint.config(
       'no-console': 'error',
       'no-restricted-exports': ['error', { restrictDefaultExports: { direct: true, named: true, defaultFrom: true } }],
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/ban-ts-comment': ['error', { 'ts-ignore': true, 'ts-expect-error': 'allow-with-description' }],
+      '@typescript-eslint/ban-ts-comment': [
+        'error',
+        { 'ts-ignore': true, 'ts-expect-error': 'allow-with-description' },
+      ],
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       // Architecture: app is thin, features talk through each other's index, shared knows no feature.
       'boundaries/dependencies': [
@@ -35,9 +50,18 @@ export default tseslint.config(
         {
           default: 'disallow',
           policies: [
-            { from: { element: { type: 'app' } }, allow: { to: { element: { type: ['feature', 'shared', 'bootstrap'] } } } },
-            { from: { element: { type: 'bootstrap' } }, allow: { to: { element: { type: ['feature', 'shared', 'demo'] } } } },
-            { from: { element: { type: 'demo' } }, allow: { to: { element: { type: ['feature', 'shared', 'fixtures'] } } } },
+            {
+              from: { element: { type: 'app' } },
+              allow: { to: { element: { type: ['feature', 'shared', 'bootstrap'] } } },
+            },
+            {
+              from: { element: { type: 'bootstrap' } },
+              allow: { to: { element: { type: ['feature', 'shared', 'demo'] } } },
+            },
+            {
+              from: { element: { type: 'demo' } },
+              allow: { to: { element: { type: ['feature', 'shared', 'fixtures'] } } },
+            },
             { from: { element: { type: 'fixtures' } }, allow: { to: { element: { type: ['feature', 'fixtures'] } } } },
             { from: { element: { type: 'shared' } }, allow: { to: { element: { type: 'shared' } } } },
             { from: { element: { type: 'feature' } }, allow: { to: { element: { type: 'shared' } } } },
@@ -52,7 +76,11 @@ export default tseslint.config(
         {
           patterns: [
             { group: ['@/features/*/*', '**/features/*/*'], message: 'Import another feature through its index.' },
-            { group: ['../../*'], message: 'Do not leave your feature folder with a relative import; use shared or the other feature index.' },
+            {
+              group: ['../../*'],
+              message:
+                'Do not leave your feature folder with a relative import; use shared or the other feature index.',
+            },
           ],
         },
       ],

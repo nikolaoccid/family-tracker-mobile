@@ -5,7 +5,10 @@ export const planSchema = z.object({
   id: z.string(),
   name: z.string(),
   price: numeric,
-  features: z.array(z.string()).nullish().transform((v) => v ?? []),
+  features: z
+    .array(z.string())
+    .nullish()
+    .transform((v) => v ?? []),
   isPopular: opt(z.boolean()),
 });
 export type Plan = z.infer<typeof planSchema>;

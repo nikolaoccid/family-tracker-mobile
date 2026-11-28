@@ -1,18 +1,35 @@
 import {
-  draftFromSchedule, emptyDraft, formatTimeInput, isSharingNow, isWithinSchedule, parseClock, toggleDay, validateDraft,
+  draftFromSchedule,
+  emptyDraft,
+  formatTimeInput,
+  isSharingNow,
+  isWithinSchedule,
+  parseClock,
+  toggleDay,
+  validateDraft,
 } from '../model/schedule';
 
 const schedule = {
-  id: 's1', name: 'School', days: ['monday', 'tuesday'] as ('monday' | 'tuesday')[], startTime: '08:00', endTime: '15:30', enabled: true,
+  id: 's1',
+  name: 'School',
+  days: ['monday', 'tuesday'] as ('monday' | 'tuesday')[],
+  startTime: '08:00',
+  endTime: '15:30',
+  enabled: true,
 };
 // 2026-03-02 is a Monday, 2026-03-03 a Tuesday, 2026-03-04 a Wednesday (local time).
 const at = (day: number, h: number, m = 0) => new Date(2026, 2, day, h, m);
 
 describe('parseClock', () => {
-  it.each([['08:00', 480], ['0:05', 5], ['23:59', 1439], ['24:00', null], ['12:60', null], ['9', null], ['ab:cd', null]])(
-    '%s -> %s',
-    (input, expected) => expect(parseClock(input)).toBe(expected),
-  );
+  it.each([
+    ['08:00', 480],
+    ['0:05', 5],
+    ['23:59', 1439],
+    ['24:00', null],
+    ['12:60', null],
+    ['9', null],
+    ['ab:cd', null],
+  ])('%s -> %s', (input, expected) => expect(parseClock(input)).toBe(expected));
 });
 
 describe('isWithinSchedule', () => {
@@ -52,19 +69,28 @@ describe('validateDraft', () => {
 
   it('reports a missing name, no days and a backwards time range', () => {
     expect(validateDraft(emptyDraft())).toEqual({ name: 'Schedule name is required', days: 'Select at least one day' });
-    expect(validateDraft({ ...emptyDraft(), name: 'a', days: ['monday'], startTime: '17:00', endTime: '08:00' }).time).toBe(
-      'End time must be after start time',
+    expect(
+      validateDraft({ ...emptyDraft(), name: 'a', days: ['monday'], startTime: '17:00', endTime: '08:00' }).time,
+    ).toBe('End time must be after start time');
+    expect(
+      validateDraft({ ...emptyDraft(), name: 'a', days: ['monday'], startTime: '08:00', endTime: '08:00' }).time,
+    ).toBeDefined();
+    expect(validateDraft({ ...emptyDraft(), name: 'a', days: ['monday'], startTime: '25:00' }).time).toBe(
+      'Invalid time values',
     );
-    expect(validateDraft({ ...emptyDraft(), name: 'a', days: ['monday'], startTime: '08:00', endTime: '08:00' }).time).toBeDefined();
-    expect(validateDraft({ ...emptyDraft(), name: 'a', days: ['monday'], startTime: '25:00' }).time).toBe('Invalid time values');
   });
 });
 
 describe('formatTimeInput', () => {
-  it.each([['0', '0'], ['083', '08:3'], ['0830', '08:30'], ['830', '23:0'], ['2575', '23:59'], ['12ab34', '12:34'], ['123456', '12:34']])(
-    '%s -> %s',
-    (input, expected) => expect(formatTimeInput(input)).toBe(expected),
-  );
+  it.each([
+    ['0', '0'],
+    ['083', '08:3'],
+    ['0830', '08:30'],
+    ['830', '23:0'],
+    ['2575', '23:59'],
+    ['12ab34', '12:34'],
+    ['123456', '12:34'],
+  ])('%s -> %s', (input, expected) => expect(formatTimeInput(input)).toBe(expected));
 });
 
 describe('schedule helpers', () => {
@@ -72,6 +98,12 @@ describe('schedule helpers', () => {
     const days = ['monday'] as const;
     expect(toggleDay(days, 'tuesday')).toEqual(['monday', 'tuesday']);
     expect(toggleDay(days, 'monday')).toEqual([]);
-    expect(draftFromSchedule(schedule)).toEqual({ name: 'School', days: ['monday', 'tuesday'], startTime: '08:00', endTime: '15:30', enabled: true });
+    expect(draftFromSchedule(schedule)).toEqual({
+      name: 'School',
+      days: ['monday', 'tuesday'],
+      startTime: '08:00',
+      endTime: '15:30',
+      enabled: true,
+    });
   });
 });

@@ -77,7 +77,8 @@ export function useMemberActions(family: Family, isAdmin: boolean) {
       if (!isAdmin) return;
       const ok = await confirm({
         title: 'Delete Family',
-        message: 'Are you sure you want to delete this family? This action cannot be undone and all members will be removed.',
+        message:
+          'Are you sure you want to delete this family? This action cannot be undone and all members will be removed.',
         confirmLabel: 'Delete',
         destructive: true,
       });

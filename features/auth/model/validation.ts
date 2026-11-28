@@ -5,7 +5,9 @@ export const MIN_PASSWORD_LENGTH = 6;
 
 export function passwordError(password: string): string | undefined {
   if (!password) return 'Password is required';
-  return password.length < MIN_PASSWORD_LENGTH ? `Password must be at least ${MIN_PASSWORD_LENGTH} characters` : undefined;
+  return password.length < MIN_PASSWORD_LENGTH
+    ? `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
+    : undefined;
 }
 
 const compact = <K extends string>(errors: FieldErrors<K>): FieldErrors<K> =>

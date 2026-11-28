@@ -8,7 +8,9 @@ describe('validateProfile', () => {
 
   it('reports each field', () => {
     expect(validateProfile({ name: '', email: '', phone: 'abc' })).toEqual({
-      name: 'Name is required', email: 'Email is required', phone: 'Phone number is invalid',
+      name: 'Name is required',
+      email: 'Email is required',
+      phone: 'Phone number is invalid',
     });
     expect(validateProfile({ name: 'A', email: 'nope', phone: '' }).email).toBe('Email is invalid');
   });

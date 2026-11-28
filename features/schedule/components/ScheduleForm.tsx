@@ -3,7 +3,14 @@ import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'rea
 import { Check, Clock } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Input } from '@/shared/ui/Input';
-import { WEEKDAYS, formatTimeInput, isWithinSchedule, toggleDay, type ScheduleDraft, type ScheduleErrors } from '../model/schedule';
+import {
+  WEEKDAYS,
+  formatTimeInput,
+  isWithinSchedule,
+  toggleDay,
+  type ScheduleDraft,
+  type ScheduleErrors,
+} from '../model/schedule';
 
 interface Props {
   draft: ScheduleDraft;
@@ -71,7 +78,15 @@ export function ScheduleForm({ draft, errors, onChange }: Props) {
   );
 }
 
-function TimeField({ value, placeholder, onChange }: { value: string; placeholder: string; onChange: (v: string) => void }) {
+function TimeField({
+  value,
+  placeholder,
+  onChange,
+}: {
+  value: string;
+  placeholder: string;
+  onChange: (v: string) => void;
+}) {
   return (
     <View style={styles.timeBox}>
       <Clock size={20} color={Colors.primary} style={styles.timeIcon} />
@@ -88,21 +103,52 @@ function TimeField({ value, placeholder, onChange }: { value: string; placeholde
 }
 
 const styles = StyleSheet.create({
-  section: { backgroundColor: Colors.light.card, borderRadius: 16, padding: 20, marginHorizontal: 24, marginBottom: 24 },
+  section: {
+    backgroundColor: Colors.light.card,
+    borderRadius: 16,
+    padding: 20,
+    marginHorizontal: 24,
+    marginBottom: 24,
+  },
   sectionTitle: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginTop: 16, marginBottom: 12 },
   error: { fontSize: 12, color: Colors.danger, marginBottom: 8 },
   days: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 16, gap: 8 },
-  day: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: Colors.light.border, backgroundColor: Colors.light.background, flexDirection: 'row', alignItems: 'center' },
+  day: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    backgroundColor: Colors.light.background,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   daySelected: { backgroundColor: Colors.primary, borderColor: Colors.primary },
   dayText: { fontSize: 14, color: Colors.light.text },
   dayTextSelected: { color: Colors.white },
   check: { marginLeft: 4 },
   times: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  timeBox: { flex: 1, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: Colors.light.border, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: Colors.light.background },
+  timeBox: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    backgroundColor: Colors.light.background,
+  },
   timeIcon: { marginRight: 8 },
   timeInput: { flex: 1, fontSize: 16, color: Colors.light.text },
   to: { marginHorizontal: 12, fontSize: 16, color: Colors.light.subtext },
-  enable: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, paddingVertical: 8 },
+  enable: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingVertical: 8,
+  },
   enableText: { fontSize: 16, color: Colors.light.text },
   helper: { fontSize: 14, color: Colors.light.subtext, marginTop: 8 },
 });

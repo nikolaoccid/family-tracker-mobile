@@ -19,7 +19,13 @@ const AVATAR_SIZE = 100;
 export function ProfileHero({ name, avatar, isPremium, isAdmin, online }: Props) {
   return (
     <View style={commonStyles.profileHeader}>
-      <Avatar source={avatar ?? undefined} name={name} size={AVATAR_SIZE} showBadge={online} badgeColor={Colors.success} />
+      <Avatar
+        source={avatar ?? undefined}
+        name={name}
+        size={AVATAR_SIZE}
+        showBadge={online}
+        badgeColor={Colors.success}
+      />
       <Text style={commonStyles.name}>{name}</Text>
       {isAdmin ? (
         <View style={styles.adminBadge}>

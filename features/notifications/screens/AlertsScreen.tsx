@@ -33,29 +33,27 @@ export function AlertsScreen() {
       </View>
 
       <QueryBoundary query={query}>
-        {() => alerts.length > 0 ? (
-        <FlatList
-          data={alerts}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <AlertItem
-              alert={item}
-              onPress={() => markRead(item.id)}
-              onMarkAsRead={() => markRead(item.id)}
+        {() =>
+          alerts.length > 0 ? (
+            <FlatList
+              data={alerts}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <AlertItem alert={item} onPress={() => markRead(item.id)} onMarkAsRead={() => markRead(item.id)} />
+              )}
+              contentContainerStyle={styles.listContent}
+              showsVerticalScrollIndicator={false}
             />
-          )}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-        />
-      ) : (
-        <View style={styles.emptyContainer}>
-          <Bell size={64} color={Colors.light.icon} />
-          <Text style={styles.emptyTitle}>No Alerts</Text>
-          <Text style={styles.emptyText}>
-            You don't have any alerts yet. Alerts will appear here when family members trigger them.
-          </Text>
-        </View>
-      )}
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Bell size={64} color={Colors.light.icon} />
+              <Text style={styles.emptyTitle}>No Alerts</Text>
+              <Text style={styles.emptyText}>
+                You don't have any alerts yet. Alerts will appear here when family members trigger them.
+              </Text>
+            </View>
+          )
+        }
       </QueryBoundary>
     </View>
   );

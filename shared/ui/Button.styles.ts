@@ -68,9 +68,6 @@ export const variantStyles = {
   secondary: filled(Colors.secondary, Colors.light.text),
   danger: filled(Colors.danger, Colors.white),
   success: filled(Colors.success, Colors.white),
-  outline: bare(
-    { borderWidth: 1, borderColor: Colors.primary },
-    { borderWidth: 1, borderColor: Colors.light.border },
-  ),
+  outline: bare({ borderWidth: 1, borderColor: Colors.primary }, { borderWidth: 1, borderColor: Colors.light.border }),
   text: bare({ paddingHorizontal: 0, paddingVertical: 0, minHeight: 0 }, {}),
 };

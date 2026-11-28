@@ -23,7 +23,11 @@ function serve(routes: Routes) {
   const fetchImpl = (async (input: RequestInfo | URL, init: RequestInit = {}) => {
     const url = new URL(String(input));
     const key = `${init.method ?? 'GET'} ${url.pathname}`;
-    requests.push({ method: init.method ?? 'GET', path: url.pathname + url.search, body: init.body ? JSON.parse(String(init.body)) : undefined });
+    requests.push({
+      method: init.method ?? 'GET',
+      path: url.pathname + url.search,
+      body: init.body ? JSON.parse(String(init.body)) : undefined,
+    });
     if (!(key in routes)) return new Response(JSON.stringify({ message: `unexpected ${key}` }), { status: 404 });
     const payload = routes[key];
     return new Response(payload === undefined ? '' : JSON.stringify(payload), { status: 200 });
@@ -51,7 +55,12 @@ describe('wire contract: routes, methods and bodies are unchanged', () => {
     await authApi.updateProfile({ name: 'B' });
     await authApi.registerPushToken('ExponentPushToken[x]');
     expect(requests.map((r) => `${r.method} ${r.path}`)).toEqual([
-      'POST /auth/login/jwt', 'POST /users', 'POST /users/reset-password', 'POST /users/complete-reset', 'PUT /users/profile', 'POST /notifications/register',
+      'POST /auth/login/jwt',
+      'POST /users',
+      'POST /users/reset-password',
+      'POST /users/complete-reset',
+      'PUT /users/profile',
+      'POST /notifications/register',
     ]);
     expect(requests[0]?.body).toEqual({ email: 'a@example.com', password: 'pw' });
     expect(requests[3]?.body).toEqual({ token: 'tok', newPassword: 'new' });
@@ -111,18 +120,45 @@ describe('wire contract: routes, methods and bodies are unchanged', () => {
     await locationApi.send({ latitude: 1, longitude: 2, timestamp: 't' });
     await locationApi.updateBattery(50);
     await zonesApi.list(ids.family);
-    await zonesApi.create({ name: 'n', color: '#fff', radius: 100, centerLatitude: 1, centerLongitude: 2, membersToTrack: [], isActive: true }, ids.family);
+    await zonesApi.create(
+      {
+        name: 'n',
+        color: '#fff',
+        radius: 100,
+        centerLatitude: 1,
+        centerLongitude: 2,
+        membersToTrack: [],
+        isActive: true,
+      },
+      ids.family,
+    );
     await zonesApi.update(ids.zoneHome, { name: 'x' }, ids.family);
     await zonesApi.setActive(ids.zoneHome, false);
     await zonesApi.remove(ids.zoneHome);
     await zonesApi.analytics(ids.zoneHome, { userId: ids.iva });
     await zonesApi.analyticsSummary({ userId: ids.iva });
     await alertsApi.list(ids.family);
-    await alertsApi.create({ type: 'emergency', message: 'm', familyId: ids.family, userId: ids.ana, latitude: 1, longitude: 2, timestamp: 't' });
-    await alertsApi.create({ type: 'heading_home', message: 'm', familyId: ids.family, userId: ids.ana, latitude: 1, longitude: 2, timestamp: 't' });
+    await alertsApi.create({
+      type: 'emergency',
+      message: 'm',
+      familyId: ids.family,
+      userId: ids.ana,
+      latitude: 1,
+      longitude: 2,
+      timestamp: 't',
+    });
+    await alertsApi.create({
+      type: 'heading_home',
+      message: 'm',
+      familyId: ids.family,
+      userId: ids.ana,
+      latitude: 1,
+      longitude: 2,
+      timestamp: 't',
+    });
     await alertsApi.remove('alert-1');
     await privacyApi.get();
-    await privacyApi.update((await privacyApi.get()));
+    await privacyApi.update(await privacyApi.get());
     await subscriptionApi.plans();
     await subscriptionApi.subscribe('premium');
     await subscriptionApi.cancel();
@@ -133,7 +169,9 @@ describe('wire contract: routes, methods and bodies are unchanged', () => {
     expect(find('POST', '/family/verify/')?.body).toEqual({ inviteToken: 'tok' });
     expect(find('PUT', `/family/${ids.family}/members/m1/role`)?.body).toEqual({ role: 'admin' });
     expect(find('POST', '/safe-zone')?.body).toMatchObject({ familyId: ids.family, centerLatitude: 1 });
-    expect(find('GET', `/location/history/${ids.ana}`)?.path).toBe(`/location/history/${ids.ana}?startDate=2026-05-01&endDate=2026-06-01&limit=1000`);
+    expect(find('GET', `/location/history/${ids.ana}`)?.path).toBe(
+      `/location/history/${ids.ana}?startDate=2026-05-01&endDate=2026-06-01&limit=1000`,
+    );
     expect(find('POST', '/payments/create-payment-intent')?.body).toEqual({ amount: 999, currency: 'usd' });
   });
 });
@@ -142,9 +180,21 @@ describe('lenient parsing: awkward but valid server responses', () => {
   it('family: null optionals, unknown role, extra fields, empty body for "no family"', async () => {
     serve({
       'GET /family/00000000-0000-0000-0000-000000000000': {
-        id: 'f', name: null, members: [
-          { id: 'm', name: null, email: 'x@example.com', role: 'owner', isSharing: null, batteryLevel: null, location: null, brandNew: [1, 2] },
-        ], futureField: true,
+        id: 'f',
+        name: null,
+        members: [
+          {
+            id: 'm',
+            name: null,
+            email: 'x@example.com',
+            role: 'owner',
+            isSharing: null,
+            batteryLevel: null,
+            location: null,
+            brandNew: [1, 2],
+          },
+        ],
+        futureField: true,
       },
     });
     const family = await familyApi.current();
@@ -157,26 +207,52 @@ describe('lenient parsing: awkward but valid server responses', () => {
   });
 
   it('zones: numerics arriving as strings, nulls and missing optionals', async () => {
-    serve({ [`GET /family/${ids.family}/safe-zones`]: [{ id: 'z', radius: '250.5', centerLatitude: '48.85', centerLongitude: 2.29, name: null, membersToTrack: null, isActive: null }] });
+    serve({
+      [`GET /family/${ids.family}/safe-zones`]: [
+        {
+          id: 'z',
+          radius: '250.5',
+          centerLatitude: '48.85',
+          centerLongitude: 2.29,
+          name: null,
+          membersToTrack: null,
+          isActive: null,
+        },
+      ],
+    });
     const [zone] = await zonesApi.list(ids.family);
     expect(zone).toMatchObject({ radius: 250.5, centerLatitude: 48.85, name: '', membersToTrack: [], isActive: true });
   });
 
   it('analytics: missing arrays become empty, numerics may be strings', async () => {
-    serve({ [`GET /zone-analytics/${ids.zoneHome}/${ids.ana}`]: { zoneId: 'z', userId: 'u', totalTimeSpent: '95', visits: [{ entryTime: 'a', exitTime: null, duration: '5' }] } });
+    serve({
+      [`GET /zone-analytics/${ids.zoneHome}/${ids.ana}`]: {
+        zoneId: 'z',
+        userId: 'u',
+        totalTimeSpent: '95',
+        visits: [{ entryTime: 'a', exitTime: null, duration: '5' }],
+      },
+    });
     const analytics = await zonesApi.analytics(ids.zoneHome, { userId: ids.ana });
     expect(analytics).toMatchObject({ totalTimeSpent: 95, timeByDay: [], visits: [{ exitTime: '', duration: 5 }] });
   });
 
   it('alerts: unknown type and absent coordinates', async () => {
-    serve({ [`GET /family/${ids.family}/alerts`]: [{ id: 'a', type: 'sos_v2', latitude: null }, { id: 'b', type: 'low_battery' }] });
+    serve({
+      [`GET /family/${ids.family}/alerts`]: [
+        { id: 'a', type: 'sos_v2', latitude: null },
+        { id: 'b', type: 'low_battery' },
+      ],
+    });
     const alerts = await alertsApi.list(ids.family);
     expect(alerts.map((a) => a.type)).toEqual(['unknown', 'low_battery']);
   });
 
   it('location history and family locations: missing optional fields', async () => {
     serve({
-      [`GET /location/history/${ids.ana}`]: [{ id: 'h', latitude: 1, longitude: 2, timestamp: null, userId: null, accuracy: null }],
+      [`GET /location/history/${ids.ana}`]: [
+        { id: 'h', latitude: 1, longitude: 2, timestamp: null, userId: null, accuracy: null },
+      ],
       [`GET /family/${ids.family}/locations`]: [{ id: 'l', latitude: null, user: null }],
     });
     const point = (await locationApi.history(ids.ana, {}))[0];
@@ -188,7 +264,9 @@ describe('lenient parsing: awkward but valid server responses', () => {
   });
 
   it('login: a user with only the required fields', async () => {
-    serve({ 'POST /auth/login/jwt': { user: { id: 'u', email: 'a@example.com' }, token: 'jwt', refreshToken: 'ignored' } });
+    serve({
+      'POST /auth/login/jwt': { user: { id: 'u', email: 'a@example.com' }, token: 'jwt', refreshToken: 'ignored' },
+    });
     const session = await authApi.login('a@example.com', 'pw');
     expect(session.user).toMatchObject({ name: '', isPremium: false });
     expect(session.user.avatar).toBeUndefined();

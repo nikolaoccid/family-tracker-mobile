@@ -4,7 +4,14 @@ import * as Location from 'expo-location';
 import { startApp } from '@/bootstrap/api';
 import { hydrateAuth, useAuthStore } from '@/features/auth';
 import { http } from '@/shared/api';
-import { handleLocationUpdate, startLocationTracking, stopLocationTracking, isLocationTrackingActive, useLocationStore, LOCATION_TASK } from '@/features/location';
+import {
+  handleLocationUpdate,
+  startLocationTracking,
+  stopLocationTracking,
+  isLocationTrackingActive,
+  useLocationStore,
+  LOCATION_TASK,
+} from '@/features/location';
 import { requestLocationGrant } from '@/features/permissions/model/locationGrant';
 import { onSessionReset } from '@/shared/session';
 import { makeUser } from '@/test-utils/user';
@@ -45,7 +52,11 @@ describe('startApp', () => {
     const unsubscribe = onSessionReset(signOutSpy);
     fetchMock.mockImplementation(async () => json({ message: 'Unauthorized' }, 401));
 
-    const results = await Promise.allSettled([http.get('/family/x'), http.get('/privacy-settings'), http.get('/subscription')]);
+    const results = await Promise.allSettled([
+      http.get('/family/x'),
+      http.get('/privacy-settings'),
+      http.get('/subscription'),
+    ]);
 
     expect(results.map((r) => r.status)).toEqual(['rejected', 'rejected', 'rejected']);
     expect(signOutSpy).toHaveBeenCalledTimes(1);
@@ -59,11 +70,16 @@ describe('startApp', () => {
     fetchMock.mockImplementation(async (url: string, init: RequestInit) => {
       const auth = (init.headers as Record<string, string>).Authorization;
       seen.push(`${new URL(url).pathname} ${auth}`);
-      if (new URL(url).pathname === '/auth/refresh') return json({ token: 'tok-2', expiresAt: '2027-01-01T00:00:00.000Z' });
+      if (new URL(url).pathname === '/auth/refresh')
+        return json({ token: 'tok-2', expiresAt: '2027-01-01T00:00:00.000Z' });
       return auth === 'Bearer tok-2' ? json({ ok: true }) : json({}, 401);
     });
 
-    const results = await Promise.all([http.get('/family/x'), http.get('/privacy-settings'), http.get('/subscription')]);
+    const results = await Promise.all([
+      http.get('/family/x'),
+      http.get('/privacy-settings'),
+      http.get('/subscription'),
+    ]);
 
     expect(results).toEqual([{ ok: true }, { ok: true }, { ok: true }]);
     expect(seen.filter((s) => s.startsWith('/auth/refresh'))).toEqual(['/auth/refresh Bearer tok-1']);
@@ -105,7 +121,10 @@ describe('background location task', () => {
 
   it('uploads the latest fix and records it locally', async () => {
     fetchMock.mockResolvedValue(json({}));
-    await handleLocationUpdate({ data: { locations: [fix, { coords: { ...fix.coords, latitude: 1 } }] as never } }, () => true);
+    await handleLocationUpdate(
+      { data: { locations: [fix, { coords: { ...fix.coords, latitude: 1 } }] as never } },
+      () => true,
+    );
     const [url, init] = fetchMock.mock.calls[0] ?? [];
     expect(String(url)).toMatch(/\/location$/);
     expect(JSON.parse(init.body)).toMatchObject({ latitude: 1, longitude: 2.29 });
@@ -128,7 +147,9 @@ describe('background location task', () => {
   it('rebuilds the session in a headless start before uploading', async () => {
     useAuthStore.setState({ accessToken: null, isAuthenticated: true, hydrated: false });
     fetchMock.mockResolvedValue(json({}));
-    const task = defineTask.mock.calls.find(([name]) => name === LOCATION_TASK)?.[1] as (body: unknown) => Promise<void>;
+    const task = defineTask.mock.calls.find(([name]) => name === LOCATION_TASK)?.[1] as (
+      body: unknown,
+    ) => Promise<void>;
     await task({ data: { locations: [fix] } });
     expect((fetchMock.mock.calls[0]?.[1].headers as Record<string, string>).Authorization).toBe('Bearer tok-1');
   });
@@ -145,7 +166,10 @@ describe('start and stop tracking', () => {
 
   it('starts location updates after both permissions are granted', async () => {
     await expect(startLocationTracking()).resolves.toBe(true);
-    expect(location.startLocationUpdatesAsync).toHaveBeenCalledWith(LOCATION_TASK, expect.objectContaining({ distanceInterval: 50 }));
+    expect(location.startLocationUpdatesAsync).toHaveBeenCalledWith(
+      LOCATION_TASK,
+      expect.objectContaining({ distanceInterval: 50 }),
+    );
   });
 
   it('does not start twice when the task is already registered', async () => {

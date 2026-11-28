@@ -33,7 +33,14 @@ export function RecentVisits({ visits }: { visits: readonly ZoneVisit[] }) {
 const styles = StyleSheet.create({
   section: { backgroundColor: Colors.light.card, borderRadius: 16, padding: 20, marginBottom: 24 },
   title: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 16 },
-  item: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: Colors.light.border },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
+  },
   when: { flex: 1 },
   date: { fontSize: 14, fontWeight: '500', color: Colors.light.text, marginBottom: 4 },
   time: { fontSize: 12, color: Colors.light.subtext },

@@ -6,7 +6,12 @@ import { logger } from '../logger';
 /** Maps state written by schema version N to version N + 1. Keyed by N. */
 export type Migrations = Record<number, (state: unknown) => unknown>;
 
-export function migratePersisted(state: unknown, fromVersion: number, toVersion: number, migrations: Migrations): unknown {
+export function migratePersisted(
+  state: unknown,
+  fromVersion: number,
+  toVersion: number,
+  migrations: Migrations,
+): unknown {
   let current = state;
   for (let v = fromVersion; v < toVersion; v++) {
     const step = migrations[v];

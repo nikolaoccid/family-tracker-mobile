@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View, TouchableOpacity, TextInputProps, ViewStyle, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
+import {
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  TextInputProps,
+  ViewStyle,
+  NativeSyntheticEvent,
+  TextInputFocusEventData,
+} from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { Colors } from './theme';
 import { styles } from './Input.styles';
@@ -48,11 +57,7 @@ export function Input({
       {label ? <Text style={styles.label}>{label}</Text> : null}
 
       <View
-        style={[
-          styles.inputContainer,
-          { borderColor: getBorderColor() },
-          isFocused && styles.inputContainerFocused
-        ]}
+        style={[styles.inputContainer, { borderColor: getBorderColor() }, isFocused && styles.inputContainerFocused]}
       >
         {leftIcon ? <View style={styles.leftIcon}>{leftIcon}</View> : null}
 
@@ -61,7 +66,7 @@ export function Input({
           style={[
             styles.input,
             leftIcon ? styles.inputWithLeftIcon : undefined,
-            (rightIcon || secureTextEntry) ? styles.inputWithRightIcon : undefined,
+            rightIcon || secureTextEntry ? styles.inputWithRightIcon : undefined,
           ]}
           placeholderTextColor={Colors.light.subtext}
           onFocus={handleFocus}
@@ -70,10 +75,7 @@ export function Input({
         />
 
         {secureTextEntry ? (
-          <TouchableOpacity
-            style={styles.rightIcon}
-            onPress={() => setIsPasswordVisible((visible) => !visible)}
-          >
+          <TouchableOpacity style={styles.rightIcon} onPress={() => setIsPasswordVisible((visible) => !visible)}>
             {isPasswordVisible ? (
               <EyeOff size={20} color={Colors.light.icon} />
             ) : (
@@ -82,9 +84,7 @@ export function Input({
           </TouchableOpacity>
         ) : null}
 
-        {rightIcon && !secureTextEntry ? (
-          <View style={styles.rightIcon}>{rightIcon}</View>
-        ) : null}
+        {rightIcon && !secureTextEntry ? <View style={styles.rightIcon}>{rightIcon}</View> : null}
       </View>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}

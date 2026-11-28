@@ -22,7 +22,10 @@ export function FormFrame({ title, headerRight, padded = true, keyboardAware = t
   const body = (
     <>
       <ScreenHeader title={title} onBack={() => router.back()} right={headerRight} />
-      <ScrollView contentContainerStyle={[styles.content, padded && styles.padded]} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={[styles.content, padded && styles.padded]}
+        showsVerticalScrollIndicator={false}
+      >
         {children}
       </ScrollView>
     </>

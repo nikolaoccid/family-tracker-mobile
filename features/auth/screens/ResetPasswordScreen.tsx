@@ -46,12 +46,7 @@ export function ResetPasswordScreen() {
         {tokenError ? (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{tokenError}</Text>
-            <Button
-              title="Back to Login"
-              onPress={() => router.push('/')}
-              fullWidth
-              style={styles.backToLoginButton}
-            />
+            <Button title="Back to Login" onPress={() => router.push('/')} fullWidth style={styles.backToLoginButton} />
           </View>
         ) : isSubmitted ? (
           <View style={styles.successContainer}>
@@ -60,18 +55,11 @@ export function ResetPasswordScreen() {
             <Text style={styles.successMessage}>
               Your password has been successfully reset. You can now log in with your new password.
             </Text>
-            <Button
-              title="Go to Login"
-              onPress={() => router.push('/')}
-              fullWidth
-              style={styles.backToLoginButton}
-            />
+            <Button title="Go to Login" onPress={() => router.push('/')} fullWidth style={styles.backToLoginButton} />
           </View>
         ) : (
           <View style={styles.formContainer}>
-            <Text style={styles.subtitle}>
-              Enter your new password below to reset your account password.
-            </Text>
+            <Text style={styles.subtitle}>Enter your new password below to reset your account password.</Text>
 
             {error && <ErrorBanner message={error} />}
 
@@ -108,4 +96,3 @@ export function ResetPasswordScreen() {
     </KeyboardScreen>
   );
 }
-

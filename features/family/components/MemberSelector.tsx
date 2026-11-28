@@ -11,48 +11,27 @@ interface MemberSelectorProps {
   onSelectMember: (id: string) => void;
 }
 
-export function MemberSelector({ 
-  members, 
-  selectedMemberIds, 
-  onSelectMember 
-}: MemberSelectorProps) {
+export function MemberSelector({ members, selectedMemberIds, onSelectMember }: MemberSelectorProps) {
   return (
-    <ScrollView 
-      horizontal 
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.container}
-    >
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.container}>
       {members.map((member) => {
         const isSelected = selectedMemberIds.includes(member.id);
-        
+
         return (
           <TouchableOpacity
             key={member.id}
-            style={[
-              styles.memberItem,
-              isSelected && styles.selectedItem
-            ]}
+            style={[styles.memberItem, isSelected && styles.selectedItem]}
             onPress={() => onSelectMember(member.id)}
           >
             <View style={styles.avatarContainer}>
-              <Avatar
-                source={member.avatar}
-                name={member.name}
-                size={50}
-              />
+              <Avatar source={member.avatar} name={member.name} size={50} />
               {isSelected && (
                 <View style={styles.checkBadge}>
                   <Check size={14} color={Colors.white} />
                 </View>
               )}
             </View>
-            <Text 
-              style={[
-                styles.memberName,
-                isSelected && styles.selectedText
-              ]}
-              numberOfLines={1}
-            >
+            <Text style={[styles.memberName, isSelected && styles.selectedText]} numberOfLines={1}>
               {member.name}
             </Text>
           </TouchableOpacity>

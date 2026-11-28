@@ -40,7 +40,13 @@ jest.mock('react-native-safe-area-context', () => ({
   SafeAreaView: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-type RouteCase = { route: string; load: () => { default: React.ComponentType }; params?: Record<string, string>; states: FetchMode[]; settle: string | RegExp };
+type RouteCase = {
+  route: string;
+  load: () => { default: React.ComponentType };
+  params?: Record<string, string>;
+  states: FetchMode[];
+  settle: string | RegExp;
+};
 
 const ALL: FetchMode[] = ['data', 'loading', 'error'];
 const FORM: FetchMode[] = ['data'];
@@ -48,32 +54,108 @@ const FORM: FetchMode[] = ['data'];
 // `load` is lazy so jest.mock above is applied before each module is evaluated.
 const routes: RouteCase[] = [
   { route: '(auth)/index', load: () => require('../app/(auth)/index'), states: FORM, settle: /Sign In/i },
-  { route: '(auth)/register', load: () => require('../app/(auth)/register'), states: FORM, settle: /Create Account|Sign Up|Register/i },
-  { route: '(auth)/forgot-password', load: () => require('../app/(auth)/forgot-password'), states: FORM, settle: /Reset|Forgot/i },
-  { route: '(auth)/reset-password', load: () => require('../app/(auth)/reset-password'), params: { token: 'abc' }, states: FORM, settle: /password/i },
-  { route: 'oauthredirect', load: () => require('../app/oauthredirect'), params: {}, states: FORM, settle: /Completing sign in/ },
+  {
+    route: '(auth)/register',
+    load: () => require('../app/(auth)/register'),
+    states: FORM,
+    settle: /Create Account|Sign Up|Register/i,
+  },
+  {
+    route: '(auth)/forgot-password',
+    load: () => require('../app/(auth)/forgot-password'),
+    states: FORM,
+    settle: /Reset|Forgot/i,
+  },
+  {
+    route: '(auth)/reset-password',
+    load: () => require('../app/(auth)/reset-password'),
+    params: { token: 'abc' },
+    states: FORM,
+    settle: /password/i,
+  },
+  {
+    route: 'oauthredirect',
+    load: () => require('../app/oauthredirect'),
+    params: {},
+    states: FORM,
+    settle: /Completing sign in/,
+  },
   { route: '(tabs)/index', load: () => require('../app/(tabs)/index'), states: ALL, settle: /Safe Zones|Emergency/ },
   { route: '(tabs)/family', load: () => require('../app/(tabs)/family'), states: ALL, settle: /Family Members/ },
   { route: '(tabs)/alerts', load: () => require('../app/(tabs)/alerts'), states: ALL, settle: /Alerts/ },
   { route: '(tabs)/chat', load: () => require('../app/(tabs)/chat'), states: ALL, settle: /Marko Sample/ },
   { route: '(tabs)/settings', load: () => require('../app/(tabs)/settings'), states: FORM, settle: /Privacy Settings/ },
-  { route: 'chat/private', load: () => require('../app/chat/private'), params: { targetUserId: ids.marko, name: 'Marko' }, states: FORM, settle: /Connecting to chat|Chat is not configured/ },
-  { route: 'family/accept-invite', load: () => require('../app/family/accept-invite'), states: FORM, settle: /Invalid invitation link/ },
-  { route: 'family/add-member', load: () => require('../app/family/add-member'), states: FORM, settle: /Send Invitation/ },
+  {
+    route: 'chat/private',
+    load: () => require('../app/chat/private'),
+    params: { targetUserId: ids.marko, name: 'Marko' },
+    states: FORM,
+    settle: /Connecting to chat|Chat is not configured/,
+  },
+  {
+    route: 'family/accept-invite',
+    load: () => require('../app/family/accept-invite'),
+    states: FORM,
+    settle: /Invalid invitation link/,
+  },
+  {
+    route: 'family/add-member',
+    load: () => require('../app/family/add-member'),
+    states: FORM,
+    settle: /Send Invitation/,
+  },
   { route: 'family/create', load: () => require('../app/family/create'), states: FORM, settle: /Create Family/ },
-  { route: 'location/history', load: () => require('../app/location/history'), states: ALL, settle: /Location History/ },
-  { route: 'permissions/location', load: () => require('../app/permissions/location'), states: FORM, settle: /Location Sharing/ },
-  { route: 'permissions/notifications', load: () => require('../app/permissions/notifications'), states: FORM, settle: /Stay Updated/ },
+  {
+    route: 'location/history',
+    load: () => require('../app/location/history'),
+    states: ALL,
+    settle: /Location History/,
+  },
+  {
+    route: 'permissions/location',
+    load: () => require('../app/permissions/location'),
+    states: FORM,
+    settle: /Location Sharing/,
+  },
+  {
+    route: 'permissions/notifications',
+    load: () => require('../app/permissions/notifications'),
+    states: FORM,
+    settle: /Stay Updated/,
+  },
   { route: 'profile/edit', load: () => require('../app/profile/edit'), states: FORM, settle: /Edit Profile/ },
   { route: 'profile/view', load: () => require('../app/profile/view'), states: FORM, settle: /Ana Example/ },
-  { route: 'profile/view/[id]', load: () => require('../app/profile/view/[id]'), params: { id: ids.marko }, states: ALL, settle: /Marko Sample|Member not found/ },
+  {
+    route: 'profile/view/[id]',
+    load: () => require('../app/profile/view/[id]'),
+    params: { id: ids.marko },
+    states: ALL,
+    settle: /Marko Sample|Member not found/,
+  },
   { route: 'schedule/create', load: () => require('../app/schedule/create'), states: FORM, settle: /Create Schedule/ },
-  { route: 'schedule/edit', load: () => require('../app/schedule/edit'), params: { id: 'schedule-1' }, states: ALL, settle: /Edit Schedule/ },
-  { route: 'settings/privacy', load: () => require('../app/settings/privacy'), states: ALL, settle: /Location Sharing/ },
+  {
+    route: 'schedule/edit',
+    load: () => require('../app/schedule/edit'),
+    params: { id: 'schedule-1' },
+    states: ALL,
+    settle: /Edit Schedule/,
+  },
+  {
+    route: 'settings/privacy',
+    load: () => require('../app/settings/privacy'),
+    states: ALL,
+    settle: /Location Sharing/,
+  },
   { route: 'subscription', load: () => require('../app/subscription'), states: ALL, settle: /Subscription/ },
   { route: 'zones/index', load: () => require('../app/zones/index'), states: ALL, settle: /Safe Zones/ },
   { route: 'zones/create', load: () => require('../app/zones/create'), states: FORM, settle: /Create Safe Zone/ },
-  { route: 'zones/edit', load: () => require('../app/zones/edit'), params: { id: ids.zoneHome }, states: ALL, settle: /Edit Safe Zone/ },
+  {
+    route: 'zones/edit',
+    load: () => require('../app/zones/edit'),
+    params: { id: ids.zoneHome },
+    states: ALL,
+    settle: /Edit Safe Zone/,
+  },
   { route: 'zones/analytics', load: () => require('../app/zones/analytics'), states: ALL, settle: /Zone Analytics/ },
 ];
 

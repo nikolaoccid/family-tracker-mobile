@@ -18,32 +18,22 @@ export function EditProfileScreen() {
 
 function EditProfileForm({ user }: { user: AppUser }) {
   const form = useEditProfileForm(user);
-  const { name, setName, email, setEmail, phone, setPhone, avatar, nameError, emailError, phoneError, isLoading } = form;
+  const { name, setName, email, setEmail, phone, setPhone, avatar, nameError, emailError, phoneError, isLoading } =
+    form;
 
   return (
     <KeyboardScreen style={styles.container}>
-      
       <ScreenHeader title="Edit Profile" onBack={form.goBack} />
-      
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.avatarContainer}>
-          <Avatar 
-            source={avatar} 
-            name={name} 
-            size={100} 
-          />
-          <TouchableOpacity 
-            style={styles.changePhotoButton}
-            onPress={form.pickImage}
-          >
+          <Avatar source={avatar} name={name} size={100} />
+          <TouchableOpacity style={styles.changePhotoButton} onPress={form.pickImage}>
             <Camera size={16} color={Colors.primary} />
             <Text style={styles.changePhotoText}>Change Photo</Text>
           </TouchableOpacity>
         </View>
-        
+
         <View style={styles.formContainer}>
           <Input
             label="Full Name"
@@ -53,7 +43,7 @@ function EditProfileForm({ user }: { user: AppUser }) {
             leftIcon={<User size={20} color={Colors.light.icon} />}
             error={nameError}
           />
-          
+
           <Input
             label="Email"
             placeholder="Enter your email"
@@ -64,7 +54,7 @@ function EditProfileForm({ user }: { user: AppUser }) {
             leftIcon={<Mail size={20} color={Colors.light.icon} />}
             error={emailError}
           />
-          
+
           <Input
             label="Phone (optional)"
             placeholder="Enter your phone number"
@@ -74,14 +64,8 @@ function EditProfileForm({ user }: { user: AppUser }) {
             leftIcon={<Phone size={20} color={Colors.light.icon} />}
             error={phoneError}
           />
-          
-          <Button
-            title="Save Changes"
-            onPress={form.save}
-            loading={isLoading}
-            fullWidth
-            style={styles.saveButton}
-          />
+
+          <Button title="Save Changes" onPress={form.save} loading={isLoading} fullWidth style={styles.saveButton} />
         </View>
       </ScrollView>
     </KeyboardScreen>

@@ -17,7 +17,11 @@ jest.mock('react-native-safe-area-context', () => ({
 jest.mock('expo-splash-screen', () => ({ preventAutoHideAsync: jest.fn(), hideAsync: jest.fn() }));
 
 beforeEach(() => {
-  configureHttp({ baseUrl: 'https://api.example.test', fetchImpl: createDemoFetch(() => new Date(), 0), getToken: () => 'demo-access-token' });
+  configureHttp({
+    baseUrl: 'https://api.example.test',
+    fetchImpl: createDemoFetch(() => new Date(), 0),
+    getToken: () => 'demo-access-token',
+  });
   useAuthStore.setState({ user: null, accessToken: null, isAuthenticated: false, hydrated: true });
 });
 

@@ -31,17 +31,23 @@ const snapshotSchema = z.object({
   clientState: z.object({
     mutations: z.array(z.unknown()),
     queries: z.array(
-      z.object({
-        queryKey: z.array(z.unknown()),
-        queryHash: z.string(),
-        state: z.object({ data: z.unknown(), dataUpdatedAt: z.number() }).loose(),
-      }).loose(),
+      z
+        .object({
+          queryKey: z.array(z.unknown()),
+          queryHash: z.string(),
+          state: z.object({ data: z.unknown(), dataUpdatedAt: z.number() }).loose(),
+        })
+        .loose(),
     ),
   }),
 });
 
 /** Newest queries first, at most `maxQueries`, and a snapshot that serialises under `maxBytes` (else null). */
-export function boundSnapshot(client: PersistedClient, maxQueries = MAX_QUERIES, maxBytes = MAX_BYTES): PersistedClient | null {
+export function boundSnapshot(
+  client: PersistedClient,
+  maxQueries = MAX_QUERIES,
+  maxBytes = MAX_BYTES,
+): PersistedClient | null {
   const queries = [...client.clientState.queries]
     .sort((a, b) => b.state.dataUpdatedAt - a.state.dataUpdatedAt)
     .slice(0, maxQueries);

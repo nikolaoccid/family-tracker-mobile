@@ -12,23 +12,12 @@ interface CardProps {
   contentStyle?: ViewStyle;
 }
 
-export function Card({
-  children,
-  title,
-  subtitle,
-  onPress,
-  style,
-  contentStyle,
-}: CardProps) {
+export function Card({ children, title, subtitle, onPress, style, contentStyle }: CardProps) {
   const CardComponent = onPress ? TouchableOpacity : View;
 
   return (
-    <CardComponent
-      style={[styles.card, style]}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      {(title || subtitle) ? (
+    <CardComponent style={[styles.card, style]} onPress={onPress} activeOpacity={0.7}>
+      {title || subtitle ? (
         <View style={styles.header}>
           {title ? <Text style={styles.title}>{title}</Text> : null}
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}

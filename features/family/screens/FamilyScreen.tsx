@@ -62,7 +62,11 @@ function FamilyOverview({ family }: { family: Family }) {
         </MembersSection>
       </ScrollView>
       {isAdmin && (
-        <TouchableOpacity style={styles.fab} onPress={() => router.push('/family/add-member')} accessibilityLabel="Add member">
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => router.push('/family/add-member')}
+          accessibilityLabel="Add member"
+        >
           <UserPlus size={24} color={Colors.white} />
         </TouchableOpacity>
       )}

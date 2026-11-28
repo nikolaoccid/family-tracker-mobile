@@ -11,11 +11,7 @@ interface SafeZoneItemProps {
 
 export function SafeZoneItem({ zone, onPress }: SafeZoneItemProps) {
   return (
-    <TouchableOpacity
-      style={[styles.container, { borderLeftColor: zone.color }]}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
+    <TouchableOpacity style={[styles.container, { borderLeftColor: zone.color }]} onPress={onPress} activeOpacity={0.7}>
       <View style={[styles.iconContainer, { backgroundColor: `${zone.color}20` }]}>
         <MapPin size={24} color={zone.color} />
       </View>
@@ -25,24 +21,15 @@ export function SafeZoneItem({ zone, onPress }: SafeZoneItemProps) {
         <View style={styles.detailsRow}>
           <Text style={styles.radius}>{zone.radius}m radius</Text>
           <View style={styles.statusContainer}>
-            <View
-              style={[
-                styles.statusDot,
-                { backgroundColor: zone.isActive ? Colors.success : Colors.light.icon }
-              ]}
-            />
-            <Text style={styles.status}>
-              {zone.isActive ? 'Active' : 'Inactive'}
-            </Text>
+            <View style={[styles.statusDot, { backgroundColor: zone.isActive ? Colors.success : Colors.light.icon }]} />
+            <Text style={styles.status}>{zone.isActive ? 'Active' : 'Inactive'}</Text>
           </View>
         </View>
       </View>
 
       <View style={styles.membersContainer}>
         <Users size={16} color={Colors.light.subtext} />
-        <Text style={styles.membersCount}>
-          {zone.membersToTrack.length}
-        </Text>
+        <Text style={styles.membersCount}>{zone.membersToTrack.length}</Text>
       </View>
     </TouchableOpacity>
   );

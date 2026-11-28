@@ -3,8 +3,16 @@ import { z } from 'zod';
 const MAX_TOKEN_LENGTH = 2048;
 
 const paramsSchema = z.object({
-  invitedEmail: z.string().min(3).max(320).regex(/^[^\s@]+@[^\s@]+$/, 'not an email'),
-  token: z.string().min(1).max(MAX_TOKEN_LENGTH).regex(/^[\w.~+/=-]+$/, 'not a token'),
+  invitedEmail: z
+    .string()
+    .min(3)
+    .max(320)
+    .regex(/^[^\s@]+@[^\s@]+$/, 'not an email'),
+  token: z
+    .string()
+    .min(1)
+    .max(MAX_TOKEN_LENGTH)
+    .regex(/^[\w.~+/=-]+$/, 'not a token'),
 });
 
 export type InviteParams = z.infer<typeof paramsSchema>;

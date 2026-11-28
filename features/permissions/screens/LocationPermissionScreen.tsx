@@ -22,17 +22,27 @@ export function LocationPermissionScreen() {
   const { mutate: updateUser } = useUpdateProfile();
   const setBackgroundTrackingEnabled = useLocationStore((s) => s.setBackgroundTrackingEnabled);
 
-  const { status: permissionStatus, isLoading, request: handleRequestPermission } = usePermissionRequest(async () => {
-    const grant = await requestLocationGrant(
-      { requestForeground: Location.requestForegroundPermissionsAsync, requestBackground: Location.requestBackgroundPermissionsAsync },
-      Platform.OS === 'web',
-    );
-    if (grant === 'denied') return 'denied';
-    updateUser({ hasLocationEnabled: true });
-    if (grant === 'background') setBackgroundTrackingEnabled(await startLocationTracking());
-    setTimeout(() => router.replace('/(tabs)'), CONTINUE_DELAY_MS);
-    return 'granted';
-  }, (error) => logger.warn('location permission request failed', error));
+  const {
+    status: permissionStatus,
+    isLoading,
+    request: handleRequestPermission,
+  } = usePermissionRequest(
+    async () => {
+      const grant = await requestLocationGrant(
+        {
+          requestForeground: Location.requestForegroundPermissionsAsync,
+          requestBackground: Location.requestBackgroundPermissionsAsync,
+        },
+        Platform.OS === 'web',
+      );
+      if (grant === 'denied') return 'denied';
+      updateUser({ hasLocationEnabled: true });
+      if (grant === 'background') setBackgroundTrackingEnabled(await startLocationTracking());
+      setTimeout(() => router.replace('/(tabs)'), CONTINUE_DELAY_MS);
+      return 'granted';
+    },
+    (error) => logger.warn('location permission request failed', error),
+  );
 
   const handleSkip = () => {
     updateUser({ hasLocationEnabled: false });
@@ -51,15 +61,16 @@ export function LocationPermissionScreen() {
         <Text style={styles.title}>Location Sharing</Text>
 
         <Text style={styles.description}>
-          Enable location services to share your location with family members and
-          receive updates about their whereabouts. This is essential for the core
-          functionality of Family Tracker.
+          Enable location services to share your location with family members and receive updates about their
+          whereabouts. This is essential for the core functionality of Family Tracker.
         </Text>
 
         <LocationRationale />
 
         <Image
-          source={{ uri: 'https://images.unsplash.com/photo-1581579438747-104c53d7fbc4?q=80&w=1470&auto=format&fit=crop' }}
+          source={{
+            uri: 'https://images.unsplash.com/photo-1581579438747-104c53d7fbc4?q=80&w=1470&auto=format&fit=crop',
+          }}
           style={styles.image}
           resizeMode="cover"
         />
@@ -75,19 +86,10 @@ export function LocationPermissionScreen() {
         )}
 
         {permissionStatus === 'granted' ? (
-          <Button
-            title="Continue to App"
-            onPress={() => router.replace('/(tabs)')}
-            fullWidth
-          />
+          <Button title="Continue to App" onPress={() => router.replace('/(tabs)')} fullWidth />
         ) : (
           <>
-            <Button
-              title="Enable Location Services"
-              onPress={handleRequestPermission}
-              fullWidth
-              loading={isLoading}
-            />
+            <Button title="Enable Location Services" onPress={handleRequestPermission} fullWidth loading={isLoading} />
 
             <SkipButton onPress={handleSkip} />
           </>
@@ -96,4 +98,3 @@ export function LocationPermissionScreen() {
     </View>
   );
 }
-

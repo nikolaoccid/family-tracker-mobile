@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  TextStyle
-} from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View, ViewStyle, TextStyle } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
 import { sizeStyles, styles, variantStyles } from './Button.styles';
 
@@ -86,10 +79,7 @@ export function Button({
       activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator
-          color={variantStyles[variant].loading}
-          size="small"
-        />
+        <ActivityIndicator color={variantStyles[variant].loading} size="small" />
       ) : (
         <View style={styles.content}>
           {icon && <View style={styles.iconContainer}>{icon}</View>}

@@ -60,18 +60,25 @@ describe('architecture', () => {
   });
 
   it('shared imports no feature', () => {
-    const offenders = sourceFiles(path.join(ROOT, 'shared')).filter((file) => importsOf(file).some((s) => s.startsWith('@/features')));
+    const offenders = sourceFiles(path.join(ROOT, 'shared')).filter((file) =>
+      importsOf(file).some((s) => s.startsWith('@/features')),
+    );
     expect(offenders).toEqual([]);
   });
 
   it('app route files and layouts never import a feature internal', () => {
-    const offenders = sourceFiles(path.join(ROOT, 'app')).filter((file) => importsOf(file).some((s) => /^@\/features\/[^/]+\/.+/.test(s)));
+    const offenders = sourceFiles(path.join(ROOT, 'app')).filter((file) =>
+      importsOf(file).some((s) => /^@\/features\/[^/]+\/.+/.test(s)),
+    );
     expect(offenders).toEqual([]);
   });
 
   it('no source file uses console or any', () => {
     const files = ['app', 'features', 'shared', 'bootstrap', 'demo'].flatMap((d) => sourceFiles(path.join(ROOT, d)));
-    const offenders = files.filter((file) => /\bconsole\.(log|warn|error|debug|info)\(/.test(fs.readFileSync(file, 'utf8')) && !file.endsWith('logger.ts'));
+    const offenders = files.filter(
+      (file) =>
+        /\bconsole\.(log|warn|error|debug|info)\(/.test(fs.readFileSync(file, 'utf8')) && !file.endsWith('logger.ts'),
+    );
     expect(offenders.map((f) => path.relative(ROOT, f))).toEqual([]);
   });
 

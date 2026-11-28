@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import { CACHE_MAX_AGE_MS, CACHE_SCHEMA_VERSION, config, createQueryClient, createQueryPersister, shouldPersistQuery } from '@/shared/api';
+import {
+  CACHE_MAX_AGE_MS,
+  CACHE_SCHEMA_VERSION,
+  config,
+  createQueryClient,
+  createQueryPersister,
+  shouldPersistQuery,
+} from '@/shared/api';
 import { onSessionReset } from '@/shared/session';
 import { RouteErrorBoundary } from '@/shared/ui';
 

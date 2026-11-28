@@ -13,7 +13,13 @@ const TOGGLES = [
   { key: 'zoneExit', label: 'Zone Exit Alerts' },
 ] as const;
 
-export function NotificationsSection({ settings, onChange }: { settings: PrivacySettings; onChange: (n: PrivacySettings) => void }) {
+export function NotificationsSection({
+  settings,
+  onChange,
+}: {
+  settings: PrivacySettings;
+  onChange: (n: PrivacySettings) => void;
+}) {
   const notifications = settings.notificationSettings;
   return (
     <View style={styles.section}>

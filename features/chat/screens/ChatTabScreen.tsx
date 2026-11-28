@@ -21,19 +21,19 @@ export function ChatTabScreen() {
     <View style={styles.container}>
       <QueryBoundary query={familyQuery}>
         {(family) => (
-      <FlatList
-        data={(family?.members ?? []).filter((m) => m.id !== user?.id)}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <FamilyMemberItem
-            member={item}
-            isCurrentUser={false}
-            isAdmin={false}
-            onPress={() => handleOpenChat(item.id, item.name)}
+          <FlatList
+            data={(family?.members ?? []).filter((m) => m.id !== user?.id)}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <FamilyMemberItem
+                member={item}
+                isCurrentUser={false}
+                isAdmin={false}
+                onPress={() => handleOpenChat(item.id, item.name)}
+              />
+            )}
+            ListEmptyComponent={<Text>No other family members</Text>}
           />
-        )}
-        ListEmptyComponent={<Text>No other family members</Text>}
-      />
         )}
       </QueryBoundary>
     </View>

@@ -28,7 +28,13 @@ export function CreateScheduleScreen() {
   return (
     <FormFrame padded={false} keyboardAware={false} title="Create Schedule">
       <ScheduleForm draft={draft} errors={errors} onChange={(c) => setDraft((d) => ({ ...d, ...c }))} />
-      <Button title={isSaving ? 'Creating...' : 'Create Schedule'} onPress={() => void submit()} disabled={isSaving} fullWidth style={styles.button} />
+      <Button
+        title={isSaving ? 'Creating...' : 'Create Schedule'}
+        onPress={() => void submit()}
+        disabled={isSaving}
+        fullWidth
+        style={styles.button}
+      />
     </FormFrame>
   );
 }

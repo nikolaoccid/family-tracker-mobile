@@ -1,5 +1,12 @@
 import { privacySettingsSchema, toPrivacyDto, defaultPrivacySettings } from '../model/privacy';
-import { removeSchedule, setMemberVisible, setNotification, setScheduleEnabled, setSharingEnabled, setVisibility } from '../model/privacyEdits';
+import {
+  removeSchedule,
+  setMemberVisible,
+  setNotification,
+  setScheduleEnabled,
+  setSharingEnabled,
+  setVisibility,
+} from '../model/privacyEdits';
 import { createPrivacyDto } from '@/fixtures';
 
 describe('privacy settings wire mapping', () => {
@@ -20,7 +27,9 @@ describe('privacy settings wire mapping', () => {
       locationSharingEnabled: null,
       visibleTo: 'friends-of-friends', // an enum value from a newer server
       selectedMembers: null,
-      schedules: [{ id: 's', startTime: '01:00', endTime: '02:00', days: ['monday', 'someday'], name: null, enabled: null }],
+      schedules: [
+        { id: 's', startTime: '01:00', endTime: '02:00', days: ['monday', 'someday'], name: null, enabled: null },
+      ],
       brandNewField: { nested: true },
     });
     expect(parsed.locationSharing).toEqual({
@@ -63,6 +72,8 @@ describe('privacy edits', () => {
   it('toggles and removes schedules by id', () => {
     const withSchedules = privacySettingsSchema.parse(createPrivacyDto());
     expect(setScheduleEnabled(withSchedules, 'schedule-2', true).locationSharing.schedules[1]?.enabled).toBe(true);
-    expect(removeSchedule(withSchedules, 'schedule-1').locationSharing.schedules.map((s) => s.id)).toEqual(['schedule-2']);
+    expect(removeSchedule(withSchedules, 'schedule-1').locationSharing.schedules.map((s) => s.id)).toEqual([
+      'schedule-2',
+    ]);
   });
 });

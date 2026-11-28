@@ -4,7 +4,12 @@ import type { Location } from '@/features/location';
 type Kind = AlertDraft['type'];
 
 /** Wire body for an emergency or "heading home" alert, built from the freshest position. */
-export function buildAlertDraft(kind: Kind, user: { id: string; name: string }, familyId: string, position: Location): AlertDraft {
+export function buildAlertDraft(
+  kind: Kind,
+  user: { id: string; name: string },
+  familyId: string,
+  position: Location,
+): AlertDraft {
   return {
     type: kind,
     userId: user.id,

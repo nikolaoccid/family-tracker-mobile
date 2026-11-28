@@ -37,11 +37,7 @@ export function MemberProfileScreen() {
       <View style={styles.errorContainer}>
         <StatusBar style="dark" />
         <Text style={styles.errorText}>Member not found</Text>
-        <Button
-          title="Go Back"
-          onPress={() => router.back()}
-          style={styles.backButton}
-        />
+        <Button title="Go Back" onPress={() => router.back()} style={styles.backButton} />
       </View>
     );
   }
@@ -52,19 +48,19 @@ export function MemberProfileScreen() {
     <View style={styles.container}>
       <StatusBar style="dark" />
 
-      <ScreenHeader title="Profile" onBack={() => router.back()} right={isCurrentUser && (
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => router.push('/profile/edit')}
-          >
-            <Text style={styles.editText}>Edit</Text>
-          </TouchableOpacity>
-        )} />
+      <ScreenHeader
+        title="Profile"
+        onBack={() => router.back()}
+        right={
+          isCurrentUser && (
+            <TouchableOpacity style={styles.editButton} onPress={() => router.push('/profile/edit')}>
+              <Text style={styles.editText}>Edit</Text>
+            </TouchableOpacity>
+          )
+        }
+      />
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <ProfileHero
           name={member.name?.length > 23 ? `${member.name.substring(0, 23)}...` : member.name}
           avatar={member.avatar}
@@ -75,7 +71,9 @@ export function MemberProfileScreen() {
 
         <View style={styles.infoSection}>
           <InfoRow icon={<Mail size={20} color={Colors.primary} />} label="Email" value={member.email} />
-          {member.phone ? <InfoRow icon={<Phone size={20} color={Colors.primary} />} label="Phone" value={member.phone} /> : null}
+          {member.phone ? (
+            <InfoRow icon={<Phone size={20} color={Colors.primary} />} label="Phone" value={member.phone} />
+          ) : null}
           <InfoRow
             icon={<Calendar size={20} color={Colors.primary} />}
             label="Member Since"
@@ -94,7 +92,11 @@ export function MemberProfileScreen() {
               )}
             </InfoRow>
           ) : (
-            <InfoRow icon={<MapPin size={20} color={Colors.light.icon} />} label="Location" value="Location sharing disabled" />
+            <InfoRow
+              icon={<MapPin size={20} color={Colors.light.icon} />}
+              label="Location"
+              value="Location sharing disabled"
+            />
           )}
           {member.batteryLevel !== undefined ? (
             <InfoRow
@@ -109,4 +111,3 @@ export function MemberProfileScreen() {
     </View>
   );
 }
-

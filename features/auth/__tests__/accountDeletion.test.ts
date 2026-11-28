@@ -23,7 +23,10 @@ describe('runAccountDeletion', () => {
 
   it('deletes on the server, then wipes the device', async () => {
     const order: string[] = [];
-    const s = steps({ remove: jest.fn(async () => void order.push('remove')), clear: jest.fn(async () => void order.push('clear')) });
+    const s = steps({
+      remove: jest.fn(async () => void order.push('remove')),
+      clear: jest.fn(async () => void order.push('clear')),
+    });
     expect(await runAccountDeletion(s)).toBe('deleted');
     expect(order).toEqual(['remove', 'clear']);
   });

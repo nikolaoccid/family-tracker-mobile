@@ -38,6 +38,13 @@ const styles = StyleSheet.create({
   info: { flex: 1, marginLeft: 16 },
   name: { fontSize: 18, fontWeight: '600', color: Colors.light.text, marginBottom: 4 },
   email: { fontSize: 14, color: Colors.light.subtext },
-  badge: { backgroundColor: Colors.secondary, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, alignSelf: 'flex-start', marginTop: 4 },
+  badge: {
+    backgroundColor: Colors.secondary,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+    marginTop: 4,
+  },
   badgeText: { color: Colors.light.text, fontSize: 12, fontWeight: '600' },
 });

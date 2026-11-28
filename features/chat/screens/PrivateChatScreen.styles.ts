@@ -48,5 +48,4 @@ export const styles = StyleSheet.create({
   chatArea: {
     flex: 1,
   },
-
 });

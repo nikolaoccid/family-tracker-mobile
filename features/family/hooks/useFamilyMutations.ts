@@ -30,7 +30,9 @@ export const useRemoveMember = (familyId: string | undefined) =>
   useFamilyMutation((memberId: string) => familyApi.removeMember(need(familyId), memberId));
 
 export const useSetMemberRole = (familyId: string | undefined) =>
-  useFamilyMutation((v: { memberId: string; role: MemberRole }) => familyApi.setRole(need(familyId), v.memberId, v.role));
+  useFamilyMutation((v: { memberId: string; role: MemberRole }) =>
+    familyApi.setRole(need(familyId), v.memberId, v.role),
+  );
 
 export const useSetSharing = (familyId: string | undefined) =>
   useFamilyMutation((isSharing: boolean) => familyApi.setSharing(need(familyId), isSharing));

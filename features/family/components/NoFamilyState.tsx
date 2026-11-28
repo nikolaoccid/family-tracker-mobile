@@ -15,9 +15,7 @@ export function NoFamilyState() {
         <Users size={60} color={Colors.primary} />
       </View>
       <Text style={styles.title}>No Family Group</Text>
-      <Text style={styles.text}>
-        Create a family group or join an existing one to start tracking your loved ones.
-      </Text>
+      <Text style={styles.text}>Create a family group or join an existing one to start tracking your loved ones.</Text>
       <View style={styles.buttons}>
         <Button title="Create Family" onPress={() => router.push('/family/create')} fullWidth />
         <Button title="Join Family" onPress={explainJoin} variant="outline" fullWidth />

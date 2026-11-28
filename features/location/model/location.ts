@@ -4,7 +4,10 @@ import { opt } from '@/shared/api';
 export const locationSchema = z.object({
   latitude: z.number(),
   longitude: z.number(),
-  timestamp: z.string().nullish().transform((v) => v ?? ''),
+  timestamp: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
   accuracy: opt(z.number()),
   speed: opt(z.number()),
   heading: opt(z.number()),
@@ -14,7 +17,10 @@ export type Location = z.infer<typeof locationSchema>;
 
 export const historyPointSchema = locationSchema.extend({
   id: z.string(),
-  userId: z.string().nullish().transform((v) => v ?? ''),
+  userId: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
   whoCanSeeLocation: opt(z.array(z.string())),
 });
 

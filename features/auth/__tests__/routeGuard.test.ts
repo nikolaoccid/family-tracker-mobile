@@ -24,7 +24,9 @@ describe('decideRoute', () => {
   it('walks a freshly signed-in user through the missing permission steps', () => {
     expect(decideRoute(['(auth)'], true, user())).toBe('/permissions/notifications');
     expect(decideRoute(['(auth)'], true, user({ hasNotificationsEnabled: true }))).toBe('/permissions/location');
-    expect(decideRoute(['(auth)'], true, user({ hasNotificationsEnabled: true, hasLocationEnabled: true }))).toBe('/(tabs)');
+    expect(decideRoute(['(auth)'], true, user({ hasNotificationsEnabled: true, hasLocationEnabled: true }))).toBe(
+      '/(tabs)',
+    );
     expect(decideRoute(['(auth)'], true, user({ hasLocationEnabled: true }))).toBe('/(tabs)');
   });
 

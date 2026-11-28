@@ -13,7 +13,10 @@ interface TaskBody {
 }
 
 /** Task body, exported for tests. Runs in a headless JS context: no UI, no React. */
-export async function handleLocationUpdate({ data, error }: TaskBody, ensureSignedIn: () => boolean | Promise<boolean>): Promise<void> {
+export async function handleLocationUpdate(
+  { data, error }: TaskBody,
+  ensureSignedIn: () => boolean | Promise<boolean>,
+): Promise<void> {
   if (error) {
     logger.warn('background location task error', error.message);
     return;

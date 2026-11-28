@@ -9,7 +9,14 @@ const TOKEN_KEY = 'family-tracker.access-token';
 const legacyEntry = (over: object = {}) =>
   JSON.stringify({
     state: {
-      user: { id: 'u1', name: 'Ana', email: 'ana@example.com', isPremium: true, createdAt: '2025-01-01', futureField: 1 },
+      user: {
+        id: 'u1',
+        name: 'Ana',
+        email: 'ana@example.com',
+        isPremium: true,
+        createdAt: '2025-01-01',
+        futureField: 1,
+      },
       accessToken: 'legacy-token',
       isAuthenticated: true,
       privacySettings: { locationSharing: { enabled: true } },
@@ -30,7 +37,11 @@ describe('upgrading from the build that stored the token in AsyncStorage', () =>
     await useAuthStore.persist.rehydrate();
     await hydrateAuth();
 
-    expect(useAuthStore.getState()).toMatchObject({ isAuthenticated: true, accessToken: 'legacy-token', hydrated: true });
+    expect(useAuthStore.getState()).toMatchObject({
+      isAuthenticated: true,
+      accessToken: 'legacy-token',
+      hydrated: true,
+    });
     expect(useAuthStore.getState().user).toMatchObject({ id: 'u1', name: 'Ana' });
     expect(await SecureStore.getItemAsync(TOKEN_KEY)).toBe('legacy-token');
   });

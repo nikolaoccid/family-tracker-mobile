@@ -1,7 +1,12 @@
 import { QueryClient } from '@tanstack/react-query';
 import { dehydrate } from '@tanstack/react-query';
 import {
-  CACHE_MAX_AGE_MS, CACHE_SCHEMA_VERSION, boundSnapshot, createQueryPersister, parseSnapshot, shouldPersistQuery,
+  CACHE_MAX_AGE_MS,
+  CACHE_SCHEMA_VERSION,
+  boundSnapshot,
+  createQueryPersister,
+  parseSnapshot,
+  shouldPersistQuery,
   type KeyValueStore,
 } from '../queryPersistence';
 
@@ -20,7 +25,11 @@ const snapshot = (queries: { key: unknown[]; at: number; data?: unknown }[], ove
   buster: String(CACHE_SCHEMA_VERSION),
   clientState: {
     mutations: [],
-    queries: queries.map((q) => ({ queryKey: q.key, queryHash: JSON.stringify(q.key), state: { data: q.data ?? { ok: 1 }, dataUpdatedAt: q.at, status: 'success' } })),
+    queries: queries.map((q) => ({
+      queryKey: q.key,
+      queryHash: JSON.stringify(q.key),
+      state: { data: q.data ?? { ok: 1 }, dataUpdatedAt: q.at, status: 'success' },
+    })),
   },
   ...over,
 });
@@ -39,8 +48,16 @@ describe('what is worth persisting', () => {
     set(['zones', 'analytics', 'z', {}]);
     set(['zones', 'summary', {}]);
     set(['family', 'invite', 'tok']);
-    const persisted = dehydrate(client, { shouldDehydrateQuery: shouldPersistQuery }).queries.map((q) => q.queryKey.join('/'));
-    expect(persisted).toEqual(['family/current', 'zones/list/f', 'alerts/list/f', 'settings/privacy', 'subscription/plans']);
+    const persisted = dehydrate(client, { shouldDehydrateQuery: shouldPersistQuery }).queries.map((q) =>
+      q.queryKey.join('/'),
+    );
+    expect(persisted).toEqual([
+      'family/current',
+      'zones/list/f',
+      'alerts/list/f',
+      'settings/privacy',
+      'subscription/plans',
+    ]);
   });
 
   it('never persists a failed or pending query', () => {
@@ -70,7 +87,10 @@ describe('restoring', () => {
     ['nothing stored', null],
     ['not JSON', '{oops'],
     ['wrong shape', JSON.stringify({ hello: 'world' })],
-    ['a queries field of the wrong type', JSON.stringify(snapshot([], { clientState: { mutations: [], queries: 'x' } }))],
+    [
+      'a queries field of the wrong type',
+      JSON.stringify(snapshot([], { clientState: { mutations: [], queries: 'x' } })),
+    ],
     ['another schema version', JSON.stringify(snapshot([], { buster: '0' }))],
     ['too old', JSON.stringify(snapshot([], { timestamp: Date.now() - CACHE_MAX_AGE_MS - 1000 }))],
   ])('discards %s', (_name, raw) => {

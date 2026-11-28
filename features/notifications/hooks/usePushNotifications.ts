@@ -35,7 +35,8 @@ export function usePushNotifications() {
     if (Platform.OS === 'web') return undefined;
     try {
       const existing = await Notifications.getPermissionsAsync();
-      const status = existing.status === 'granted' ? existing.status : (await Notifications.requestPermissionsAsync()).status;
+      const status =
+        existing.status === 'granted' ? existing.status : (await Notifications.requestPermissionsAsync()).status;
       if (status !== 'granted') return undefined;
 
       const token = (await Notifications.getExpoPushTokenAsync()).data;

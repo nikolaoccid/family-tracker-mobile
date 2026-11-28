@@ -9,7 +9,16 @@ export { ids, landmarks } from './ids';
 export { users, demoUser, DEMO_TOKEN } from './users';
 export { plans, paymentIntent } from './subscription';
 export { chatToken } from './chat';
-export { createAlerts, createChatMessages, createFamily, createFamilyLocations, createHistory, createPrivacyDto, createZones, createAnalytics };
+export {
+  createAlerts,
+  createChatMessages,
+  createFamily,
+  createFamilyLocations,
+  createHistory,
+  createPrivacyDto,
+  createZones,
+  createAnalytics,
+};
 
 /** Every fixture, built relative to `now` so recency-based UI (online dots, "5 min ago") is realistic. */
 export function createFixtures(now: Date = new Date()) {

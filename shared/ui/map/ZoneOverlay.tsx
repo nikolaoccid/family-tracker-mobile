@@ -10,7 +10,13 @@ export function ZoneOverlay({ zone }: { zone: MapZone }) {
   const center = { latitude: zone.centerLatitude, longitude: zone.centerLongitude };
   return (
     <>
-      <Circle center={center} radius={zone.radius} strokeColor={zone.color} fillColor={`${zone.color}${FILL_ALPHA}`} zIndex={1} />
+      <Circle
+        center={center}
+        radius={zone.radius}
+        strokeColor={zone.color}
+        fillColor={`${zone.color}${FILL_ALPHA}`}
+        zIndex={1}
+      />
       <Marker coordinate={center} anchor={{ x: 0.5, y: 1 }} tracksViewChanges={false}>
         <View style={styles.label}>
           <Text style={styles.labelText}>{zone.name}</Text>

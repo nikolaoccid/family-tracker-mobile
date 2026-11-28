@@ -19,4 +19,5 @@ export const sharePercent = (part: number, total: number): number => (total > 0 
 const FULL_BAR_MINUTES = 8 * 60;
 
 /** Bar width for a day's time, where eight hours fills the bar. */
-export const dayBarPercent = (minutes: number): number => Math.min(100, Math.max(0, (minutes / FULL_BAR_MINUTES) * 100));
+export const dayBarPercent = (minutes: number): number =>
+  Math.min(100, Math.max(0, (minutes / FULL_BAR_MINUTES) * 100));

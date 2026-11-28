@@ -26,7 +26,14 @@ export function MenuItem({ label, Icon, onPress, variant = 'default' }: Props) {
 }
 
 const styles = StyleSheet.create({
-  item: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.light.card, borderRadius: 12, padding: 16, marginBottom: 8 },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.light.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 8,
+  },
   icon: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', marginRight: 12 },
   label: { flex: 1, fontSize: 16, color: Colors.light.text },
 });
