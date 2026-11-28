@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { cardShadow } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
   container: {
@@ -9,11 +10,7 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 2,
     borderColor: 'transparent',
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...cardShadow,
   },
   selectedContainer: {
     borderColor: Colors.primary,

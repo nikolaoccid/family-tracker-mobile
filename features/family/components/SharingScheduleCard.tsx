@@ -3,6 +3,7 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ChevronRight, Clock } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles, cardShadow } from '@/shared/ui/screenStyles';
 
 /** Entry point to sharing schedules; a premium feature, so free users get an upgrade prompt. */
 export function SharingScheduleCard({ isPremium }: { isPremium: boolean }) {
@@ -46,8 +47,8 @@ export function SharingScheduleCard({ isPremium }: { isPremium: boolean }) {
 }
 
 const styles = StyleSheet.create({
-  section: { marginBottom: 24 },
-  sectionTitle: { fontSize: 18, fontWeight: '600', color: Colors.light.text, marginBottom: 16, paddingHorizontal: 24 },
+  section: screenStyles.section,
+  sectionTitle: screenStyles.sectionTitle,
   card: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -55,21 +56,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginHorizontal: 24,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...cardShadow,
   },
-  icon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: `${Colors.primary}20`,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
+  icon: { ...screenStyles.iconBadge, marginRight: 16 },
   content: { flex: 1 },
   title: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 4 },
   text: { fontSize: 12, color: Colors.light.subtext },

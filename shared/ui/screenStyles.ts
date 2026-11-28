@@ -1,6 +1,15 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
 
+/** Soft drop shadow shared by raised cards. */
+export const cardShadow = {
+  shadowColor: Colors.black,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 8,
+  elevation: 2,
+} as const;
+
 export const screenStyles = StyleSheet.create({
   title: {
     fontSize: 20,
@@ -95,4 +104,14 @@ export const screenStyles = StyleSheet.create({
   pickerSection: { marginBottom: 24, paddingHorizontal: 24 },
   pickerTitle: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 12 },
   pickerList: { paddingBottom: 8 },
+  section: { marginBottom: 24 },
+  sectionTitle: { fontSize: 18, fontWeight: '600', color: Colors.light.text, marginBottom: 16, paddingHorizontal: 24 },
+  iconBadge: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: `${Colors.primary}20`,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

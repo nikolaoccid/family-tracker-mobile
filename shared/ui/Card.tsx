@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, ViewStyle, TouchableOpacity } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
+import { cardShadow } from './screenStyles';
 
 interface CardProps {
   children: React.ReactNode;
@@ -42,11 +43,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.light.card,
     borderRadius: 16,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...cardShadow,
     marginBottom: 16,
     overflow: 'hidden',
   },

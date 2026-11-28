@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { BarChart2, MapPin } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles, cardShadow } from '@/shared/ui/screenStyles';
 
 const cards = [
   { href: '/location/history', Icon: MapPin, title: 'Location History', text: 'View where family members have been' },
@@ -30,8 +31,8 @@ export function AnalyticsShortcuts() {
 }
 
 const styles = StyleSheet.create({
-  section: { marginBottom: 24 },
-  sectionTitle: { fontSize: 18, fontWeight: '600', color: Colors.light.text, marginBottom: 16, paddingHorizontal: 24 },
+  section: screenStyles.section,
+  sectionTitle: screenStyles.sectionTitle,
   cards: { flexDirection: 'row', paddingHorizontal: 16 },
   card: {
     flex: 1,
@@ -39,21 +40,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginHorizontal: 8,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...cardShadow,
   },
-  icon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: `${Colors.primary}20`,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
+  icon: { ...screenStyles.iconBadge, marginBottom: 12 },
   title: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 4 },
   text: { fontSize: 12, color: Colors.light.subtext },
 });

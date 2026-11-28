@@ -23,6 +23,8 @@ jobs:
         run: npm run typecheck
       - name: Lint (includes boundary rules)
         run: npm run lint
+      - name: Duplicate code (1 percent gate)
+        run: npm run dupes
       - name: Test
         run: npm run test:ci
       - name: Expo doctor
