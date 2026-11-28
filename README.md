@@ -103,7 +103,7 @@ Everything here ships in the app bundle, so only public values belong in these v
 | `EXPO_PUBLIC_API_BASE_URL` | yes (unless demo mode) | Base URL of the API | the config fails with a clear message |
 | `EXPO_PUBLIC_IDEMPOTENCY_KEYS` | no | `0` stops sending `Idempotency-Key` on family, safe-zone and alert creates | keys are sent |
 | `EXPO_PUBLIC_DEMO_MODE` | no | `1` serves fictional data from memory, no server needed | off |
-| `EXPO_PUBLIC_GOOGLE_MAPS_API_KEY` | no | Maps tiles on Android and iOS | the Map screen crashes on Android (native "API key not found") |
+| `EXPO_PUBLIC_GOOGLE_MAPS_API_KEY` | for the Map screen | Maps tiles on Android and iOS | the Map screen crashes on Android (native "API key not found") |
 | `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY` | no | Premium checkout | payment sheet cannot open |
 | `EXPO_PUBLIC_STREAM_API_KEY` | no | Chat | chat shows "not configured" |
 | `EXPO_PUBLIC_ANDROID_CLIENT_ID`, `EXPO_PUBLIC_IOS_CLIENT_ID` | no | Google sign-in | Google button does nothing |
