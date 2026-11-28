@@ -1,5 +1,7 @@
 import { z } from 'zod';
-import { createHttpClient, buildUrl, type HttpClientConfig } from '../client';
+import { createHttpClient } from '../client';
+import { buildUrl } from '../request';
+import type { HttpClientConfig } from '../types';
 import { ApiError, isApiError, messageFromBody, toResult } from '../errors';
 import { backoffDelay, defaultRetryPolicy } from '../retry';
 

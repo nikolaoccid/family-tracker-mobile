@@ -1,4 +1,6 @@
-export { createHttpClient, buildUrl, type HttpClient, type HttpClientConfig, type RequestOptions } from './client';
+export { createHttpClient } from './client';
+export { buildUrl } from './request';
+export type { HttpClient, HttpClientConfig, RequestOptions } from './types';
 export { ApiError, isApiError, toResult, errorMessage, type Result, type ApiErrorKind } from './errors';
 export { configureHttp, http } from './http';
 export { config } from './config';

@@ -1,60 +1,10 @@
-import type { ZodType } from 'zod';
 import { ApiError, messageFromBody } from './errors';
-import { backoffDelay, defaultRetryPolicy, IDEMPOTENT_METHODS, type RetryPolicy } from './retry';
-
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
-
-export interface RequestOptions<T> {
-  query?: Record<string, string | number | boolean | undefined | null>;
-  body?: unknown;
-  /** Response validator. Use non-strict objects: unknown fields must be tolerated. */
-  schema?: ZodType<T>;
-  /** Skip the Authorization header and the 401 refresh flow (login, register, reset). */
-  auth?: boolean;
-  /** Set false on the refresh call itself: its 401 means "cannot refresh", not "try refreshing". */
-  refresh?: boolean;
-  /** Allow automatic retries for a non-idempotent call that is safe to repeat. */
-  retry?: boolean;
-  /** Sent as `Idempotency-Key`; a keyed create is safe to retry, so it is retried like an idempotent call. */
-  idempotencyKey?: string;
-  timeoutMs?: number;
-  signal?: AbortSignal;
-}
-
-export interface HttpClientConfig {
-  baseUrl: string;
-  fetchImpl?: typeof fetch;
-  getToken: () => string | null;
-  /** Returns a fresh token, or null when the session cannot be renewed. Optional: the API has no refresh endpoint yet. */
-  refreshToken?: () => Promise<string | null>;
-  /** Called once when the session is definitively invalid. */
-  onUnauthorized?: () => void;
-  timeoutMs?: number;
-  retryPolicy?: RetryPolicy;
-  sleep?: (ms: number) => Promise<void>;
-  random?: () => number;
-}
+import { backoffDelay, defaultRetryPolicy, IDEMPOTENT_METHODS } from './retry';
+import { buildUrl, parseBody, sendRequest } from './request';
+import { createSessionGuard } from './session';
+import type { HttpClient, HttpClientConfig, HttpMethod, RequestOptions } from './types';
 
 const DEFAULT_TIMEOUT_MS = 10_000;
-
-export interface HttpClient {
-  request<T = unknown>(method: HttpMethod, path: string, options?: RequestOptions<T>): Promise<T>;
-  get<T = unknown>(path: string, options?: RequestOptions<T>): Promise<T>;
-  post<T = unknown>(path: string, body?: unknown, options?: RequestOptions<T>): Promise<T>;
-  put<T = unknown>(path: string, body?: unknown, options?: RequestOptions<T>): Promise<T>;
-  delete<T = unknown>(path: string, options?: RequestOptions<T>): Promise<T>;
-}
-
-export function buildUrl(baseUrl: string, path: string, query?: RequestOptions<unknown>['query']): string {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(query ?? {})) {
-    if (value !== undefined && value !== null && value !== '') params.append(key, String(value));
-  }
-  const qs = params.toString();
-  const suffix = qs ? `?${qs}` : '';
-  if (/^https?:\/\//.test(path)) return `${path}${suffix}`; // absolute URL for third-party calls
-  return `${baseUrl.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}${suffix}`;
-}
 
 export function createHttpClient(config: HttpClientConfig): HttpClient {
   const fetchImpl = config.fetchImpl ?? fetch;
@@ -62,66 +12,8 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
   const sleep = config.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
   const random = config.random ?? Math.random;
 
-  // Concurrent 401s on the same token report the end of the session once.
-  let reportedToken: string | null | undefined;
-  const reportUnauthorized = (token: string | null) => {
-    if (reportedToken === token) return;
-    reportedToken = token;
-    config.onUnauthorized?.();
-  };
-
-  // Single-flight refresh: concurrent 401s share one refresh call.
-  let refreshing: Promise<string | null> | null = null;
-  const refreshOnce = (): Promise<string | null> => {
-    if (!config.refreshToken) return Promise.resolve(null);
-    refreshing ??= config.refreshToken().finally(() => {
-      refreshing = null;
-    });
-    return refreshing;
-  };
-
-  async function send(method: HttpMethod, url: string, token: string | null, options: RequestOptions<unknown>) {
-    const controller = new AbortController();
-    const timeoutMs = options.timeoutMs ?? config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-    let timedOut = false;
-    const timer = setTimeout(() => {
-      timedOut = true;
-      controller.abort();
-    }, timeoutMs);
-    const onCallerAbort = () => controller.abort();
-    options.signal?.addEventListener('abort', onCallerAbort);
-
-    try {
-      const headers: Record<string, string> = { Accept: 'application/json' };
-      if (options.body !== undefined) headers['Content-Type'] = 'application/json';
-      if (token) headers.Authorization = `Bearer ${token}`;
-      if (options.idempotencyKey) headers['Idempotency-Key'] = options.idempotencyKey;
-      const response = await fetchImpl(url, {
-        method,
-        headers,
-        body: options.body === undefined ? undefined : JSON.stringify(options.body),
-        signal: controller.signal,
-      });
-      const text = await response.text();
-      return { response, text };
-    } catch (cause) {
-      if (timedOut) throw new ApiError({ kind: 'timeout', message: 'The request timed out', cause });
-      if (options.signal?.aborted) throw new ApiError({ kind: 'aborted', message: 'Request cancelled', cause });
-      throw new ApiError({ kind: 'network', message: 'Network request failed', cause });
-    } finally {
-      clearTimeout(timer);
-      options.signal?.removeEventListener('abort', onCallerAbort);
-    }
-  }
-
-  function parseBody(text: string, status: number): unknown {
-    if (!text) return undefined;
-    try {
-      return JSON.parse(text);
-    } catch (cause) {
-      throw new ApiError({ kind: 'parse', status, message: 'The server sent an unreadable response', cause });
-    }
-  }
+  const session = createSessionGuard(config);
+  const timeoutMs = config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
 
   async function request<T>(method: HttpMethod, path: string, options: RequestOptions<T> = {}): Promise<T> {
     const url = buildUrl(config.baseUrl, path, options.query);
@@ -132,7 +24,7 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
 
     for (let attempt = 0; ; attempt++) {
       try {
-        const { response, text } = await send(method, url, token, options);
+        const { response, text } = await sendRequest(fetchImpl, options.timeoutMs ?? timeoutMs, method, url, token, options);
 
         if (response.status === 401 && useAuth && options.refresh === false) {
           throw new ApiError({ kind: 'unauthorized', status: 401, message: 'Your session has expired' });
@@ -148,14 +40,14 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
           }
           if (!refreshedOnce && config.refreshToken) {
             refreshedOnce = true;
-            const fresh = await refreshOnce();
+            const fresh = await session.refreshOnce();
             if (fresh) {
               token = fresh;
               attempt--; // the refresh retry does not consume a transient-failure attempt
               continue;
             }
           }
-          reportUnauthorized(token);
+          session.reportUnauthorized(token);
           throw new ApiError({ kind: 'unauthorized', status: 401, message: 'Your session has expired' });
         }
 
@@ -170,7 +62,7 @@ export function createHttpClient(config: HttpClientConfig): HttpClient {
           throw new ApiError({ kind: 'http', status: response.status, message, code });
         }
 
-        reportedToken = undefined; // a working session re-arms the sign-out report
+        session.rearm();
         const data = parseBody(text, response.status);
         if (!options.schema) return data as T;
         const parsed = options.schema.safeParse(data);

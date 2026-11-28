@@ -1,4 +1,5 @@
-import { createHttpClient, type HttpClient, type HttpClientConfig } from './client';
+import { createHttpClient } from './client';
+import type { HttpClient, HttpClientConfig } from './types';
 
 let instance: HttpClient | null = null;
 
