@@ -1,12 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import { useMapZoom } from './useMapZoom';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import MapView, { Marker, Circle, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors } from '@/shared/ui/theme';
 import { Minus, Plus, ZoomIn, ZoomOut } from 'lucide-react-native';
 
 const MIN_RADIUS_M = 50;
 const MAX_RADIUS_M = 5000;
-const MIN_DELTA = 0.001;
 
 interface Props {
   center: { latitude: number; longitude: number };
@@ -18,14 +18,7 @@ interface Props {
 
 export function EditableMap({ center, setCenter, radius, setRadius, color }: Props) {
   const mapRef = useRef<MapView>(null);
-  const [delta, setDelta] = useState(0.01);
-  const region: Region = { ...center, latitudeDelta: delta, longitudeDelta: delta };
-
-  const zoom = (factor: number) => {
-    const next = Math.max(MIN_DELTA, delta * factor);
-    setDelta(next);
-    mapRef.current?.animateToRegion({ ...center, latitudeDelta: next, longitudeDelta: next }, 200);
-  };
+  const { region, zoom } = useMapZoom(mapRef, center, 0.01);
 
   return (
     <View style={styles.container}>

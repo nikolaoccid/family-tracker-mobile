@@ -42,114 +42,35 @@ export const sizeStyles = {
   },
 };
 
+const BUTTON_FONT_SIZE = 16;
+const disabledText = { color: Colors.light.subtext, fontSize: BUTTON_FONT_SIZE };
+
+/** Solid background with readable text; every filled variant disables to the same grey. */
+const filled = (backgroundColor: string, textColor: string) => ({
+  container: { backgroundColor },
+  text: { color: textColor, fontSize: BUTTON_FONT_SIZE },
+  disabled: { backgroundColor: Colors.light.border },
+  disabledText,
+  loading: textColor,
+});
+
+/** Transparent button whose text and spinner use the accent color. */
+const bare = (container: object, disabled: object) => ({
+  container: { backgroundColor: 'transparent', ...container },
+  text: { color: Colors.primary, fontSize: BUTTON_FONT_SIZE },
+  disabled: { backgroundColor: 'transparent', ...disabled },
+  disabledText,
+  loading: Colors.primary,
+});
+
 export const variantStyles = {
-  primary: {
-    container: {
-      backgroundColor: Colors.primary,
-    },
-    text: {
-      color: Colors.white,
-      fontSize: 16,
-    },
-    disabled: {
-      backgroundColor: Colors.light.border,
-    },
-    disabledText: {
-      color: Colors.light.subtext,
-      fontSize: 16,
-    },
-    loading: Colors.white,
-  },
-  secondary: {
-    container: {
-      backgroundColor: Colors.secondary,
-    },
-    text: {
-      color: Colors.light.text,
-      fontSize: 16,
-    },
-    disabled: {
-      backgroundColor: Colors.light.border,
-    },
-    disabledText: {
-      color: Colors.light.subtext,
-      fontSize: 16,
-    },
-    loading: Colors.light.text,
-  },
-  outline: {
-    container: {
-      backgroundColor: 'transparent',
-      borderWidth: 1,
-      borderColor: Colors.primary,
-    },
-    text: {
-      color: Colors.primary,
-      fontSize: 16,
-    },
-    disabled: {
-      backgroundColor: 'transparent',
-      borderWidth: 1,
-      borderColor: Colors.light.border,
-    },
-    disabledText: {
-      color: Colors.light.subtext,
-      fontSize: 16,
-    },
-    loading: Colors.primary,
-  },
-  danger: {
-    container: {
-      backgroundColor: Colors.danger,
-    },
-    text: {
-      color: Colors.white,
-      fontSize: 16,
-    },
-    disabled: {
-      backgroundColor: Colors.light.border,
-    },
-    disabledText: {
-      color: Colors.light.subtext,
-      fontSize: 16,
-    },
-    loading: Colors.white,
-  },
-  success: {
-    container: {
-      backgroundColor: Colors.success,
-    },
-    text: {
-      color: Colors.white,
-      fontSize: 16,
-    },
-    disabled: {
-      backgroundColor: Colors.light.border,
-    },
-    disabledText: {
-      color: Colors.light.subtext,
-      fontSize: 16,
-    },
-    loading: Colors.white,
-  },
-  text: {
-    container: {
-      backgroundColor: 'transparent',
-      paddingHorizontal: 0,
-      paddingVertical: 0,
-      minHeight: 0,
-    },
-    text: {
-      color: Colors.primary,
-      fontSize: 16,
-    },
-    disabled: {
-      backgroundColor: 'transparent',
-    },
-    disabledText: {
-      color: Colors.light.subtext,
-      fontSize: 16,
-    },
-    loading: Colors.primary,
-  },
+  primary: filled(Colors.primary, Colors.white),
+  secondary: filled(Colors.secondary, Colors.light.text),
+  danger: filled(Colors.danger, Colors.white),
+  success: filled(Colors.success, Colors.white),
+  outline: bare(
+    { borderWidth: 1, borderColor: Colors.primary },
+    { borderWidth: 1, borderColor: Colors.light.border },
+  ),
+  text: bare({ paddingHorizontal: 0, paddingVertical: 0, minHeight: 0 }, {}),
 };

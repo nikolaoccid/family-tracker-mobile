@@ -11,3 +11,4 @@ export { AddMemberScreen } from './screens/AddMemberScreen';
 export { CreateFamilyScreen } from './screens/CreateFamilyScreen';
 export { useInviteDeepLink } from './hooks/useInviteDeepLink';
 export { parseInviteParams, isInviteLink } from './model/inviteLink';
+export { batteryColor, isOnline } from './model/memberStatus';

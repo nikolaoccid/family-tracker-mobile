@@ -92,4 +92,7 @@ export const screenStyles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 24,
   },
+  pickerSection: { marginBottom: 24, paddingHorizontal: 24 },
+  pickerTitle: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 12 },
+  pickerList: { paddingBottom: 8 },
 });

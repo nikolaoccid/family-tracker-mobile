@@ -6,6 +6,7 @@ import { Avatar } from '@/shared/ui/Avatar';
 import { formatDistanceToNow } from '@/shared/utils/date';
 import { BatteryMedium, MapPin, Trash2, UserCog } from 'lucide-react-native';
 import { styles } from './FamilyMemberItem.styles';
+import { batteryColor, isOnline } from '../model/memberStatus';
 
 interface FamilyMemberItemProps {
   member: FamilyMember;
@@ -26,17 +27,7 @@ export function FamilyMemberItem({
                                            onPromote,
                                            onDemote,
                                          }: FamilyMemberItemProps) {
-  const getBatteryColor = () => {
-    if (!member.batteryLevel) return Colors.light.icon;
-    if (member.batteryLevel < 20) return Colors.danger;
-    if (member.batteryLevel < 50) return Colors.warning;
-    return Colors.success;
-  };
-
-  const isOnline =
-    member.isSharing &&
-    member.lastSeen &&
-    new Date().getTime() - new Date(member.lastSeen).getTime() < 5 * 60 * 1000;
+  const online = isOnline(member);
 
   return (
     <TouchableOpacity
@@ -48,7 +39,7 @@ export function FamilyMemberItem({
         source={member.avatar}
         name={member.name}
         size={50}
-        showBadge={!!isOnline}
+        showBadge={online}
         badgeColor={Colors.success}
       />
 
@@ -68,7 +59,7 @@ export function FamilyMemberItem({
         {member.lastSeen && (
           <Text style={styles.lastSeen}>
             {member.isSharing
-              ? isOnline
+              ? online
                 ? 'Online now'
                 : `Last seen ${formatDistanceToNow(new Date(member.lastSeen))} ago`
               : 'Location sharing disabled'}
@@ -88,8 +79,8 @@ export function FamilyMemberItem({
       <View style={styles.rightContainer}>
         {member.batteryLevel !== undefined && (
           <View style={styles.batteryContainer}>
-            <BatteryMedium size={16} color={getBatteryColor()} />
-            <Text style={[styles.batteryText, { color: getBatteryColor() }]}>
+            <BatteryMedium size={16} color={batteryColor(member.batteryLevel)} />
+            <Text style={[styles.batteryText, { color: batteryColor(member.batteryLevel) }]}>
               {member.batteryLevel}%
             </Text>
           </View>

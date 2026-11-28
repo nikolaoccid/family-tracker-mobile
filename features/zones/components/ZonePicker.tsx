@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { MapPin } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import type { SafeZone } from '../model/zone';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 interface Props {
   zones: readonly SafeZone[];
@@ -37,9 +38,9 @@ export function ZonePicker({ zones, selectedId, onToggle }: Props) {
 }
 
 const styles = StyleSheet.create({
-  section: { marginBottom: 24, paddingHorizontal: 24 },
-  title: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 12 },
-  list: { paddingBottom: 8 },
+  section: screenStyles.pickerSection,
+  title: screenStyles.pickerTitle,
+  list: screenStyles.pickerList,
   item: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20, marginRight: 12 },
   name: { fontSize: 14, marginLeft: 6 },
 });

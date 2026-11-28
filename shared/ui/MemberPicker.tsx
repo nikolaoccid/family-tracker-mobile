@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { User } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 interface Props {
   members: readonly { id: string; name: string }[];
@@ -34,9 +35,9 @@ export function MemberPicker({ members, selectedId, onSelect }: Props) {
 }
 
 const styles = StyleSheet.create({
-  section: { marginBottom: 24, paddingHorizontal: 24 },
-  title: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 12 },
-  list: { paddingBottom: 8 },
+  section: screenStyles.pickerSection,
+  title: screenStyles.pickerTitle,
+  list: screenStyles.pickerList,
   item: { alignItems: 'center', marginRight: 16, width: 80 },
   icon: { width: 48, height: 48, borderRadius: 24, backgroundColor: `${Colors.primary}20`, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
   iconSelected: { backgroundColor: Colors.primary },

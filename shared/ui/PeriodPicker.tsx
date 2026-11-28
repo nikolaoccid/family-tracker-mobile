@@ -4,6 +4,7 @@ import { Calendar } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { formatDate } from '@/shared/utils/date';
 import { PERIODS, type Period } from '@/shared/utils/period';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 interface Props {
   period: Period;
@@ -40,8 +41,8 @@ export function PeriodPicker({ period, startDate, endDate, onChange }: Props) {
 }
 
 const styles = StyleSheet.create({
-  section: { marginBottom: 24, paddingHorizontal: 24 },
-  title: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 12 },
+  section: screenStyles.pickerSection,
+  title: screenStyles.pickerTitle,
   buttons: { flexDirection: 'row', marginBottom: 12 },
   button: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 8, backgroundColor: Colors.light.card, alignItems: 'center', marginRight: 8 },
   selected: { backgroundColor: Colors.primary },

@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
+import { useMapZoom } from './useMapZoom';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import MapView, { Circle, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors } from '@/shared/ui/theme';
 import { Plus, Minus } from 'lucide-react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -13,12 +14,10 @@ interface Props {
 }
 
 const DEFAULT_CENTER = { latitude: 48.8584, longitude: 2.2945 }; // Eiffel Tower: neutral until positions arrive
-const MIN_DELTA = 0.001;
 
 export function Map({ familyLocations = [], safeZones = [] }: Props) {
   const mapRef = useRef<MapView>(null);
   const [mapKey, setMapKey] = useState(0);
-  const [delta, setDelta] = useState(0.05);
 
   // Remount the native map when the tab regains focus; Android can lose its tiles otherwise.
   useFocusEffect(
@@ -29,13 +28,7 @@ export function Map({ familyLocations = [], safeZones = [] }: Props) {
 
   const first = familyLocations.find((m) => typeof m.latitude === 'number' && typeof m.longitude === 'number');
   const center = first ? { latitude: first.latitude as number, longitude: first.longitude as number } : DEFAULT_CENTER;
-  const region: Region = { ...center, latitudeDelta: delta, longitudeDelta: delta };
-
-  const zoom = (factor: number) => {
-    const next = Math.max(MIN_DELTA, delta * factor);
-    setDelta(next);
-    mapRef.current?.animateToRegion({ ...center, latitudeDelta: next, longitudeDelta: next }, 200);
-  };
+  const { region, zoom } = useMapZoom(mapRef, center, 0.05);
 
   return (
     <View style={styles.container}>

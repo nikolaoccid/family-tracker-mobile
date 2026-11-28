@@ -4,6 +4,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, Phone, Calendar, Crown, MapPin, BatteryMedium } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
+import { batteryColor, isOnline } from '@/features/family';
 import { useAuthStore } from '@/features/auth';
 import { useFamily } from '@/features/family';
 import { Avatar } from '@/shared/ui/Avatar';
@@ -44,15 +45,7 @@ export function MemberProfileScreen() {
     );
   }
 
-  const getBatteryColor = () => {
-    if (!member.batteryLevel) return Colors.light.icon;
-    if (member.batteryLevel < 20) return Colors.danger;
-    if (member.batteryLevel < 50) return Colors.warning;
-    return Colors.success;
-  };
-
-  const isOnline = member.isSharing && member.lastSeen &&
-    new Date().getTime() - new Date(member.lastSeen).getTime() < 5 * 60 * 1000; // 5 minutes
+  const online = isOnline(member);
 
   return (
     <View style={styles.container}>
@@ -76,7 +69,7 @@ export function MemberProfileScreen() {
             source={member.avatar}
             name={member.name}
             size={100}
-            showBadge={!!isOnline}
+            showBadge={online}
             badgeColor={Colors.success}
           />
           <Text style={styles.name}>{member.name?.length > 23 ? `${member.name.substring(0, 23)}...` : member.name}</Text>
@@ -130,7 +123,7 @@ export function MemberProfileScreen() {
                 </Text>
                 {member.lastSeen && (
                   <Text style={styles.lastSeen}>
-                    {isOnline
+                    {online
                       ? 'Online now'
                       : `Last seen ${formatDistanceToNow(new Date(member.lastSeen))} ago`}
                   </Text>
@@ -149,10 +142,10 @@ export function MemberProfileScreen() {
 
           {member.batteryLevel !== undefined ? (
             <View style={styles.infoItem}>
-              <BatteryMedium size={20} color={getBatteryColor()} />
+              <BatteryMedium size={20} color={batteryColor(member.batteryLevel)} />
               <View style={styles.infoContent}>
                 <Text style={styles.infoLabel}>Battery</Text>
-                <Text style={[styles.infoValue, { color: getBatteryColor() }]}>
+                <Text style={[styles.infoValue, { color: batteryColor(member.batteryLevel) }]}>
                   {member.batteryLevel}%
                 </Text>
               </View>
