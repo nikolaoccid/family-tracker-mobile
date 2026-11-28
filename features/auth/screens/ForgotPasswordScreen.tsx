@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { useRouter, useNavigation } from 'expo-router';
-import { ArrowLeft, CheckCircle } from 'lucide-react-native';
+import { CheckCircle } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
 import { useAuthFlow } from '../hooks/useAuthFlow';
@@ -10,6 +10,7 @@ import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 import { ErrorBanner } from '@/shared/ui/ErrorBanner';
 import { EmailInput } from '@/shared/ui/EmailInput';
 import { emailError } from '@/shared/utils/validation';
+import { BackTitleHeader } from '@/shared/ui/ScreenHeader';
 
 export function ForgotPasswordScreen() {
   const router = useRouter();
@@ -55,15 +56,7 @@ export function ForgotPasswordScreen() {
   return (
     <KeyboardScreen style={styles.container}>
 
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={handleBackToLogin}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Reset Password</Text>
-      </View>
+      <BackTitleHeader title="Reset Password" onBack={handleBackToLogin} />
 
       {isSubmitted ? (
         <View style={styles.successContainer}>

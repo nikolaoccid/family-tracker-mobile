@@ -1,5 +1,5 @@
 import { emailError } from '@/shared/utils/validation';
-import { passwordError, validateLogin, validateRegistration } from '../model/validation';
+import { passwordError, validateLogin, validatePasswordReset, validateRegistration } from '../model/validation';
 
 describe('auth form validation', () => {
   it('checks e-mail', () => {
@@ -25,5 +25,19 @@ describe('auth form validation', () => {
     expect(validateRegistration({ ...ok, name: '' }).name).toBe('Name is required');
     expect(validateRegistration({ ...ok, confirmPassword: '' }).confirmPassword).toBe('Please confirm your password');
     expect(validateRegistration({ ...ok, confirmPassword: 'other' }).confirmPassword).toBe('Passwords do not match');
+  });
+
+  it('holds a reset password to eight characters and a matching confirmation', () => {
+    expect(validatePasswordReset({ password: '', confirmPassword: '' })).toEqual({
+      password: 'Password is required',
+      confirmPassword: 'Please confirm your password',
+    });
+    expect(validatePasswordReset({ password: 'short', confirmPassword: 'short' })).toEqual({
+      password: 'Password must be at least 8 characters',
+    });
+    expect(validatePasswordReset({ password: 'long-enough', confirmPassword: 'different' })).toEqual({
+      confirmPassword: 'Passwords do not match',
+    });
+    expect(validatePasswordReset({ password: 'long-enough', confirmPassword: 'long-enough' })).toEqual({});
   });
 });

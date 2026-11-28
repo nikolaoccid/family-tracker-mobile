@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Lock, CheckCircle } from 'lucide-react-native';
+import { Lock, CheckCircle } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
+import { validatePasswordReset, type FieldErrors } from '../model/validation';
 import { styles } from './ResetPasswordScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 import { ErrorBanner } from '@/shared/ui/ErrorBanner';
+import { BackTitleHeader } from '@/shared/ui/ScreenHeader';
 
 export function ResetPasswordScreen() {
   const router = useRouter();
@@ -17,38 +19,17 @@ export function ResetPasswordScreen() {
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [errors, setErrors] = useState<FieldErrors<'password' | 'confirmPassword'>>({});
+  const passwordError = errors.password ?? '';
+  const confirmPasswordError = errors.confirmPassword ?? '';
   const [isSubmitted, setIsSubmitted] = useState(false);
   const tokenError = token ? '' : 'Invalid or missing reset token. Please request a new password reset link.';
 
   const validateForm = () => {
-    let isValid = true;
-
-    // Reset errors
-    setPasswordError('');
-    setConfirmPasswordError('');
     clearError();
-
-    // Validate password
-    if (!password) {
-      setPasswordError('Password is required');
-      isValid = false;
-    } else if (password.length < 8) {
-      setPasswordError('Password must be at least 8 characters');
-      isValid = false;
-    }
-
-    // Validate confirm password
-    if (!confirmPassword) {
-      setConfirmPasswordError('Please confirm your password');
-      isValid = false;
-    } else if (password !== confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
-      isValid = false;
-    }
-
-    return isValid;
+    const found = validatePasswordReset({ password, confirmPassword });
+    setErrors(found);
+    return Object.keys(found).length === 0;
   };
 
   const handleResetPassword = async () => {
@@ -60,15 +41,7 @@ export function ResetPasswordScreen() {
   return (
     <KeyboardScreen style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <ArrowLeft size={24} color={Colors.light.text} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Reset Password</Text>
-        </View>
+        <BackTitleHeader title="Reset Password" onBack={() => router.back()} />
 
         {tokenError ? (
           <View style={styles.errorContainer}>

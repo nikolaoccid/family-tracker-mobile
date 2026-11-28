@@ -9,11 +9,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 24,
   },
-  header: screenStyles.headerAlt,
-  backButton: {
-    marginBottom: 16,
-  },
-  title: screenStyles.titleAlt,
   subtitle: screenStyles.subtitle,
   formContainer: {
     flex: 1,

@@ -4,11 +4,6 @@ import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
   container: screenStyles.container,
-  header: screenStyles.headerAlt,
-  backButton: {
-    marginBottom: 16,
-  },
-  title: screenStyles.titleAlt,
   subtitle: screenStyles.subtitle,
   formContainer: {
     flex: 1,

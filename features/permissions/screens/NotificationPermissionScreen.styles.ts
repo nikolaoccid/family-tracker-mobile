@@ -45,6 +45,4 @@ export const styles = StyleSheet.create({
   },
   errorContainer: commonStyles.errorContainer,
   errorText: commonStyles.errorText,
-  skipButton: commonStyles.skipButton,
-  skipText: commonStyles.skipText,
 });

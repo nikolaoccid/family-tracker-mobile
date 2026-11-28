@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, Mail } from 'lucide-react-native';
+import { Mail } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
@@ -12,6 +12,7 @@ import { styles } from './AddMemberScreen.styles';
 import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 import { ErrorBanner } from '@/shared/ui/ErrorBanner';
 import { emailError } from '@/shared/utils/validation';
+import { BackTitleHeader } from '@/shared/ui/ScreenHeader';
 
 export function AddMemberScreen() {
   const router = useRouter();
@@ -46,15 +47,7 @@ export function AddMemberScreen() {
   return (
     <KeyboardScreen style={styles.container}>
 
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Add Family Member</Text>
-      </View>
+      <BackTitleHeader title="Add Family Member" onBack={() => router.back()} />
 
       {isSubmitted ? (
         <View style={styles.successContainer}>

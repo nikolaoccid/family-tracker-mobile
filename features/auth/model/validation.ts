@@ -26,3 +26,21 @@ export function validateRegistration(v: { name: string; email: string; password:
         : undefined,
   });
 }
+
+export const MIN_RESET_PASSWORD_LENGTH = 8;
+
+export function validatePasswordReset(v: { password: string; confirmPassword: string }) {
+  const passwordProblem = !v.password
+    ? 'Password is required'
+    : v.password.length < MIN_RESET_PASSWORD_LENGTH
+      ? `Password must be at least ${MIN_RESET_PASSWORD_LENGTH} characters`
+      : undefined;
+  return compact<'password' | 'confirmPassword'>({
+    password: passwordProblem,
+    confirmPassword: !v.confirmPassword
+      ? 'Please confirm your password'
+      : v.password !== v.confirmPassword
+        ? 'Passwords do not match'
+        : undefined,
+  });
+}

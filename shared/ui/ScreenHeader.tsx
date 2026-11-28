@@ -27,3 +27,20 @@ const styles = StyleSheet.create({
   back: { padding: 8 },
   spacer: { width: 40 },
 });
+
+/** Back arrow above a large title, for form screens whose content flows below. */
+export function BackTitleHeader({ title, onBack }: { title: string; onBack: () => void }) {
+  return (
+    <View style={stacked.header}>
+      <TouchableOpacity style={stacked.back} onPress={onBack} accessibilityLabel="Go back">
+        <ArrowLeft size={24} color={Colors.light.text} />
+      </TouchableOpacity>
+      <Text style={screenStyles.titleAlt}>{title}</Text>
+    </View>
+  );
+}
+
+const stacked = StyleSheet.create({
+  header: { paddingTop: 60, paddingBottom: 24 },
+  back: { marginBottom: 16 },
+});
