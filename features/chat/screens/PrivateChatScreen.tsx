@@ -1,12 +1,12 @@
 import React from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { Channel, Chat, MessageInput, MessageList, OverlayProvider } from 'stream-chat-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/features/auth';
-import { Colors } from '@/shared/ui/theme';
 import { usePrivateChat } from '../hooks/usePrivateChat';
+import { styles } from './PrivateChatScreen.styles';
 
 export function PrivateChatScreen() {
   const router = useRouter();
@@ -69,53 +69,3 @@ function Header({ name, onBack }: { name?: string; onBack: () => void }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
-  flex: {
-    flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    color: Colors.chatMuted,
-    marginTop: 10,
-  },
-  errorText: {
-    color: 'red',
-    marginTop: 10,
-  },
-  errorBanner: {
-    backgroundColor: Colors.errorTint,
-    padding: 8,
-    alignItems: 'center',
-  },
-  errorBannerText: {
-    color: Colors.errorStrong,
-    fontSize: 14,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  headerTitle: {
-    fontSize: 18,
-    color: 'white',
-    fontWeight: '600',
-  },
-  chatArea: {
-    flex: 1,
-  },
-
-});
