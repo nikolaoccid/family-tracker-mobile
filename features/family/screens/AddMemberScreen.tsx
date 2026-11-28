@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Mail } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
@@ -10,6 +9,7 @@ import { errorMessage } from '@/shared/api';
 import { useFamily } from '../hooks/useFamily';
 import { useAddMember } from '../hooks/useFamilyMutations';
 import { styles } from './AddMemberScreen.styles';
+import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 
 export function AddMemberScreen() {
   const router = useRouter();
@@ -54,12 +54,7 @@ export function AddMemberScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
-      <StatusBar style="dark" />
+    <KeyboardScreen style={styles.container}>
 
       <View style={styles.header}>
         <TouchableOpacity
@@ -119,7 +114,7 @@ export function AddMemberScreen() {
           />
         </View>
       )}
-    </KeyboardAvoidingView>
+    </KeyboardScreen>
   );
 }
 

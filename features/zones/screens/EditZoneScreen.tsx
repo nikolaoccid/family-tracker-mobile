@@ -9,7 +9,7 @@ import { Button } from '@/shared/ui/Button';
 import { Colors } from '@/shared/ui/theme';
 import { confirm } from '@/shared/utils/confirm';
 import { ZoneForm } from '../components/ZoneForm';
-import { ZoneScreenFrame } from '../components/ZoneScreenFrame';
+import { FormFrame } from '@/shared/ui/FormFrame';
 import { useZoneForm } from '../hooks/useZoneForm';
 import { useZoneMutations, useZones } from '../hooks/useZones';
 import { formFromZone, toNewZone } from '../model/zoneForm';
@@ -72,7 +72,7 @@ function EditZoneForm({
 
   const error = update.error ?? remove.error;
   return (
-    <ZoneScreenFrame
+    <FormFrame
       title="Edit Safe Zone"
       headerRight={
         <TouchableOpacity onPress={() => void destroy()} style={styles.delete} accessibilityLabel="Delete zone">
@@ -91,7 +91,7 @@ function EditZoneForm({
       {error ? <Text style={styles.error}>{errorMessage(error)}</Text> : null}
       <Button title="Save Changes" onPress={() => void save()} loading={update.isPending} fullWidth />
       <Button title="Cancel" onPress={() => router.back()} variant="outline" fullWidth style={styles.cancel} />
-    </ZoneScreenFrame>
+    </FormFrame>
   );
 }
 

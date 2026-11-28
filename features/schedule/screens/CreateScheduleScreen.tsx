@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button } from '@/shared/ui/Button';
 import { ScheduleForm } from '../components/ScheduleForm';
-import { ScheduleFrame } from '../components/ScheduleFrame';
+import { FormFrame } from '@/shared/ui/FormFrame';
 import { useSchedules } from '../hooks/useScheduleMutations';
 import { emptyDraft, validateDraft, type ScheduleErrors } from '../model/schedule';
 
@@ -26,10 +26,10 @@ export function CreateScheduleScreen() {
   };
 
   return (
-    <ScheduleFrame title="Create Schedule">
+    <FormFrame padded={false} keyboardAware={false} title="Create Schedule">
       <ScheduleForm draft={draft} errors={errors} onChange={(c) => setDraft((d) => ({ ...d, ...c }))} />
       <Button title={isSaving ? 'Creating...' : 'Create Schedule'} onPress={() => void submit()} disabled={isSaving} fullWidth style={styles.button} />
-    </ScheduleFrame>
+    </FormFrame>
   );
 }
 

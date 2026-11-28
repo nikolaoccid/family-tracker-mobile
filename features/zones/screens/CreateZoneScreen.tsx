@@ -9,7 +9,7 @@ import { ErrorState } from '@/shared/ui';
 import { Text, StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
 import { ZoneForm } from '../components/ZoneForm';
-import { ZoneScreenFrame } from '../components/ZoneScreenFrame';
+import { FormFrame } from '@/shared/ui/FormFrame';
 import { useZoneForm } from '../hooks/useZoneForm';
 import { useZoneMutations } from '../hooks/useZones';
 import { toNewZone } from '../model/zoneForm';
@@ -39,7 +39,7 @@ export function CreateZoneScreen() {
   };
 
   return (
-    <ZoneScreenFrame title="Create Safe Zone">
+    <FormFrame title="Create Safe Zone">
       <Text style={styles.subtitle}>
         Safe zones alert you when family members enter or leave important locations.
       </Text>
@@ -53,7 +53,7 @@ export function CreateZoneScreen() {
       {create.error ? <Text style={styles.error}>{errorMessage(create.error)}</Text> : null}
       <Button title="Create Safe Zone" onPress={() => void submit()} loading={create.isPending} fullWidth />
       <Button title="Cancel" onPress={() => router.back()} variant="outline" fullWidth style={styles.cancel} />
-    </ZoneScreenFrame>
+    </FormFrame>
   );
 }
 

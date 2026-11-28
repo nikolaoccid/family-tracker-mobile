@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, Users } from 'lucide-react-native';
+import { Users } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { useAuthStore } from '@/features/auth';
 import { useCreateFamily } from '../hooks/useFamilyMutations';
 import { Button } from '@/shared/ui/Button';
 import { styles } from './CreateFamilyScreen.styles';
+import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
+import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
 export function CreateFamilyScreen() {
   const router = useRouter();
@@ -38,23 +39,9 @@ export function CreateFamilyScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
-    >
-      <StatusBar style="dark" />
+    <KeyboardScreen style={styles.container} iosOffset={100} androidOffset={0}>
 
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Create Family</Text>
-        <View style={styles.placeholder} />
-      </View>
+      <ScreenHeader title="Create Family" onBack={() => router.back()} />
 
       <ScrollView
         contentContainerStyle={styles.content}
@@ -112,7 +99,7 @@ export function CreateFamilyScreen() {
           fullWidth
         />
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardScreen>
   );
 }
 

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, User, Mail, Phone, Camera } from 'lucide-react-native';
+import { User, Mail, Phone, Camera } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '@/shared/ui/theme';
 import { useAuthStore, useUpdateProfile, type User as AppUser } from '@/features/auth';
@@ -12,6 +11,8 @@ import { Avatar } from '@/shared/ui/Avatar';
 import { Input } from '@/shared/ui/Input';
 import { Button } from '@/shared/ui/Button';
 import { styles } from './EditProfileScreen.styles';
+import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
+import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
 export function EditProfileScreen() {
   const user = useAuthStore((s) => s.user);
@@ -71,23 +72,9 @@ function EditProfileForm({ user }: { user: AppUser }) {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
-      <StatusBar style="dark" />
+    <KeyboardScreen style={styles.container}>
       
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Edit Profile</Text>
-        <View style={styles.placeholder} />
-      </View>
+      <ScreenHeader title="Edit Profile" onBack={() => router.back()} />
       
       <ScrollView 
         contentContainerStyle={styles.scrollContent}
@@ -148,6 +135,6 @@ function EditProfileForm({ user }: { user: AppUser }) {
           />
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardScreen>
   );
 }

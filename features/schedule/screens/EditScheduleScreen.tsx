@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/Button';
 import { Colors } from '@/shared/ui/theme';
 import { confirm } from '@/shared/utils/confirm';
 import { ScheduleForm } from '../components/ScheduleForm';
-import { ScheduleFrame } from '../components/ScheduleFrame';
+import { FormFrame } from '@/shared/ui/FormFrame';
 import { useSchedules } from '../hooks/useScheduleMutations';
 import { draftFromSchedule, validateDraft, type ScheduleDraft, type ScheduleErrors } from '../model/schedule';
 
@@ -61,7 +61,7 @@ function EditForm({ id, initial }: { id: string; initial: ScheduleDraft }) {
   };
 
   return (
-    <ScheduleFrame
+    <FormFrame padded={false} keyboardAware={false}
       title="Edit Schedule"
       headerRight={
         <TouchableOpacity onPress={() => void destroy()} style={styles.delete} accessibilityLabel="Delete schedule">
@@ -71,7 +71,7 @@ function EditForm({ id, initial }: { id: string; initial: ScheduleDraft }) {
     >
       <ScheduleForm draft={draft} errors={errors} onChange={(c) => setDraft((d) => ({ ...d, ...c }))} />
       <Button title={isSaving ? 'Saving...' : 'Save Changes'} onPress={() => void submit()} disabled={isSaving} fullWidth style={styles.button} />
-    </ScheduleFrame>
+    </FormFrame>
   );
 }
 

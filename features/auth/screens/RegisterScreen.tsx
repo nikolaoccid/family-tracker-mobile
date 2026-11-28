@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
@@ -9,6 +8,7 @@ import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { validateRegistration, type FieldErrors } from '../model/validation';
 import { styles } from './RegisterScreen.styles';
+import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 
 export function RegisterScreen() {
   const router = useRouter();
@@ -42,12 +42,7 @@ export function RegisterScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
-      <StatusBar style="dark" />
+    <KeyboardScreen style={styles.container}>
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -135,7 +130,7 @@ export function RegisterScreen() {
           </Text>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardScreen>
   );
 }
 

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter, useNavigation } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { styles } from './ForgotPasswordScreen.styles';
+import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 
 export function ForgotPasswordScreen() {
   const router = useRouter();
@@ -63,12 +63,7 @@ export function ForgotPasswordScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
-      <StatusBar style="dark" />
+    <KeyboardScreen style={styles.container}>
 
       <View style={styles.header}>
         <TouchableOpacity
@@ -126,7 +121,7 @@ export function ForgotPasswordScreen() {
           />
         </View>
       )}
-    </KeyboardAvoidingView>
+    </KeyboardScreen>
   );
 }
 

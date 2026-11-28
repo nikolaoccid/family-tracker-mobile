@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { Mail, Lock, LogIn } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
@@ -11,6 +10,7 @@ import { useAuthStore } from '../model/authStore';
 import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
 import { validateLogin, type FieldErrors } from '../model/validation';
 import { styles } from './LoginScreen.styles';
+import { KeyboardScreen } from '@/shared/ui/KeyboardScreen';
 
 
 export function LoginScreen() {
@@ -36,12 +36,7 @@ export function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
-      <StatusBar style="dark" />
+    <KeyboardScreen style={styles.container}>
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -127,7 +122,7 @@ export function LoginScreen() {
           </View>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardScreen>
   );
 }
 
