@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, Edit2, Mail, Phone, Calendar, Crown } from 'lucide-react-native';
+import { Edit2, Mail, Phone, Calendar, Crown } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { useAuthStore } from '@/features/auth';
 import { Avatar } from '@/shared/ui/Avatar';
 import { Button } from '@/shared/ui/Button';
 import { formatDate } from '@/shared/utils/date';
 import { styles } from './ProfileViewScreen.styles';
+import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
 export function ProfileViewScreen() {
   const router = useRouter();
@@ -30,21 +31,14 @@ export function ProfileViewScreen() {
     <View style={styles.container}>
       <StatusBar style="dark" />
       
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Profile</Text>
-        <TouchableOpacity 
+      <ScreenHeader title="Profile" onBack={() => router.back()} right={
+<TouchableOpacity 
           style={styles.editButton}
           onPress={handleEditProfile}
         >
           <Edit2 size={20} color={Colors.primary} />
         </TouchableOpacity>
-      </View>
+} />
       
       <ScrollView 
         contentContainerStyle={styles.scrollContent}

@@ -13,8 +13,6 @@ export const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
   },
-  errorContainer: screenStyles.errorContainer,
-  errorText: screenStyles.errorText,
   sendButton: {
     marginTop: 8,
   },
@@ -35,9 +33,6 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   successMessage: screenStyles.successMessage,
-  shareButton: {
-    marginBottom: 16,
-  },
   doneButton: {
     marginTop: 8,
   },

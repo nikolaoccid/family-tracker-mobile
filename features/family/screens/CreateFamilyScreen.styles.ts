@@ -4,14 +4,6 @@ import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
   container: screenStyles.containerAlt3,
-  header: screenStyles.header,
-  backButton: {
-    padding: 8,
-  },
-  title: screenStyles.title,
-  placeholder: {
-    width: 40,
-  },
   content: {
     paddingHorizontal: 24,
     paddingBottom: 100,

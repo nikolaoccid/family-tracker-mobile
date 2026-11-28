@@ -5,11 +5,6 @@ import { commonStyles } from './common.styles';
 
 export const styles = StyleSheet.create({
   container: screenStyles.containerAlt3,
-  header: screenStyles.header,
-  backButton: {
-    padding: 8,
-  },
-  title: screenStyles.title,
   editButton: {
     padding: 8,
   },

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { AlertCircle, ArrowLeft, RefreshCw } from 'lucide-react-native';
+import { AlertCircle, RefreshCw } from 'lucide-react-native';
 import { useAuthStore } from '@/features/auth';
 import { QueryBoundary } from '@/shared/ui';
 import { Button } from '@/shared/ui/Button';
@@ -12,6 +12,7 @@ import { SubscriptionCard } from '../components/SubscriptionCard';
 import { usePlans } from '../hooks/usePlans';
 import { useSubscriptionActions } from '../hooks/useSubscriptionActions';
 import { styles } from './SubscriptionScreen.styles';
+import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
 export function SubscriptionScreen() {
   const router = useRouter();
@@ -54,16 +55,7 @@ export function SubscriptionScreen() {
     <View style={styles.container}>
       <StatusBar style="dark" />
 
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Subscription</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <ScreenHeader title="Subscription" onBack={() => router.back()} />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}

@@ -23,11 +23,9 @@ export const styles = StyleSheet.create({
     color: Colors.light.text,
     marginBottom: 20,
   },
-  header: screenStyles.header,
   backButton: {
     padding: 8,
   },
-  title: screenStyles.title,
   editButton: {
     padding: 8,
   },

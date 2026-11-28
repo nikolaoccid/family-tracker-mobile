@@ -13,8 +13,6 @@ export const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
   },
-  errorContainer: screenStyles.errorContainer,
-  errorText: screenStyles.errorText,
   resetButton: {
     marginTop: 8,
   },

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, Mail, Phone, Calendar, Crown, MapPin, BatteryMedium } from 'lucide-react-native';
+import { Mail, Phone, Calendar, Crown, MapPin, BatteryMedium } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { useAuthStore } from '@/features/auth';
 import { useFamily } from '@/features/family';
@@ -10,6 +10,7 @@ import { Avatar } from '@/shared/ui/Avatar';
 import { Button } from '@/shared/ui/Button';
 import { formatDate, formatDistanceToNow } from '@/shared/utils/date';
 import { styles } from './MemberProfileScreen.styles';
+import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
 export function MemberProfileScreen() {
   const router = useRouter();
@@ -57,23 +58,14 @@ export function MemberProfileScreen() {
     <View style={styles.container}>
       <StatusBar style="dark" />
 
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Profile</Text>
-        {isCurrentUser && (
+      <ScreenHeader title="Profile" onBack={() => router.back()} right={isCurrentUser && (
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => router.push('/profile/edit')}
           >
             <Text style={styles.editText}>Edit</Text>
           </TouchableOpacity>
-        )}
-      </View>
+        )} />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}

@@ -22,8 +22,6 @@ export const styles = StyleSheet.create({
   formContainer: {
     paddingHorizontal: 24,
   },
-  errorContainer: screenStyles.errorContainer,
-  errorText: screenStyles.errorText,
   registerButton: {
     marginTop: 8,
     marginBottom: 24,

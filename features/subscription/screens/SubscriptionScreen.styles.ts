@@ -4,19 +4,15 @@ import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
   container: screenStyles.containerAlt3,
-  header: screenStyles.header,
   backButton: {
     padding: 8,
     marginTop: 8,
   },
-  title: screenStyles.title,
   scrollContent: {
     paddingHorizontal: 24,
     paddingBottom: 100,
   },
   subtitle: screenStyles.subtitle,
-  errorContainer: screenStyles.errorContainer,
-  errorText: screenStyles.errorText,
   transactionErrorContainer: {
     backgroundColor: `${Colors.danger}10`,
     padding: 16,

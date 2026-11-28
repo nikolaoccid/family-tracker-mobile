@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, MapPin } from 'lucide-react-native';
+import { MapPin } from 'lucide-react-native';
 import { useAuthStore } from '@/features/auth';
 import { useFamily } from '@/features/family';
 import { useLocationHistory } from '@/features/location';
@@ -13,6 +13,7 @@ import { MemberPicker } from '@/shared/ui/MemberPicker';
 import { PeriodPicker } from '@/shared/ui/PeriodPicker';
 import { rangeFor, type Period } from '@/shared/utils/period';
 import { RecentLocations } from '../components/RecentLocations';
+import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
 export function LocationHistoryScreen() {
   const router = useRouter();
@@ -32,13 +33,7 @@ export function LocationHistoryScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.back} onPress={() => router.back()} accessibilityLabel="Go back">
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Location History</Text>
-        <View style={styles.spacer} />
-      </View>
+      <ScreenHeader title="Location History" onBack={() => router.back()} />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <MemberPicker members={members} selectedId={selectedId} onSelect={setMemberId} />
@@ -68,10 +63,6 @@ export function LocationHistoryScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.light.background },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 60, paddingBottom: 20, paddingHorizontal: 24 },
-  back: { padding: 8 },
-  title: { fontSize: 20, fontWeight: '700', color: Colors.light.text },
-  spacer: { width: 40 },
   content: { paddingBottom: 40 },
   mapContainer: { height: 300, marginHorizontal: 24, marginBottom: 24, borderRadius: 16, overflow: 'hidden' },
   empty: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.light.card, padding: 24 },

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, BarChart2 } from 'lucide-react-native';
+import { BarChart2 } from 'lucide-react-native';
 import { useAuthStore } from '@/features/auth';
 import { useFamily } from '@/features/family';
 import { ErrorState, LoadingState } from '@/shared/ui';
@@ -18,6 +18,7 @@ import { ZonePicker } from '../components/ZonePicker';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useZones } from '../hooks/useZones';
 import { totalMinutes } from '../model/analytics';
+import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 
 export function ZoneAnalyticsScreen() {
   const router = useRouter();
@@ -44,13 +45,7 @@ export function ZoneAnalyticsScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.back} onPress={() => router.back()} accessibilityLabel="Go back">
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Zone Analytics</Text>
-        <View style={styles.spacer} />
-      </View>
+      <ScreenHeader title="Zone Analytics" onBack={() => router.back()} />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <MemberPicker members={members} selectedId={selectedId} onSelect={setMemberId} />
@@ -92,10 +87,6 @@ export function ZoneAnalyticsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.light.background },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 60, paddingBottom: 20, paddingHorizontal: 24 },
-  back: { padding: 8 },
-  title: { fontSize: 20, fontWeight: '700', color: Colors.light.text },
-  spacer: { width: 40 },
   content: { paddingBottom: 40 },
   body: { paddingHorizontal: 24 },
   empty: { height: 300, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.light.card, borderRadius: 16, padding: 24 },
