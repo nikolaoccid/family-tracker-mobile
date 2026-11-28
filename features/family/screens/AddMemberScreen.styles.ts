@@ -4,10 +4,7 @@ import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
   container: screenStyles.container,
-  header: {
-    paddingTop: 60,
-    paddingBottom: 24,
-  },
+  header: screenStyles.headerAlt,
   backButton: {
     marginBottom: 16,
   },
@@ -17,10 +14,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   errorContainer: screenStyles.errorContainer,
-  errorText: {
-    color: Colors.danger,
-    fontSize: 14,
-  },
+  errorText: screenStyles.errorText,
   sendButton: {
     marginTop: 8,
   },

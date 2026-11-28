@@ -9,4 +9,8 @@ export const commonStyles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 12,
   },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
+  },
 });

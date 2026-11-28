@@ -3,10 +3,7 @@ import { Colors } from '@/shared/ui/theme';
 import { screenStyles } from '@/shared/ui/screenStyles';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
+  container: screenStyles.containerAlt3,
   header: screenStyles.header,
   backButton: {
     padding: 8,
@@ -19,10 +16,7 @@ export const styles = StyleSheet.create({
   },
   subtitle: screenStyles.subtitle,
   errorContainer: screenStyles.errorContainer,
-  errorText: {
-    color: Colors.danger,
-    fontSize: 14,
-  },
+  errorText: screenStyles.errorText,
   transactionErrorContainer: {
     backgroundColor: `${Colors.danger}10`,
     padding: 16,

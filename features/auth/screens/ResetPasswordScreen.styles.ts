@@ -1,22 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '@/shared/ui/theme';
 import { screenStyles } from '@/shared/ui/screenStyles';
 import { commonStyles } from './common.styles';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
+  container: screenStyles.containerAlt3,
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
     paddingBottom: 24,
   },
-  header: {
-    paddingTop: 60,
-    paddingBottom: 24,
-  },
+  header: screenStyles.headerAlt,
   backButton: {
     marginBottom: 16,
   },
@@ -26,10 +19,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   errorContainer: screenStyles.errorContainer,
-  errorText: {
-    color: Colors.danger,
-    fontSize: 14,
-  },
+  errorText: screenStyles.errorText,
   resetButton: {
     marginTop: 16,
   },

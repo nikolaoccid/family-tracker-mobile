@@ -5,6 +5,7 @@ import { Check, Users, X } from 'lucide-react-native';
 import { Colors } from '@/shared/ui/theme';
 import { Button } from '@/shared/ui/Button';
 import { useInviteFlow } from '../hooks/useInviteFlow';
+import { screenStyles } from '@/shared/ui/screenStyles';
 
 export function AcceptInviteScreen() {
   const flow = useInviteFlow();
@@ -62,10 +63,7 @@ export function AcceptInviteScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
+  container: screenStyles.containerAlt3,
   content: {
     flex: 1,
     alignItems: 'center',

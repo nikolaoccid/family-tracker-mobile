@@ -1,16 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/shared/ui/theme';
 import { screenStyles } from '@/shared/ui/screenStyles';
+import { commonStyles } from './common.styles';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 24,
-  },
+  container: screenStyles.containerAlt3,
+  scrollContent: commonStyles.scrollContent,
   header: {
     alignItems: 'center',
     paddingTop: 60,
@@ -39,10 +34,7 @@ export const styles = StyleSheet.create({
     marginBottom: 24,
   },
   errorContainer: screenStyles.errorContainer,
-  errorText: {
-    color: Colors.danger,
-    fontSize: 14,
-  },
+  errorText: screenStyles.errorText,
   forgotPassword: {
     alignSelf: 'flex-end',
     marginBottom: 24,

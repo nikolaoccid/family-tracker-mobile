@@ -41,4 +41,12 @@ export const commonStyles = StyleSheet.create({
     color: Colors.light.text,
     fontWeight: '500',
   },
+  profileHeader: {
+    alignItems: 'center',
+    paddingVertical: 24,
+  },
+  infoSection: {
+    paddingHorizontal: 24,
+    marginBottom: 32,
+  },
 });

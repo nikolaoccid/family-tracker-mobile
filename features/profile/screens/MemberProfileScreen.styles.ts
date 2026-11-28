@@ -4,10 +4,7 @@ import { screenStyles } from '@/shared/ui/screenStyles';
 import { commonStyles } from './common.styles';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
+  container: screenStyles.containerAlt3,
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -42,10 +39,7 @@ export const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 40,
   },
-  profileHeader: {
-    alignItems: 'center',
-    paddingVertical: 24,
-  },
+  profileHeader: commonStyles.profileHeader,
   name: commonStyles.name,
   adminBadge: {
     flexDirection: 'row',
@@ -63,10 +57,7 @@ export const styles = StyleSheet.create({
   },
   premiumBadge: commonStyles.premiumBadge,
   premiumText: commonStyles.premiumText,
-  infoSection: {
-    paddingHorizontal: 24,
-    marginBottom: 32,
-  },
+  infoSection: commonStyles.infoSection,
   infoItem: commonStyles.infoItem,
   infoContent: {
     marginLeft: 16,

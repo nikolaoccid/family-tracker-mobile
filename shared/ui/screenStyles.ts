@@ -80,4 +80,16 @@ export const screenStyles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  containerAlt3: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+  },
+  errorText: {
+    color: Colors.danger,
+    fontSize: 14,
+  },
+  headerAlt: {
+    paddingTop: 60,
+    paddingBottom: 24,
+  },
 });
