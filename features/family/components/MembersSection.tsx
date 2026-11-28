@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 export function MembersSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (

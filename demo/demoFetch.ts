@@ -1,8 +1,10 @@
 import { DEMO_TOKEN, chatToken, createFixtures, demoUser, ids, paymentIntent, plans, users } from '@/fixtures';
 
-/* eslint-disable @typescript-eslint/no-explicit-any -- demo rows are loose JSON, mutated like a database would be */
 type Json = Record<string, unknown> | unknown[] | null;
-type Handler = (ctx: { params: string[]; body: Record<string, any>; query: URLSearchParams }) => { status?: number; body: Json };
+type Row = Record<string, unknown>;
+type Member = Row & { id: unknown };
+type Family = Row & { members: Member[] };
+type Handler = (ctx: { params: string[]; body: Row; query: URLSearchParams }) => { status?: number; body: Json };
 
 /**
  * In-memory stand-in for the API. It is the only thing demo mode swaps: the
@@ -15,14 +17,14 @@ type Handler = (ctx: { params: string[]; body: Record<string, any>; query: URLSe
 export function createDemoFetch(clock: () => Date = () => new Date(), latencyMs = 120): typeof fetch {
   const fx = createFixtures(clock());
   const state = {
-    family: fx.family as Record<string, any> | null,
-    zones: [...fx.zones] as Record<string, any>[],
-    alerts: [...fx.alerts] as Record<string, any>[],
-    privacy: { ...fx.privacy } as Record<string, any>,
-    user: { ...demoUser } as Record<string, any>,
+    family: fx.family as Family | null,
+    zones: [...fx.zones] as Row[],
+    alerts: [...fx.alerts] as Row[],
+    privacy: { ...fx.privacy } as Row,
+    user: { ...demoUser } as Row,
   };
   const ok = (body: Json): ReturnType<Handler> => ({ body });
-  const withFamily = (change: (f: Record<string, any>) => void): ReturnType<Handler> => {
+  const withFamily = (change: (f: Family) => void): ReturnType<Handler> => {
     if (state.family) change(state.family);
     return ok(state.family);
   };
@@ -36,13 +38,13 @@ export function createDemoFetch(clock: () => Date = () => new Date(), latencyMs 
     ['POST', /^\/(user\/push-token|user\/battery|location)$/, () => ok({})],
 
     ['GET', /^\/family\/([^/]+)$/, () => ok(state.family)],
-    ['POST', /^\/family$/, ({ body }) => ok((state.family = { ...fx.family, name: body.name }))],
+    ['POST', /^\/family$/, ({ body }) => ok((state.family = { ...fx.family, members: fx.family.members ?? [], name: body.name }))],
     ['PUT', /^\/family\/([^/]+)$/, ({ body }) => withFamily((f) => (f.name = body.name ?? f.name))],
     ['DELETE', /^\/family\/([^/]+)$/, () => ok((state.family = null))],
     ['POST', /^\/family\/([^/]+)\/members$/, ({ body }) => withFamily((f) => f.members.push({ id: `invited-${f.members.length}`, name: body.email, email: body.email, role: 'member', isSharing: false, isInvited: true }))],
-    ['DELETE', /^\/family\/([^/]+)\/members\/([^/]+)$/, ({ params }) => withFamily((f) => (f.members = f.members.filter((m: any) => m.id !== params[1])))],
-    ['PUT', /^\/family\/([^/]+)\/members\/([^/]+)\/role$/, ({ params, body }) => withFamily((f) => f.members.forEach((m: any) => m.id === params[1] && (m.role = body.role)))],
-    ['PUT', /^\/family\/([^/]+)\/location-sharing$/, ({ body }) => withFamily((f) => f.members.forEach((m: any) => m.id === ids.ana && (m.isSharing = body.isSharing)))],
+    ['DELETE', /^\/family\/([^/]+)\/members\/([^/]+)$/, ({ params }) => withFamily((f) => (f.members = f.members.filter((m) => m.id !== params[1])))],
+    ['PUT', /^\/family\/([^/]+)\/members\/([^/]+)\/role$/, ({ params, body }) => withFamily((f) => f.members.forEach((m) => m.id === params[1] && (m.role = body.role)))],
+    ['PUT', /^\/family\/([^/]+)\/location-sharing$/, ({ body }) => withFamily((f) => f.members.forEach((m) => m.id === ids.ana && (m.isSharing = body.isSharing)))],
     ['POST', /^\/family\/verify\/?$/, () => ok({ familyId: ids.family, familyName: 'The Examples', inviteeMail: users.tomas.email, expiresAt: clock().toISOString() })],
     ['POST', /^\/family\/(accept|reject)\/?$/, () => ok({})],
     ['GET', /^\/family\/([^/]+)\/locations$/, () => ok(fx.familyLocations)],
@@ -52,7 +54,7 @@ export function createDemoFetch(clock: () => Date = () => new Date(), latencyMs 
     ['POST', /^\/safe-zone$/, ({ body }) => { const zone = { ...body, id: `zone-${state.zones.length + 1}`, createdAt: clock().toISOString() }; state.zones.push(zone); return ok(zone); }],
     ['PUT', /^\/safe-zone\/([^/]+)(\/status)?$/, ({ params, body }) => { const zone = state.zones.find((z) => z.id === params[0]); return zone ? ok(Object.assign(zone, body)) : { status: 404, body: { message: 'Safe zone not found' } }; }],
     ['DELETE', /^\/safe-zone\/([^/]+)$/, ({ params }) => { state.zones = state.zones.filter((z) => z.id !== params[0]); return ok({}); }],
-    ['GET', /^\/zone-analytics\/user\/([^/]+)\/summary$/, ({ params }) => ok(state.zones.filter((z) => z.isActive).map((z) => fx.analytics(z.id, params[0] as string)))],
+    ['GET', /^\/zone-analytics\/user\/([^/]+)\/summary$/, ({ params }) => ok(state.zones.filter((z) => z.isActive).map((z) => fx.analytics(String(z.id), params[0] as string)))],
     ['GET', /^\/zone-analytics\/([^/]+)\/([^/]+)$/, ({ params }) => ok(fx.analytics(params[0] as string, params[1] as string))],
     ['GET', /^\/location\/history\/([^/]+)$/, () => ok(fx.history)],
 

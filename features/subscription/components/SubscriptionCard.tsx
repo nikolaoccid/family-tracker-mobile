@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import type { Plan } from '../model/plan';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { Check } from 'lucide-react-native';
 import { styles } from './SubscriptionCard.styles';
 
@@ -11,7 +11,7 @@ interface SubscriptionCardProps {
   onSelect: () => void;
 }
 
-export default function SubscriptionCard({ 
+export function SubscriptionCard({ 
   plan, 
   isSelected, 
   onSelect 

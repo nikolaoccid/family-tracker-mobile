@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import type { FamilyMember } from '../model/family';
-import Colors from '@/shared/ui/colors';
-import Avatar from '@/shared/ui/Avatar';
+import { Colors } from '@/shared/ui/theme';
+import { Avatar } from '@/shared/ui/Avatar';
 import { formatDistanceToNow } from '@/shared/utils/date';
 import { BatteryMedium, MapPin, Trash2, UserCog } from 'lucide-react-native';
 import { styles } from './FamilyMemberItem.styles';
@@ -17,7 +17,7 @@ interface FamilyMemberItemProps {
   onDemote?: () => void;
 }
 
-export default function FamilyMemberItem({
+export function FamilyMemberItem({
                                            member,
                                            onPress,
                                            isCurrentUser = false,

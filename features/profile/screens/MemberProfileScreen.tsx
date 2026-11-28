@@ -3,11 +3,11 @@ import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'rea
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Mail, Phone, Calendar, Crown, MapPin, BatteryMedium } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { useAuthStore } from '@/features/auth';
 import { useFamily } from '@/features/family';
-import Avatar from '@/shared/ui/Avatar';
-import Button from '@/shared/ui/Button';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Button } from '@/shared/ui/Button';
 import { formatDate, formatDistanceToNow } from '@/shared/utils/date';
 import { styles } from './MemberProfileScreen.styles';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, ViewStyle, TouchableOpacity } from 'react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 interface CardProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ interface CardProps {
   contentStyle?: ViewStyle;
 }
 
-export default function Card({
+export function Card({
   children,
   title,
   subtitle,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.light.card,
     borderRadius: 16,
-    shadowColor: '#000',
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,

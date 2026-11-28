@@ -3,9 +3,9 @@ import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 're
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Mail } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
-import Button from '@/shared/ui/Button';
-import Input from '@/shared/ui/Input';
+import { Colors } from '@/shared/ui/theme';
+import { Button } from '@/shared/ui/Button';
+import { Input } from '@/shared/ui/Input';
 import { errorMessage } from '@/shared/api';
 import { useFamily } from '../hooks/useFamily';
 import { useAddMember } from '../hooks/useFamilyMutations';

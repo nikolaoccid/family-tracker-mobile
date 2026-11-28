@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import MapView, { Marker, Circle, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { Minus, Plus, ZoomIn, ZoomOut } from 'lucide-react-native';
 
 const MIN_RADIUS_M = 50;
@@ -16,7 +16,7 @@ interface Props {
   color: string;
 }
 
-export default function EditableMap({ center, setCenter, radius, setRadius, color }: Props) {
+export function EditableMap({ center, setCenter, radius, setRadius, color }: Props) {
   const mapRef = useRef<MapView>(null);
   const [delta, setDelta] = useState(0.01);
   const region: Region = { ...center, latitudeDelta: delta, longitudeDelta: delta };
@@ -54,13 +54,13 @@ export default function EditableMap({ center, setCenter, radius, setRadius, colo
           style={styles.controlButton}
           onPress={() => zoom(0.5)}
         >
-          <ZoomIn size={18} color="#fff" />
+          <ZoomIn size={18} color={Colors.white} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.controlButton}
           onPress={() => zoom(2)}
         >
-          <ZoomOut size={18} color="#fff" />
+          <ZoomOut size={18} color={Colors.white} />
         </TouchableOpacity>
       </View>
 
@@ -69,13 +69,13 @@ export default function EditableMap({ center, setCenter, radius, setRadius, colo
           style={styles.controlButton}
           onPress={() => setRadius(Math.min(MAX_RADIUS_M, radius + 50))}
         >
-          <Plus size={18} color="#fff" />
+          <Plus size={18} color={Colors.white} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.controlButton}
           onPress={() => setRadius(Math.max(MIN_RADIUS_M, radius - 50))}
         >
-          <Minus size={18} color="#fff" />
+          <Minus size={18} color={Colors.white} />
         </TouchableOpacity>
       </View>
     </View>

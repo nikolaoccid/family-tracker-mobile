@@ -3,8 +3,8 @@ import { View, Text, Image, TouchableOpacity, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Bell, ArrowRight, CheckCircle } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
-import Button from '@/shared/ui/Button';
+import { Colors } from '@/shared/ui/theme';
+import { Button } from '@/shared/ui/Button';
 import { usePushNotifications } from '@/features/notifications';
 import { useUpdateProfile } from '@/features/auth';
 import { logger } from '@/shared/logger';
@@ -117,7 +117,7 @@ export function NotificationPermissionScreen() {
           onPress={handleRequestPermission}
           loading={isLoading}
           fullWidth
-          icon={permissionStatus !== 'granted' ? <Bell size={20} color="#FFFFFF" /> : null}
+          icon={permissionStatus !== 'granted' ? <Bell size={20} color={Colors.white} /> : null}
         />
         
         {permissionStatus !== 'granted' && (

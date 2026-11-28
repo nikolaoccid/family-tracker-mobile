@@ -4,13 +4,13 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, User, Mail, Phone, Camera } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { useAuthStore, useUpdateProfile, type User as AppUser } from '@/features/auth';
 import { logger } from '@/shared/logger';
 import { validateProfile, type ProfileErrors } from '../model/profileForm';
-import Avatar from '@/shared/ui/Avatar';
-import Input from '@/shared/ui/Input';
-import Button from '@/shared/ui/Button';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Input } from '@/shared/ui/Input';
+import { Button } from '@/shared/ui/Button';
 import { styles } from './EditProfileScreen.styles';
 
 export function EditProfileScreen() {

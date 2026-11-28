@@ -8,7 +8,7 @@ import { logger } from '@/shared/logger';
 const RECHECK_MS = 60_000;
 
 /** Keeps background tracking and the push token in step with the signed-in user's permissions. */
-export default function TrackingSetup() {
+export function TrackingSetup() {
   const userId = useAuthStore((s) => s.user?.id);
   const hasLocation = useAuthStore((s) => s.user?.hasLocationEnabled);
   const hasNotifications = useAuthStore((s) => s.user?.hasNotificationsEnabled);

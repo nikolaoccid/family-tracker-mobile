@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Crown } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/features/auth';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 /** Header button for free users; renders nothing for premium users or signed-out state. */
 export function UpgradeButton() {

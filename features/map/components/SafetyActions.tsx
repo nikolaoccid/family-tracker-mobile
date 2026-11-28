@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AlertTriangle, Home } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 interface Props {
   onEmergency: () => void;
@@ -12,11 +12,11 @@ export function SafetyActions({ onEmergency, onHeadingHome }: Props) {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={[styles.button, styles.emergency]} onPress={onEmergency} accessibilityRole="button">
-        <AlertTriangle size={24} color="#FFFFFF" />
+        <AlertTriangle size={24} color={Colors.white} />
         <Text style={styles.label}>Emergency</Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.button, styles.home]} onPress={onHeadingHome} accessibilityRole="button">
-        <Home size={24} color="#FFFFFF" />
+        <Home size={24} color={Colors.white} />
         <Text style={styles.label}>Heading Home</Text>
       </TouchableOpacity>
     </View>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 30,
-    shadowColor: '#000',
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -47,5 +47,5 @@ const styles = StyleSheet.create({
   },
   emergency: { backgroundColor: Colors.danger },
   home: { backgroundColor: Colors.primary },
-  label: { color: '#FFFFFF', fontWeight: '600', marginLeft: 8 },
+  label: { color: Colors.white, fontWeight: '600', marginLeft: 8 },
 });

@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 export { RouterErrorBoundary as ErrorBoundary } from '@/shared/ui';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 export default function AuthLayout() {
   return (

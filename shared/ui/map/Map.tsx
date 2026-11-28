@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MapView, { Circle, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { Plus, Minus } from 'lucide-react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -15,7 +15,7 @@ interface Props {
 const DEFAULT_CENTER = { latitude: 48.8584, longitude: 2.2945 }; // Eiffel Tower: neutral until positions arrive
 const MIN_DELTA = 0.001;
 
-function Map({ familyLocations = [], safeZones = [] }: Props) {
+export function Map({ familyLocations = [], safeZones = [] }: Props) {
   const mapRef = useRef<MapView>(null);
   const [mapKey, setMapKey] = useState(0);
   const [delta, setDelta] = useState(0.05);
@@ -100,10 +100,10 @@ function Map({ familyLocations = [], safeZones = [] }: Props) {
 
           <View style={styles.zoomControls}>
             <TouchableOpacity style={styles.zoomButton} onPress={() => zoom(0.5)}>
-              <Plus size={18} color="#fff" />
+              <Plus size={18} color={Colors.white} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.zoomButton} onPress={() => zoom(2)}>
-              <Minus size={18} color="#fff" />
+              <Minus size={18} color={Colors.white} />
             </TouchableOpacity>
           </View>
         </>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     flex: 1,
-    backgroundColor: '#E8EEF4',
+    backgroundColor: Colors.mapBackground,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -161,4 +161,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Map;

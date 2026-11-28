@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import type { User } from '@/features/auth';
-import Avatar from '@/shared/ui/Avatar';
-import Colors from '@/shared/ui/colors';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Colors } from '@/shared/ui/theme';
 
 export function ProfileCard({ user, onPress }: { user: User; onPress: () => void }) {
   return (
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 16,
     marginBottom: 24,
-    shadowColor: '#000',
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,

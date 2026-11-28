@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
   },
   adminText: {
-    color: '#FFFFFF',
+    color: Colors.white,
     fontSize: 10,
     fontWeight: '500',
   },

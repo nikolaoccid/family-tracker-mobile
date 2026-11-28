@@ -7,10 +7,10 @@ import { useAuthStore } from '@/features/auth';
 import { useFamily } from '@/features/family';
 import { useLocationHistory } from '@/features/location';
 import { ErrorState, LoadingState } from '@/shared/ui';
-import Colors from '@/shared/ui/colors';
-import Map from '@/shared/ui/map/Map';
-import MemberPicker from '@/shared/ui/MemberPicker';
-import PeriodPicker from '@/shared/ui/PeriodPicker';
+import { Colors } from '@/shared/ui/theme';
+import { Map } from '@/shared/ui/map/Map';
+import { MemberPicker } from '@/shared/ui/MemberPicker';
+import { PeriodPicker } from '@/shared/ui/PeriodPicker';
 import { rangeFor, type Period } from '@/shared/utils/period';
 import { RecentLocations } from '../components/RecentLocations';
 

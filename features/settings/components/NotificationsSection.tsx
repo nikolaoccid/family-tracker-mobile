@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
-import SwitchRow from '@/shared/ui/SwitchRow';
+import { Colors } from '@/shared/ui/theme';
+import { SwitchRow } from '@/shared/ui/SwitchRow';
 import { setNotification } from '../model/privacyEdits';
 import type { PrivacySettings } from '../model/privacy';
 import { SectionHeader } from './SectionHeader';

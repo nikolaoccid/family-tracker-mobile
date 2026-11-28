@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, ViewStyle } from 'react-native';
 import { Image } from 'expo-image';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 interface AvatarProps {
   source?: string;
@@ -12,7 +12,7 @@ interface AvatarProps {
   badgeColor?: string;
 }
 
-export default function Avatar({
+export function Avatar({
   source,
   name,
   size = 40,
@@ -95,12 +95,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   initials: {
-    color: '#FFFFFF',
+    color: Colors.white,
     fontWeight: '600',
   },
   badge: {
     position: 'absolute',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.white,
   },
 });

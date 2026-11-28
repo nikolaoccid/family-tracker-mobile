@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ChevronRight, Clock, Plus, Trash2 } from 'lucide-react-native';
-import Button from '@/shared/ui/Button';
-import Colors from '@/shared/ui/colors';
+import { Button } from '@/shared/ui/Button';
+import { Colors } from '@/shared/ui/theme';
 import { removeSchedule, setScheduleEnabled } from '../model/privacyEdits';
 import type { PrivacySettings, SharingSchedule } from '../model/privacy';
 import { SectionHeader } from './SectionHeader';
@@ -48,7 +48,7 @@ export function SchedulesSection({ settings, onChange }: { settings: PrivacySett
         ))
       )}
 
-      <Button title="Add Schedule" onPress={() => router.push('/schedule/create')} icon={<Plus size={18} color="#FFFFFF" />} fullWidth style={styles.add} />
+      <Button title="Add Schedule" onPress={() => router.push('/schedule/create')} icon={<Plus size={18} color={Colors.white} />} fullWidth style={styles.add} />
     </View>
   );
 }

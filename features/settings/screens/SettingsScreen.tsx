@@ -5,8 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Clock, CreditCard, Lock, LogOut, Trash2, User } from 'lucide-react-native';
 import { useAuthStore, useDeleteAccount } from '@/features/auth';
 import { config } from '@/shared/api';
-import Colors from '@/shared/ui/colors';
-import MenuItem from '@/shared/ui/MenuItem';
+import { Colors } from '@/shared/ui/theme';
+import { MenuItem } from '@/shared/ui/MenuItem';
 import { ProfileCard } from '../components/ProfileCard';
 
 export function SettingsScreen() {

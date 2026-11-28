@@ -4,7 +4,7 @@ export { familyKeys } from './model/keys';
 export { useFamily } from './hooks/useFamily';
 export * from './hooks/useFamilyMutations';
 export { MemberSelector } from './components/MemberSelector';
-export { default as FamilyMemberItem } from './components/FamilyMemberItem';
+export { FamilyMemberItem } from './components/FamilyMemberItem';
 export { FamilyScreen } from './screens/FamilyScreen';
 export { AcceptInviteScreen } from './screens/AcceptInviteScreen';
 export { AddMemberScreen } from './screens/AddMemberScreen';

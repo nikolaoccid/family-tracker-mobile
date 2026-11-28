@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Users } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { useAuthStore } from '@/features/auth';
 import { useCreateFamily } from '../hooks/useFamilyMutations';
-import Button from '@/shared/ui/Button';
+import { Button } from '@/shared/ui/Button';
 import { styles } from './CreateFamilyScreen.styles';
 
 export function CreateFamilyScreen() {

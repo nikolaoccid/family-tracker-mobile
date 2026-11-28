@@ -11,7 +11,7 @@ import {
   TextInputFocusEventData
 } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -22,7 +22,7 @@ interface InputProps extends TextInputProps {
   secureTextEntry?: boolean;
 }
 
-export default function Input({
+export function Input({
   label,
   error,
   containerStyle,

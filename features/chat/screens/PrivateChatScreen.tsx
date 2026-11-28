@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/features/auth';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { usePrivateChat } from '../hooks/usePrivateChat';
 
 export function PrivateChatScreen() {
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    color: '#555',
+    color: Colors.chatMuted,
     marginTop: 10,
   },
   errorText: {
@@ -93,12 +93,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   errorBanner: {
-    backgroundColor: '#ffcccc',
+    backgroundColor: Colors.errorTint,
     padding: 8,
     alignItems: 'center',
   },
   errorBannerText: {
-    color: '#990000',
+    color: Colors.errorStrong,
     fontSize: 14,
   },
   header: {

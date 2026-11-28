@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { User } from 'lucide-react-native';
-import Colors from './colors';
+import { Colors } from '@/shared/ui/theme';
 
 interface Props {
   members: readonly { id: string; name: string }[];
@@ -9,7 +9,7 @@ interface Props {
   onSelect: (id: string) => void;
 }
 
-export default function MemberPicker({ members, selectedId, onSelect }: Props) {
+export function MemberPicker({ members, selectedId, onSelect }: Props) {
   if (members.length < 2) return null;
   return (
     <View style={styles.section}>
@@ -20,7 +20,7 @@ export default function MemberPicker({ members, selectedId, onSelect }: Props) {
           return (
             <TouchableOpacity key={member.id} style={styles.item} onPress={() => onSelect(member.id)}>
               <View style={[styles.icon, selected && styles.iconSelected]}>
-                <User size={20} color={selected ? '#FFFFFF' : Colors.primary} />
+                <User size={20} color={selected ? Colors.white : Colors.primary} />
               </View>
               <Text style={[styles.name, selected && styles.nameSelected]} numberOfLines={1}>
                 {member.name}

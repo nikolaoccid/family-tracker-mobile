@@ -1,6 +1,6 @@
 import React from 'react';
 import { logger } from '@/shared/logger';
-import ErrorState from './ErrorState';
+import { ErrorState } from './ErrorState';
 
 interface Props {
   error: Error;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 /** Shape expo-router expects from a layout's `ErrorBoundary` export. */
-export default function RouterErrorBoundary({ error, retry }: Props) {
+export function RouterErrorBoundary({ error, retry }: Props) {
   React.useEffect(() => {
     logger.error('route render error', error.message);
   }, [error]);

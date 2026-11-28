@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 2,
     borderColor: 'transparent',
-    shadowColor: '#000',
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
@@ -94,7 +94,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   selectedButtonText: {
-    color: '#FFFFFF',
+    color: Colors.white,
   },
   unselectedButtonText: {
     color: Colors.primary,

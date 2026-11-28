@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Clock, MapPin } from 'lucide-react-native';
 import type { LocationHistory } from '@/features/location';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { formatDate } from '@/shared/utils/date';
 
 const SHOWN = 10;

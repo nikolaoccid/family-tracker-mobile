@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { UserPlus } from 'lucide-react-native';
 import { useAuthStore } from '@/features/auth';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { QueryBoundary } from '@/shared/ui';
 import { useFamily } from '../hooks/useFamily';
 import { useMemberActions } from '../hooks/useMemberActions';
@@ -12,7 +12,7 @@ import { isFamilyAdmin } from '../model/permissions';
 import type { Family } from '../model/family';
 import { AnalyticsShortcuts } from '../components/AnalyticsShortcuts';
 import { FamilyHeader } from '../components/FamilyHeader';
-import FamilyMemberItem from '../components/FamilyMemberItem';
+import { FamilyMemberItem } from '../components/FamilyMemberItem';
 import { NoFamilyState } from '../components/NoFamilyState';
 import { SharingScheduleCard } from '../components/SharingScheduleCard';
 import { MembersSection } from '../components/MembersSection';
@@ -63,7 +63,7 @@ function FamilyOverview({ family }: { family: Family }) {
       </ScrollView>
       {isAdmin && (
         <TouchableOpacity style={styles.fab} onPress={() => router.push('/family/add-member')} accessibilityLabel="Add member">
-          <UserPlus size={24} color="#FFFFFF" />
+          <UserPlus size={24} color={Colors.white} />
         </TouchableOpacity>
       )}
     </>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,

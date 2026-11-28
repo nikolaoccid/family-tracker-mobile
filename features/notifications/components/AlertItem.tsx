@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { formatDistanceToNow } from '@/shared/utils/date';
 import type { Alert } from '../model/alert';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { AlertCircle, Battery, MapPin, Home, LogOut } from 'lucide-react-native';
 
 interface AlertItemProps {
@@ -11,7 +11,7 @@ interface AlertItemProps {
   onMarkAsRead?: () => void;
 }
 
-export default function AlertItem({ alert, onPress, onMarkAsRead }: AlertItemProps) {
+export function AlertItem({ alert, onPress, onMarkAsRead }: AlertItemProps) {
   const getAlertIcon = () => {
     switch (alert.type) {
       case 'emergency':

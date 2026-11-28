@@ -2,10 +2,10 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MapPin } from 'lucide-react-native';
 import { MemberSelector, type FamilyMember } from '@/features/family';
-import Colors from '@/shared/ui/colors';
-import ColorPicker from '@/shared/ui/ColorPicker';
-import Input from '@/shared/ui/Input';
-import EditableMap from '@/shared/ui/map/EditableMap';
+import { Colors } from '@/shared/ui/theme';
+import { ColorPicker } from '@/shared/ui/ColorPicker';
+import { Input } from '@/shared/ui/Input';
+import { EditableMap } from '@/shared/ui/map/EditableMap';
 import { RADIUS_MIN_M, toggleMember, type ZoneFormErrors, type ZoneFormValues } from '../model/zoneForm';
 
 const PALETTE = [Colors.primary, Colors.secondary, Colors.success, Colors.danger, Colors.warning, Colors.info];
@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
   statusButton: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 16 },
   active: { backgroundColor: Colors.success },
   inactive: { backgroundColor: Colors.light.icon },
-  statusText: { color: '#fff', fontWeight: '600' },
+  statusText: { color: Colors.white, fontWeight: '600' },
   empty: { fontSize: 14, color: Colors.light.subtext, marginVertical: 8 },
 });

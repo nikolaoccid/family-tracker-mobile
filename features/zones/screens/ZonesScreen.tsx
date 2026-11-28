@@ -5,9 +5,9 @@ import { StatusBar } from 'expo-status-bar';
 import { PlusCircle, MapPin } from 'lucide-react-native';
 import { useFamily } from '@/features/family';
 import { QueryBoundary } from '@/shared/ui';
-import Button from '@/shared/ui/Button';
-import Colors from '@/shared/ui/colors';
-import SafeZoneItem from '../components/SafeZoneItem';
+import { Button } from '@/shared/ui/Button';
+import { Colors } from '@/shared/ui/theme';
+import { SafeZoneItem } from '../components/SafeZoneItem';
 import { useZones } from '../hooks/useZones';
 
 export function ZonesScreen() {

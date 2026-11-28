@@ -25,6 +25,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'no-console': 'error',
+      'no-restricted-exports': ['error', { restrictDefaultExports: { direct: true, named: true, defaultFrom: true } }],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/ban-ts-comment': ['error', { 'ts-ignore': true, 'ts-expect-error': 'allow-with-description' }],
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
@@ -56,6 +57,11 @@ export default tseslint.config(
         },
       ],
     },
+  },
+  {
+    // Expo Router and tool configs require default exports.
+    files: ['app/**', '*.config.{ts,js,mjs}'],
+    rules: { 'no-restricted-exports': 'off' },
   },
   {
     files: ['**/*.test.{ts,tsx}', 'jest.setup.ts', '__tests__/**', 'test-utils/**'],

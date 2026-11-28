@@ -2,12 +2,12 @@ import React from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Bell } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { useFamily } from '@/features/family';
 import { QueryBoundary } from '@/shared/ui';
 import { useAlerts } from '../hooks/useAlerts';
 import { useReadAlertsStore } from '../model/readAlertsStore';
-import AlertItem from '../components/AlertItem';
+import { AlertItem } from '../components/AlertItem';
 
 export function AlertsScreen() {
   const family = useFamily().data;
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   countText: {
-    color: '#FFFFFF',
+    color: Colors.white,
     fontSize: 12,
     fontWeight: '600',
   },

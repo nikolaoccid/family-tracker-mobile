@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { formatDuration, sharePercent, totalMinutes } from '../model/analytics';
 import type { SafeZone, ZoneAnalytics } from '../model/zone';
 

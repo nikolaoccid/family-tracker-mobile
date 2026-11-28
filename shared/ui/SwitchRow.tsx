@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Switch, Text, View } from 'react-native';
-import Colors from './colors';
+import { Colors } from '@/shared/ui/theme';
 
 interface Props {
   label: string;
@@ -8,7 +8,7 @@ interface Props {
   onValueChange: (value: boolean) => void;
 }
 
-export default function SwitchRow({ label, value, onValueChange }: Props) {
+export function SwitchRow({ label, value, onValueChange }: Props) {
   return (
     <View style={styles.row}>
       <Text style={styles.label}>{label}</Text>

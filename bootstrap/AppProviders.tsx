@@ -7,7 +7,7 @@ import { onSessionReset } from '@/shared/session';
 import { RouteErrorBoundary } from '@/shared/ui';
 
 /** Gesture root, persisted query cache, payments and the global error boundary. */
-export default function AppProviders({ children }: { children: React.ReactNode }) {
+export function AppProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(createQueryClient);
   const [persister] = useState(() => createQueryPersister());
 

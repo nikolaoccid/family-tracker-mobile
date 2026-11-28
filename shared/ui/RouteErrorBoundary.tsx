@@ -1,6 +1,6 @@
 import React from 'react';
 import { logger } from '@/shared/logger';
-import ErrorState from './ErrorState';
+import { ErrorState } from './ErrorState';
 
 interface Props {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ interface State {
 }
 
 /** Catches render errors below it, reports them, and offers a restart of the subtree. */
-export default class RouteErrorBoundary extends React.Component<Props, State> {
+export class RouteErrorBoundary extends React.Component<Props, State> {
   override state: State = { error: null };
 
   static getDerivedStateFromError(error: Error): State {

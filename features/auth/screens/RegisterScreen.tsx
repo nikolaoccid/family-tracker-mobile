@@ -3,9 +3,9 @@ import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platfor
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
-import Button from '@/shared/ui/Button';
-import Input from '@/shared/ui/Input';
+import { Colors } from '@/shared/ui/theme';
+import { Button } from '@/shared/ui/Button';
+import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { validateRegistration, type FieldErrors } from '../model/validation';
 import { styles } from './RegisterScreen.styles';

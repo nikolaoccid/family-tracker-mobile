@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import Colors from './colors';
+import { Colors } from '@/shared/ui/theme';
 
 export const styles = StyleSheet.create({
   button: {
@@ -48,7 +48,7 @@ export const variantStyles = {
       backgroundColor: Colors.primary,
     },
     text: {
-      color: '#FFFFFF',
+      color: Colors.white,
       fontSize: 16,
     },
     disabled: {
@@ -58,7 +58,7 @@ export const variantStyles = {
       color: Colors.light.subtext,
       fontSize: 16,
     },
-    loading: '#FFFFFF',
+    loading: Colors.white,
   },
   secondary: {
     container: {
@@ -103,7 +103,7 @@ export const variantStyles = {
       backgroundColor: Colors.danger,
     },
     text: {
-      color: '#FFFFFF',
+      color: Colors.white,
       fontSize: 16,
     },
     disabled: {
@@ -113,14 +113,14 @@ export const variantStyles = {
       color: Colors.light.subtext,
       fontSize: 16,
     },
-    loading: '#FFFFFF',
+    loading: Colors.white,
   },
   success: {
     container: {
       backgroundColor: Colors.success,
     },
     text: {
-      color: '#FFFFFF',
+      color: Colors.white,
       fontSize: 16,
     },
     disabled: {
@@ -130,7 +130,7 @@ export const variantStyles = {
       color: Colors.light.subtext,
       fontSize: 16,
     },
-    loading: '#FFFFFF',
+    loading: Colors.white,
   },
   text: {
     container: {

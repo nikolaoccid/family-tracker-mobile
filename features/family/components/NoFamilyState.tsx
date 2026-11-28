@@ -2,8 +2,8 @@ import React from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Users } from 'lucide-react-native';
-import Button from '@/shared/ui/Button';
-import Colors from '@/shared/ui/colors';
+import { Button } from '@/shared/ui/Button';
+import { Colors } from '@/shared/ui/theme';
 
 export function NoFamilyState() {
   const router = useRouter();

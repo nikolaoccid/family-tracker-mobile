@@ -1,10 +1,11 @@
+import { Colors } from '@/shared/ui/theme';
 import { z } from 'zod';
 import { numeric } from '@/shared/api';
 
 export const zoneSchema = z.object({
   id: z.string(),
   name: z.string().nullish().transform((v) => v ?? ''),
-  color: z.string().nullish().transform((v) => v ?? '#4A80F0'),
+  color: z.string().nullish().transform((v) => v ?? Colors.primary),
   radius: numeric,
   centerLatitude: numeric,
   centerLongitude: numeric,

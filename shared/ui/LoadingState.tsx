@@ -1,8 +1,8 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import Colors from './colors';
+import { Colors } from '@/shared/ui/theme';
 
-export default function LoadingState() {
+export function LoadingState() {
   return (
     <View style={styles.container} accessible accessibilityRole="progressbar">
       <ActivityIndicator size="large" color={Colors.primary} />

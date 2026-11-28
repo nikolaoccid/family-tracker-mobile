@@ -3,9 +3,9 @@ import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 're
 import { useRouter, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
-import Button from '@/shared/ui/Button';
-import Input from '@/shared/ui/Input';
+import { Colors } from '@/shared/ui/theme';
+import { Button } from '@/shared/ui/Button';
+import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { styles } from './ForgotPasswordScreen.styles';
 

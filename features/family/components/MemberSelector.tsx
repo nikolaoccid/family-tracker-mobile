@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import type { FamilyMember } from '../model/family';
-import Colors from '@/shared/ui/colors';
-import Avatar from '@/shared/ui/Avatar';
+import { Colors } from '@/shared/ui/theme';
+import { Avatar } from '@/shared/ui/Avatar';
 import { Check } from 'lucide-react-native';
 
 interface MemberSelectorProps {
@@ -42,7 +42,7 @@ export function MemberSelector({
               />
               {isSelected && (
                 <View style={styles.checkBadge}>
-                  <Check size={14} color="#FFFFFF" />
+                  <Check size={14} color={Colors.white} />
                 </View>
               )}
             </View>

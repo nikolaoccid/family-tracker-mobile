@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Edit2, Mail, Phone, Calendar, Crown } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { useAuthStore } from '@/features/auth';
-import Avatar from '@/shared/ui/Avatar';
-import Button from '@/shared/ui/Button';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Button } from '@/shared/ui/Button';
 import { formatDate } from '@/shared/utils/date';
 import { styles } from './ProfileViewScreen.styles';
 
@@ -102,7 +102,7 @@ export function ProfileViewScreen() {
             <Button
               title="Upgrade Now"
               onPress={handleUpgradeSubscription}
-              icon={<Crown size={18} color="#FFFFFF" />}
+              icon={<Crown size={18} color={Colors.white} />}
               fullWidth
               style={styles.upgradeButton}
             />

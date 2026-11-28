@@ -2,8 +2,8 @@ import React from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Check, Users, X } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
-import Button from '@/shared/ui/Button';
+import { Colors } from '@/shared/ui/theme';
+import { Button } from '@/shared/ui/Button';
 import { useInviteFlow } from '../hooks/useInviteFlow';
 
 export function AcceptInviteScreen() {
@@ -50,7 +50,7 @@ export function AcceptInviteScreen() {
                 title="Accept"
                 onPress={flow.accept}
                 loading={flow.isAccepting}
-                icon={<Check size={20} color="#FFFFFF" />}
+                icon={<Check size={20} color={Colors.white} />}
                 style={styles.acceptButton}
               />
             </View>

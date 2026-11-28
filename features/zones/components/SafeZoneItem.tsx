@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import type { SafeZone } from '../model/zone';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { MapPin, Users } from 'lucide-react-native';
 
 interface SafeZoneItemProps {
@@ -9,7 +9,7 @@ interface SafeZoneItemProps {
   onPress?: () => void;
 }
 
-export default function SafeZoneItem({ zone, onPress }: SafeZoneItemProps) {
+export function SafeZoneItem({ zone, onPress }: SafeZoneItemProps) {
   return (
     <TouchableOpacity
       style={[styles.container, { borderLeftColor: zone.color }]}

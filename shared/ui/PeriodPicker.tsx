@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Calendar } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { formatDate } from '@/shared/utils/date';
 import { PERIODS, type Period } from '@/shared/utils/period';
 
@@ -12,7 +12,7 @@ interface Props {
   onChange: (period: Period) => void;
 }
 
-export default function PeriodPicker({ period, startDate, endDate, onChange }: Props) {
+export function PeriodPicker({ period, startDate, endDate, onChange }: Props) {
   return (
     <View style={styles.section}>
       <Text style={styles.title}>Time Period</Text>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   button: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 8, backgroundColor: Colors.light.card, alignItems: 'center', marginRight: 8 },
   selected: { backgroundColor: Colors.primary },
   text: { fontSize: 14, fontWeight: '500', color: Colors.light.text },
-  selectedText: { color: '#FFFFFF' },
+  selectedText: { color: Colors.white },
   info: { flexDirection: 'row', alignItems: 'center' },
   infoText: { fontSize: 14, color: Colors.light.subtext, marginLeft: 8 },
 });

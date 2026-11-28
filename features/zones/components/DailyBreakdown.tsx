@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { formatDate } from '@/shared/utils/date';
 import { dayBarPercent, formatDuration } from '../model/analytics';
 import type { ZoneAnalytics } from '../model/zone';

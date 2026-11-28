@@ -1,3 +1,4 @@
+import { Colors } from './theme';
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Check } from 'lucide-react-native';
@@ -8,7 +9,7 @@ interface ColorPickerProps {
   onSelectColor: (color: string) => void;
 }
 
-export default function ColorPicker({ colors, selectedColor, onSelectColor }: ColorPickerProps) {
+export function ColorPicker({ colors, selectedColor, onSelectColor }: ColorPickerProps) {
   return (
     <View style={styles.container}>
       {colors.map((color) => (
@@ -22,7 +23,7 @@ export default function ColorPicker({ colors, selectedColor, onSelectColor }: Co
           onPress={() => onSelectColor(color)}
         >
           {selectedColor === color && (
-            <Check size={20} color="#FFFFFF" />
+            <Check size={20} color={Colors.white} />
           )}
         </TouchableOpacity>
       ))}
@@ -47,8 +48,8 @@ const styles = StyleSheet.create({
   },
   selectedOption: {
     borderWidth: 2,
-    borderColor: '#FFFFFF',
-    shadowColor: '#000',
+    borderColor: Colors.white,
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,

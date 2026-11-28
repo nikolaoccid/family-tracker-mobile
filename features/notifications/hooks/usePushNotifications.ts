@@ -1,3 +1,4 @@
+import { Colors } from '@/shared/ui/theme';
 import { useCallback, useEffect, useState } from 'react';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
@@ -20,7 +21,7 @@ async function ensureAndroidChannel() {
     name: 'default',
     importance: Notifications.AndroidImportance.MAX,
     vibrationPattern: [0, 250, 250, 250],
-    lightColor: '#FF231F7C',
+    lightColor: Colors.notificationLight,
   });
 }
 

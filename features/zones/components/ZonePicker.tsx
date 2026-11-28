@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MapPin } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import type { SafeZone } from '../model/zone';
 
 interface Props {
@@ -24,8 +24,8 @@ export function ZonePicker({ zones, selectedId, onToggle }: Props) {
               style={[styles.item, { backgroundColor: selected ? zone.color : `${zone.color}40` }]}
               onPress={() => onToggle(zone)}
             >
-              <MapPin size={20} color={selected ? '#FFFFFF' : zone.color} />
-              <Text style={[styles.name, { color: selected ? '#FFFFFF' : Colors.light.text }]} numberOfLines={1}>
+              <MapPin size={20} color={selected ? Colors.white : zone.color} />
+              <Text style={[styles.name, { color: selected ? Colors.white : Colors.light.text }]} numberOfLines={1}>
                 {zone.name}
               </Text>
             </TouchableOpacity>

@@ -3,9 +3,9 @@ import { View, Text, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, 
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Mail, Lock, LogIn } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
-import Button from '@/shared/ui/Button';
-import Input from '@/shared/ui/Input';
+import { Colors } from '@/shared/ui/theme';
+import { Button } from '@/shared/ui/Button';
+import { Input } from '@/shared/ui/Input';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import { useAuthStore } from '../model/authStore';
 import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
@@ -99,7 +99,7 @@ export function LoginScreen() {
             onPress={handleLogin}
             loading={isLoading}
             fullWidth
-            icon={<LogIn size={20} color="#FFFFFF" />}
+            icon={<LogIn size={20} color={Colors.white} />}
             style={styles.loginButton}
           />
 

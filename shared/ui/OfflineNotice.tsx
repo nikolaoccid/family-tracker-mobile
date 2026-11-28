@@ -2,15 +2,15 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { WifiOff } from 'lucide-react-native';
 import { useNetInfo } from '@react-native-community/netinfo';
-import Colors from './colors';
+import { Colors } from '@/shared/ui/theme';
 
 /** Banner shown while the device has no network connection. */
-export default function OfflineNotice() {
+export function OfflineNotice() {
   const { isConnected } = useNetInfo();
   if (isConnected !== false) return null;
   return (
     <View style={styles.container} accessibilityRole="alert">
-      <WifiOff size={16} color="#fff" />
+      <WifiOff size={16} color={Colors.white} />
       <Text style={styles.text}>You're offline. Some features may be limited.</Text>
     </View>
   );
@@ -25,5 +25,5 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     backgroundColor: Colors.warning,
   },
-  text: { color: '#fff', fontSize: 13, fontWeight: '600' },
+  text: { color: Colors.white, fontSize: 13, fontWeight: '600' },
 });

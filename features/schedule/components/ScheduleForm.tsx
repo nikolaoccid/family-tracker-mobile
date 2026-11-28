@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Check, Clock } from 'lucide-react-native';
-import Colors from '@/shared/ui/colors';
-import Input from '@/shared/ui/Input';
+import { Colors } from '@/shared/ui/theme';
+import { Input } from '@/shared/ui/Input';
 import { WEEKDAYS, formatTimeInput, isWithinSchedule, toggleDay, type ScheduleDraft, type ScheduleErrors } from '../model/schedule';
 
 interface Props {
@@ -39,7 +39,7 @@ export function ScheduleForm({ draft, errors, onChange }: Props) {
               <Text style={[styles.dayText, selected && styles.dayTextSelected]}>
                 {day.charAt(0).toUpperCase() + day.slice(1, 3)}
               </Text>
-              {selected && <Check size={14} color="#FFFFFF" style={styles.check} />}
+              {selected && <Check size={14} color={Colors.white} style={styles.check} />}
             </TouchableOpacity>
           );
         })}
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   day: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: Colors.light.border, backgroundColor: Colors.light.background, flexDirection: 'row', alignItems: 'center' },
   daySelected: { backgroundColor: Colors.primary, borderColor: Colors.primary },
   dayText: { fontSize: 14, color: Colors.light.text },
-  dayTextSelected: { color: '#FFFFFF' },
+  dayTextSelected: { color: Colors.white },
   check: { marginLeft: 4 },
   times: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   timeBox: { flex: 1, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: Colors.light.border, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: Colors.light.background },

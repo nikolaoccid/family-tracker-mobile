@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
-import Button from './Button';
-import Colors from './colors';
+import { Button } from './Button';
+import { Colors } from '@/shared/ui/theme';
 import { errorMessage } from '@/shared/api/errors';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 }
 
 /** The one place a screen shows a failed load. */
-export default function ErrorState({ error, title = 'Something went wrong', onRetry }: Props) {
+export function ErrorState({ error, title = 'Something went wrong', onRetry }: Props) {
   return (
     <View style={styles.container} accessible accessibilityRole="alert">
       <AlertTriangle size={40} color={Colors.danger} />

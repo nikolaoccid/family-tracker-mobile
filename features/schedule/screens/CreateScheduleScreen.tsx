@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import Button from '@/shared/ui/Button';
+import { Button } from '@/shared/ui/Button';
 import { ScheduleForm } from '../components/ScheduleForm';
 import { ScheduleFrame } from '../components/ScheduleFrame';
 import { useSchedules } from '../hooks/useScheduleMutations';

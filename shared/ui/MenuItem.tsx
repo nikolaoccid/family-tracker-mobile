@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ChevronRight, type LucideIcon } from 'lucide-react-native';
-import Colors from './colors';
+import { Colors } from '@/shared/ui/theme';
 
 interface Props {
   label: string;
@@ -11,7 +11,7 @@ interface Props {
   variant?: 'default' | 'danger';
 }
 
-export default function MenuItem({ label, Icon, onPress, variant = 'default' }: Props) {
+export function MenuItem({ label, Icon, onPress, variant = 'default' }: Props) {
   const danger = variant === 'danger';
   const tint = danger ? Colors.danger : Colors.primary;
   return (

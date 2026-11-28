@@ -7,7 +7,7 @@ import {
   ViewStyle,
   TextStyle
 } from 'react-native';
-import Colors from '@/shared/ui/colors';
+import { Colors } from '@/shared/ui/theme';
 import { sizeStyles, styles, variantStyles } from './Button.styles';
 
 interface ButtonProps {
@@ -24,7 +24,7 @@ interface ButtonProps {
   textStyle?: TextStyle;
 }
 
-export default function Button({
+export function Button({
   title,
   onPress,
   isLoading,
